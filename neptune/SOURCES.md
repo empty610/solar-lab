@@ -6,6 +6,7 @@
 
 - [NASA VTAD 海王星模型](https://science.nasa.gov/resource/neptune-3d-model/)：从 [GLB](https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/n/Neptune_1_49528.glb) 提取几何、原始 UV 与贴图，归一化半径。原模型节点方向保留；不是自然色校准产品。
 - [NASA VTAD 海卫一模型](https://science.nasa.gov/resource/triton-3d-model/)：从 [GLB](https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/t/Triton_1_2707.glb) 提取。未完整成像部分不代表精确地貌。
+- `assets/triton-globe.png` 使用上述模型的原始几何、UV 与贴图渲染为透明背景球体，用于海卫一章节展示；探测器拼接照片仍保留在影像画廊。
 - [大黑斑 PIA00052](https://science.nasa.gov/photojournal/neptune-great-dark-spot-in-high-resolution/)：NASA/JPL；旅行者二号。透明、绿色滤光片的合成影像。文件 `assets/dark-spot.jpg`。
 - [海卫一全球拼接 PIA00317](https://science.nasa.gov/photojournal/global-color-mosaic-of-triton/)：NASA/JPL/USGS；旅行者二号。橙、紫、紫外滤光片映射色。文件 `assets/triton-mosaic.jpg` 已缩小至适合网页的分辨率。
 - [海王星 NIRCam 近景 weic2214a](https://esawebb.org/images/weic2214a/)：NASA, ESA, CSA, STScI。2022 年发布，近红外映射色。文件 `assets/webb-rings.jpg`。

@@ -1,0 +1,234 @@
+/* The personal site's terminal-in transition: scale(1.02), 0.4s ease. */
+.interface-page {
+  animation: interface-in 0.4s ease;
+  transform-origin: 50% 12%;
+}
+.interface-page.interface-leaving {
+  animation: interface-out 0.2s ease both;
+  pointer-events: none;
+}
+@keyframes interface-in {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes interface-out {
+  to {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+}
+.tab-view-enter {
+  animation: interface-in 0.4s ease both;
+}
+.archive-back {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 80;
+  padding: 10px 16px;
+  border: 1px solid #9f968466;
+  border-radius: 24px;
+  background: #f8f5edea;
+  color: #49473c;
+  text-decoration: none;
+  font: 12px monospace;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(12px);
+}
+dialog.archive-dialog {
+  width: min(1320px, calc(100vw - 40px));
+  max-width: none;
+  height: min(780px, calc(100dvh - 64px));
+  max-height: none;
+  padding: 0;
+  border: 1px solid #c3d0cc33;
+  border-radius: 20px;
+  background: #142024;
+  color: #f4f2eb;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+dialog.archive-dialog[open] {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  animation: interface-in 0.4s ease;
+}
+dialog.archive-dialog::backdrop {
+  background: #050c10c9;
+  backdrop-filter: blur(8px);
+}
+dialog.archive-dialog > figure {
+  display: contents;
+}
+dialog.archive-dialog > img,
+dialog.archive-dialog > figure > img,
+dialog.archive-dialog > .dialog-image,
+dialog.archive-dialog > .dialog-visual,
+dialog.archive-dialog > .world-dialog-scroll {
+  grid-column: 1;
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+  background: #080f12;
+  box-sizing: border-box;
+}
+dialog.archive-dialog > .dialog-image img,
+dialog.archive-dialog > .dialog-visual img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+dialog.archive-dialog > .dialog-copy,
+dialog.archive-dialog > figure > figcaption,
+dialog.archive-dialog > header {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 64px 36px 32px;
+  overflow-y: auto;
+  color: #f4f2eb;
+  background: #142024;
+  text-align: left;
+  box-sizing: border-box;
+  line-height: 1.85;
+}
+dialog.archive-dialog .terrain-copy {
+  padding: 0;
+  color: inherit;
+  background: none;
+}
+dialog.archive-dialog .terrain-copy h3 {
+  color: inherit;
+}
+dialog.archive-dialog .terrain-copy p {
+  color: #d2dbdb;
+  font-size: 15px;
+  line-height: 1.85;
+}
+dialog.archive-dialog .dialog-copy p,
+dialog.archive-dialog #dialog-description,
+dialog.archive-dialog #dialog-description p,
+dialog.archive-dialog .dialog-subtitle {
+  color: #d2dbdb;
+}
+dialog.archive-dialog .dialog-copy h2,
+dialog.archive-dialog .terrain-copy h3,
+dialog.archive-dialog .dialog-title {
+  display: block;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 12px 0 22px;
+  color: #f4f2eb;
+}
+dialog.archive-dialog .dialog-copy,
+dialog.archive-dialog > figure > figcaption {
+  font-size: 15px;
+}
+dialog.archive-dialog .dialog-subtitle {
+  display: block;
+  font-size: 15px;
+  line-height: 1.85;
+}
+dialog.archive-dialog .terrain-kicker,
+dialog.archive-dialog .terrain-source,
+dialog.archive-dialog .eyebrow {
+  color: #a8c2c9;
+  font-size: 11px;
+}
+dialog.archive-dialog .terrain-source a,
+dialog.archive-dialog .dialog-copy a {
+  color: #a2d2e0;
+}
+dialog.archive-dialog > .dialog-close,
+dialog.archive-dialog > .image-dialog-close,
+dialog.archive-dialog > #photo-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 4;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  color: #f4f2eb;
+  background: #24373bec;
+}
+dialog.archive-dialog:has(> .dialog-toolbar)[open] {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+dialog.archive-dialog > .dialog-toolbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: static;
+}
+dialog.archive-dialog:has(> .dialog-toolbar) > .dialog-visual,
+dialog.archive-dialog:has(> .dialog-toolbar) > .dialog-copy {
+  grid-row: 2;
+}
+dialog.archive-dialog > header {
+  display: block;
+}
+dialog.archive-dialog > header strong {
+  font-size: 26px;
+}
+dialog.archive-dialog > header p {
+  color: #d2dbdb;
+  font-size: 15px;
+}
+dialog.archive-dialog > header button {
+  margin-top: 24px;
+}
+@media (max-width: 760px) {
+  .archive-back {
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+  }
+  dialog.archive-dialog {
+    width: calc(100vw - 20px);
+    height: calc(100dvh - 32px);
+    border-radius: 14px;
+  }
+  dialog.archive-dialog[open] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  dialog.archive-dialog > .dialog-copy,
+  dialog.archive-dialog > figure > figcaption,
+  dialog.archive-dialog > header {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 24px;
+  }
+  dialog.archive-dialog:has(> .dialog-toolbar)[open] {
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
+  }
+  dialog.archive-dialog:has(> .dialog-toolbar) > .dialog-visual {
+    grid-row: 2;
+  }
+  dialog.archive-dialog:has(> .dialog-toolbar) > .dialog-copy {
+    grid-row: 3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .interface-page,
+  .interface-page.interface-leaving,
+  .tab-view-enter,
+  dialog.archive-dialog[open] {
+    animation: none;
+  }
+}
