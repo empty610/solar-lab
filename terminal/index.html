@@ -18,8 +18,22 @@
     <script defer src="labels.js"></script>
     <link rel="stylesheet" href="../shared/interface.css" />
     <script defer src="../shared/interface.js"></script>
+    <link rel="stylesheet" href="site-controls.css" />
+    <script defer src="../shared/idle-controls.js"></script>
+    <script defer src="../shared/music.js"></script>
   </head>
   <body id="top">
+    <a
+      id="terminal-back"
+      href="https://empty610.com/#projects"
+      data-idle-hide
+      aria-label="返回个人主页项目区"
+      title="Back"
+    >
+      <svg class="back-u-turn" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 5 5 9l4 4M5 9h8a5 5 0 0 1 5 5v1" /></svg
+      ><span>BACK</span>
+    </a>
     <a class="skip" href="#explorer">跳到天体选择</a>
     <div class="site-shell">
       <header class="masthead">
@@ -257,7 +271,12 @@
         >
       </main>
       <footer>
-        <p><a href="https://empty610.com/#projects" aria-label="返回 empty610.com 项目区">EMPTY610</a> <span>/</span> SOLAR LABORATORY</p>
+        <p>
+          <a href="https://empty610.com/#projects" aria-label="返回 empty610.com 项目区"
+            >EMPTY610</a
+          >
+          <span>/</span> SOLAR LABORATORY
+        </p>
         <p>运转速度为展示处理，非实时星历 · 1 AU 为日地平均距离</p>
         <a href="#top">回到顶部</a>
       </footer>
@@ -273,5 +292,17 @@
       >
     </div>
     <p class="sr-only" id="selection-status" role="status" aria-live="polite"></p>
+    <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio>
+    <button
+      id="music-toggle"
+      class="music-toggle"
+      type="button"
+      data-idle-hide
+      aria-label="播放或暂停音乐"
+      aria-pressed="false"
+      title="音乐"
+    >
+      <span aria-hidden="true">♪</span>
+    </button>
   </body>
 </html>
