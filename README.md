@@ -47,7 +47,7 @@ git push origin main
 
 `terminal/` 中：`app.js` 管理标签、选中天体和档案入口；`motion.js` 管理星图运转；`labels.js` 将标签放在独立图层并动态避开星球和其他标签。`style.css`、`refinement.css`、`motion.css` 管理布局、标签过渡和样式。
 
-`shared/interface.css` 与 `shared/interface.js` 复用个人网站的 `0.4 秒 ease` 轻微缩放入场，统一档案的 BACK 返回总览，以及左图右介绍的放大窗口（手机改为上下布局）。修改这些通用效果时，连同 `shared/` 一起提交。
+`shared/interface.css` 与 `shared/interface.js` 复用个人网站的金色双轨道、中心光点和深色遮罩，在跳转前显示约 1 秒的 `ESTABLISHING LINK` 连接动画；同时统一档案的 BACK 返回总览，以及左图右介绍的放大窗口（手机改为上下布局）。修改这些通用效果时，连同 `shared/` 一起提交。
 
 从原始工作区同步时，在 `E:\solar system` 运行 `node tools/export-site.mjs`，再在本仓库检查和提交变化。同步脚本保留本仓库元数据，复制当前版的页面依赖并更新目录链接；不会删除文件。
 

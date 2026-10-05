@@ -1,12 +1,141 @@
-/* The personal site's terminal-in transition: scale(1.02), 0.4s ease. */
-.interface-page {
-  animation: interface-in 0.4s ease;
-  transform-origin: 50% 12%;
-}
-.interface-page.interface-leaving {
-  animation: interface-out 0.2s ease both;
+/* Copied from the personal site's home/home.css: DC page hand-off. */
+.dc-page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: #e5c76f;
+  background:
+    radial-gradient(circle at center, rgba(184, 148, 56, 0.16), transparent 30%),
+    rgba(13, 11, 8, 0.98);
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  transition:
+    opacity 0.5s ease,
+    visibility 0s linear 0.5s;
+  box-sizing: border-box;
 }
+.dc-page-transition.is-mounted {
+  visibility: visible;
+  pointer-events: auto;
+}
+.dc-page-transition.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease;
+}
+.dc-transition-core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(190px, 52vw);
+  aspect-ratio: 1;
+  isolation: isolate;
+  opacity: 0;
+  transform: scale(0.9) translateZ(0);
+  will-change: opacity, transform;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.dc-page-transition.is-active .dc-transition-core {
+  opacity: 1;
+  transform: scale(1) translateZ(0);
+}
+.dc-transition-orbit {
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(229, 199, 111, 0.58);
+  border-radius: 50%;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+.dc-transition-orbit-b {
+  width: 72%;
+  transform: rotateX(68deg) rotateZ(-30deg);
+  border-color: rgba(229, 199, 111, 0.34);
+}
+.dc-page-transition.is-active .dc-transition-orbit-a {
+  animation: dc-orbit-a 0.78s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.dc-page-transition.is-active .dc-transition-orbit-b {
+  animation: dc-orbit-b 0.78s 0.06s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.dc-transition-signal {
+  width: 13px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e5c76f;
+  box-shadow:
+    0 0 0 7px rgba(229, 199, 111, 0.11),
+    0 0 18px rgba(229, 199, 111, 0.7);
+  will-change: transform, opacity;
+}
+.dc-page-transition.is-active .dc-transition-signal {
+  animation: dc-signal 0.72s 0.1s ease-in-out both;
+}
+.dc-transition-core p {
+  position: absolute;
+  top: calc(100% + 20px);
+  width: max-content;
+  max-width: 80vw;
+  margin: 0;
+  color: #e5c76f;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
+    sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.22em;
+  text-align: center;
+}
+@keyframes dc-orbit-a {
+  from {
+    transform: translateZ(0) rotate(-36deg);
+    opacity: 0;
+  }
+  to {
+    transform: translateZ(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes dc-orbit-b {
+  from {
+    transform: rotateX(68deg) rotateZ(-76deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateX(68deg) rotateZ(-30deg);
+    opacity: 1;
+  }
+}
+@keyframes dc-signal {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-page-transition,
+  .dc-page-transition.is-active,
+  .dc-transition-core {
+    transition-duration: 0.01ms;
+  }
+  .dc-transition-orbit,
+  .dc-transition-signal {
+    animation: none;
+  }
+}
+/* Photo dialog entrance. */
 @keyframes interface-in {
   from {
     transform: scale(1.02);
@@ -14,15 +143,6 @@
   to {
     transform: none;
   }
-}
-@keyframes interface-out {
-  to {
-    opacity: 0;
-    transform: scale(0.99);
-  }
-}
-.tab-view-enter {
-  animation: interface-in 0.4s ease both;
 }
 .archive-back {
   position: fixed;
@@ -225,9 +345,6 @@ dialog.archive-dialog > header button {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .interface-page,
-  .interface-page.interface-leaving,
-  .tab-view-enter,
   dialog.archive-dialog[open] {
     animation: none;
   }
