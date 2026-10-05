@@ -85,7 +85,8 @@
       return;
     const archive = archives.find(([, pattern]) => pattern.test(destination.pathname));
     if (!archive) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Like the original site, reduced motion keeps the connection screen visible.
+    // The CSS removes orbit motion while retaining the one-second hand-off.
     event.preventDefault();
     if (navigationPending) return;
     navigationPending = true;

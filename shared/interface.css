@@ -127,11 +127,13 @@
 @media (prefers-reduced-motion: reduce) {
   .dc-page-transition,
   .dc-page-transition.is-active,
-  .dc-transition-core {
+  .dc-transition-core,
+  .dc-page-transition.is-active .dc-transition-core {
     transition-duration: 0.01ms;
   }
-  .dc-transition-orbit,
-  .dc-transition-signal {
+  .dc-page-transition.is-active .dc-transition-orbit-a,
+  .dc-page-transition.is-active .dc-transition-orbit-b,
+  .dc-page-transition.is-active .dc-transition-signal {
     animation: none;
   }
 }
