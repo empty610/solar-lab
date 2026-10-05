@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#eee9e1" />
+    <meta
+      name="description"
+      content="冥王星观察档案：转动冥王星与冥卫一的三维模型，认识氮冰原、蓝色薄雾、双星舞步与新视野号的探索。"
+    />
+    <title>冥王星 · Pluto | Solar Laboratory</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <noscript
+      ><style>
+        #model-loading,
+        .model-hint,
+        .view-toolbar,
+        .button-row,
+        #model-status,
+        .orbit-controls,
+        .text-button {
+          display: none;
+        }
+        #model-fallback[hidden] {
+          display: grid !important;
+        }
+        #binary-pluto {
+          transform: translate(295px, 285px);
+        }
+        #binary-charon {
+          transform: translate(571px, 285px);
+        }
+      </style></noscript
+    >
+    <script defer src="vendor/three.min.js"></script>
+    <script defer src="vendor/OrbitControls.js"></script>
+    <script defer src="assets/models.js"></script>
+    <script defer src="model.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body id="top">
+    <a class="skip" href="#observatory">跳到三维观察台</a>
+    <div class="wrap">
+      <header class="masthead">
+        <a class="brand" href="../terminal/index.html"
+          >EMPTY610 <span>/ SOLAR LABORATORY</span></a
+        ><a class="back-link" href="../terminal/index.html">返回太阳系总览</a>
+      </header>
+      <main>
+        <section class="hero" aria-labelledby="title">
+          <div>
+            <p class="eyebrow">FIELD NOTES · DWARF PLANET / 01</p>
+            <h1 id="title">冥王星 <span>PLUTO</span></h1>
+            <p class="hero-copy">太阳很远，<br />故事还在继续。</p>
+          </div>
+          <div class="hero-note">
+            <span class="orbit-mark" aria-hidden="true">♇</span>
+            <p>柯伊伯带 · 矮行星<br /><small>BEYOND NEPTUNE, A WORLD WITH A HEART.</small></p>
+          </div>
+        </section>
+        <nav class="reading-nav" aria-label="冥王星页面导航">
+          <a href="#observatory" aria-current="location"><span>00</span> 三维观察</a
+          ><a href="#landscapes"><span>01</span> 冰与薄雾</a
+          ><a href="#charon"><span>02</span> 冥卫一</a
+          ><a href="#journey"><span>03</span> 探索历程</a
+          ><a href="#identity"><span>04</span> 矮行星档案</a>
+        </nav>
+
+        <section id="observatory" class="panel observatory" aria-labelledby="model-title">
+          <div class="panel-head">
+            <h2 id="model-title"><span class="section-no">00</span> 冥王星观察台</h2>
+            <span class="model-status" id="model-status" role="status">正在准备模型</span>
+          </div>
+          <div class="view-toolbar">
+            <div class="view-tabs" aria-label="选择三维观察对象">
+              <button type="button" data-view="pluto" aria-pressed="true">冥王星</button
+              ><button type="button" data-view="charon" aria-pressed="false">冥卫一</button
+              ><button type="button" data-view="system" aria-pressed="false">双星全景</button>
+            </div>
+            <span class="micro">NASA / NEW HORIZONS SURFACE MAPS</span>
+          </div>
+          <div class="model-layout">
+            <aside class="model-profile">
+              <p class="eyebrow" id="profile-kicker">AN ICY WORLD, STILL CHANGING</p>
+              <h3 id="profile-title">一颗小小的世界，<br />装着不小的惊喜。</h3>
+              <p id="profile-copy">
+                转动冥王星，寻找那片明亮的“心”。它不是一块静止的装饰：不同的冰、起伏的地形与遥远的阳光，仍在塑造这里的表面。
+              </p>
+              <dl class="profile-facts" id="profile-facts">
+                <div>
+                  <dt>直径</dt>
+                  <dd>2,377 <small>km</small></dd>
+                </div>
+                <div>
+                  <dt>自转一周</dt>
+                  <dd>6.4 <small>地球日</small></dd>
+                </div>
+                <div>
+                  <dt>天体分类</dt>
+                  <dd>矮行星</dd>
+                </div>
+              </dl>
+              <details class="model-note">
+                <summary>模型与颜色说明</summary>
+                <p>
+                  使用 NASA VTAD
+                  的原始几何和影像贴图。拼接清晰度不均，未完整拍摄的区域可能包含填补；增强色和展示光照不等同于肉眼所见。
+                </p>
+                <p>
+                  双星全景保留两颗天体的相对大小与中心距离。轨道简化为圆，朝向与起始相位为示意；没有包含另外四颗小卫星。
+                </p>
+              </details>
+            </aside>
+            <div class="model-stage" id="model-stage">
+              <div id="model-mount"></div>
+              <span class="model-word" id="model-word" aria-hidden="true">PLUTO</span>
+              <div class="model-loading" id="model-loading"><span></span>正在展开冰封世界</div>
+              <div class="model-fallback" id="model-fallback" hidden>
+                <img src="assets/pluto-global.jpg" alt="新视野号拍摄的冥王星增强色影像" />
+                <p>当前设备使用图文模式。下方影像与轨道演示仍可浏览。</p>
+              </div>
+              <span class="system-label" id="pluto-label" hidden>冥王星</span
+              ><span class="system-label" id="charon-label" hidden>冥卫一</span
+              ><span class="system-label bary-label" id="bary-label" hidden>共同质心</span>
+              <p class="model-hint">拖动旋转 · 滚轮 / 双指缩放</p>
+            </div>
+          </div>
+          <div class="model-bottom">
+            <p id="view-note">影像拼接与可视化照明 · 自转速度经过加快</p>
+            <div class="button-row">
+              <button type="button" id="model-spin" aria-pressed="true">暂停自转</button
+              ><button type="button" id="model-light" aria-pressed="false">昼夜照明</button
+              ><button type="button" id="model-reset">重置视角</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="fact-strip">
+          <div>
+            <span>冥王星的直径</span><strong>2,377 <small>km</small></strong>
+            <p>约为地球直径的五分之一</p>
+          </div>
+          <div>
+            <span>绕太阳一周</span><strong>248 <small>地球年</small></strong>
+            <p>一年，足以跨越几代人</p>
+          </div>
+          <div>
+            <span>阳光的单程旅途</span><strong>5.5 <small>小时</small></strong>
+            <p>平均距离下的近似时间</p>
+          </div>
+          <div>
+            <span>第一次近距离相遇</span><strong>2015 <small>年</small></strong>
+            <p>新视野号 · 7 月 14 日</p>
+          </div>
+        </div>
+
+        <section id="landscapes" class="section-block" aria-labelledby="landscape-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">01 / A LANDSCAPE MADE OF ICE</p>
+              <h2 id="landscape-title">遥远，不等于沉寂。</h2>
+            </div>
+            <p>把目光从轮廓移向表面。<br />三张影像，读懂三种不同的冰与光。</p>
+          </div>
+          <div class="gallery-grid">
+            <article class="photo-card">
+              <button class="photo-open" data-photo="heart" aria-label="放大冥王星心形区域影像">
+                <img
+                  src="assets/pluto-global.jpg"
+                  alt="冥王星的明亮心形区域与红褐色地形"
+                  width="1200"
+                  height="1200"
+                  loading="lazy"
+                /><span class="photo-tag">NEW HORIZONS / ENHANCED COLOR</span
+                ><span class="expand">查看影像</span>
+              </button>
+              <div class="photo-copy">
+                <span class="micro">A / SPUTNIK PLANITIA</span>
+                <h3>那颗“心”，还在缓慢流动。</h3>
+                <p>
+                  汤博区勾勒出熟悉的心形轮廓。它的西半部是斯普特尼克平原，覆盖着富含氮的冰；冰原上的多边形纹理，是研究缓慢对流与表面更新的重要线索。
+                </p>
+                <a
+                  class="source"
+                  href="https://www.nasa.gov/solar-system/five-years-after-new-horizons-historic-flyby-here-are-10-cool-things-we-learned-about-pluto/"
+                  target="_blank"
+                  rel="noopener"
+                  >NASA · 冰原与地质活动</a
+                >
+              </div>
+            </article>
+            <article class="photo-card">
+              <button class="photo-open" data-photo="haze" aria-label="放大冥王星蓝色薄雾影像">
+                <img
+                  src="assets/pluto-haze.jpg"
+                  alt="逆光下环绕冥王星的蓝色薄雾"
+                  width="1041"
+                  height="1041"
+                  loading="lazy"
+                /><span class="photo-tag">LOOKING BACK / ATMOSPHERIC HAZE</span
+                ><span class="expand">查看影像</span>
+              </button>
+              <div class="photo-copy">
+                <span class="micro">B / A BLUE EDGE</span>
+                <h3>薄薄的大气，描出一圈蓝。</h3>
+                <p>
+                  飞掠之后回望，冥王星显露出一圈蓝色薄雾。微小颗粒散射阳光，让极稀薄的大气变得可见；这圈蓝色并不意味着它拥有地球一样的空气。
+                </p>
+                <a
+                  class="source"
+                  href="https://www.nasa.gov/image-article/plutos-blue-sky/"
+                  target="_blank"
+                  rel="noopener"
+                  >NASA · 蓝色薄雾</a
+                >
+              </div>
+            </article>
+            <article class="photo-card">
+              <button
+                class="photo-open"
+                data-photo="mountains"
+                aria-label="放大冥王星山脉与冰原影像"
+              >
+                <img
+                  src="assets/pluto-mountains.jpg"
+                  alt="低角度光照下的冥王星山脉、冰原与层状薄雾"
+                  width="1280"
+                  height="546"
+                  loading="lazy"
+                /><span class="photo-tag">NEAR SUNSET / JULY 2015</span
+                ><span class="expand">查看影像</span>
+              </button>
+              <div class="photo-copy">
+                <span class="micro">C / WATER ICE AS ROCK</span>
+                <h3>这里的山，由水冰撑起。</h3>
+                <p>
+                  在极低温度下，水冰能像岩石一样坚硬。低角度阳光勾出崎岖山峰与平坦冰原，地平线上还能看到层层薄雾。熟悉的水，在这里扮演着陌生的角色。
+                </p>
+                <a
+                  class="source"
+                  href="https://science.nasa.gov/resource/plutos-majestic-mountains-frozen-plains-and-foggy-hazes/"
+                  target="_blank"
+                  rel="noopener"
+                  >NASA · 冰山与薄雾</a
+                >
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="charon" class="panel binary-section" aria-labelledby="charon-title">
+          <div class="panel-head">
+            <h2 id="charon-title"><span class="section-no">02</span> 冥卫一：彼此相望的两个世界</h2>
+            <span class="micro">PLUTO & CHARON</span>
+          </div>
+          <div class="binary-layout">
+            <div class="binary-visual">
+              <svg
+                id="binary-svg"
+                viewBox="0 0 650 600"
+                role="img"
+                aria-label="冥王星与冥卫一围绕共同质心公转的示意，两者持续以同一面相对"
+              >
+                <circle class="binary-track" cx="325" cy="285" r="246" />
+                <circle class="binary-track inner" cx="325" cy="285" r="30" />
+                <path class="binary-axis" d="M45 285H605M325 17V553" />
+                <line id="binary-connection" x1="295" y1="285" x2="571" y2="285" />
+                <g id="binary-pluto">
+                  <image href="assets/pluto.png" x="-20" y="-20" width="40" height="40" />
+                  <circle class="facing-dot" cx="14" cy="0" r="2.5" />
+                  <text x="0" y="39" text-anchor="middle">冥王星</text>
+                </g>
+                <g id="binary-charon">
+                  <image href="assets/charon.png" x="-11" y="-11" width="22" height="22" />
+                  <circle class="facing-dot" cx="-7" cy="0" r="2" />
+                  <text x="0" y="-23" text-anchor="middle">冥卫一</text>
+                </g>
+                <circle class="bary-dot" cx="325" cy="285" r="3" />
+                <text class="bary-text" x="334" y="308">共同质心</text>
+                <text class="binary-scale" x="325" y="582" text-anchor="middle">
+                  从轨道上方看 · 圆轨道示意 · 相向小点标记同一侧表面
+                </text>
+              </svg>
+            </div>
+            <div class="binary-copy">
+              <p class="eyebrow">TWO WORLDS. ONE RHYTHM.</p>
+              <h3>不是一个不动，<br />另一个绕行。</h3>
+              <p>
+                冥卫一的直径约为冥王星的一半。它们共同围绕两者之间的质心运动，而这个中心位于冥王星表面之外。
+              </p>
+              <p>
+                它们还彼此潮汐锁定：公转与各自的自转大约都是 6.4
+                个地球日，所以总以同一面相对。图中的小点，帮助你追踪这两张“面对彼此的脸”。
+              </p>
+              <dl class="pair-facts">
+                <div>
+                  <dt>冥卫一直径</dt>
+                  <dd>≈ 1,214 <small>km</small></dd>
+                </div>
+                <div>
+                  <dt>两者中心相距</dt>
+                  <dd>≈ 19,640 <small>km</small></dd>
+                </div>
+              </dl>
+              <button class="text-button" data-focus="charon">在三维观察台中查看冥卫一</button
+              ><a
+                class="source"
+                href="https://science.nasa.gov/dwarf-planets/pluto/moons/charon/"
+                target="_blank"
+                rel="noopener"
+                >NASA · 冥卫一档案</a
+              >
+            </div>
+          </div>
+          <div class="orbit-controls">
+            <div>
+              <label for="binary-phase">轨道相位 <strong id="phase-value">0°</strong></label
+              ><input
+                id="binary-phase"
+                type="range"
+                min="0"
+                max="360"
+                step="0.1"
+                value="0"
+                aria-label="冥王星与冥卫一的轨道相位"
+              />
+            </div>
+            <button id="binary-play" type="button" aria-pressed="false">播放双星舞步</button
+            ><button id="binary-reset" type="button">回到起点</button>
+          </div>
+          <p class="panel-note">
+            演示只包含冥王星与冥卫一，周期加快；二维圆点略放大，质心位置按近似质量比绘制。它与上方三维视图是独立的教学演示。
+          </p>
+        </section>
+
+        <section id="journey" class="section-block" aria-labelledby="journey-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">03 / A LONG WAY TO A FIRST HELLO</p>
+              <h2 id="journey-title">从一个光点，<br />到一个有地貌的世界。</h2>
+            </div>
+            <a
+              class="source"
+              href="https://science.nasa.gov/mission/new-horizons/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 新视野号任务档案</a
+            >
+          </div>
+          <div class="timeline">
+            <article>
+              <span class="timeline-year">1930</span>
+              <h3>发现冥王星</h3>
+              <p>
+                克莱德·汤博在不同时刻拍摄的底片中，找到了缓慢移动的光点。那个遥远世界，第一次进入人类的视野。
+              </p>
+            </article>
+            <article>
+              <span class="timeline-year">2006</span>
+              <h3>新视野号启程</h3>
+              <p>1 月 19 日发射。探测器踏上长途旅程，随后借助木星引力加速，驶向太阳系更远处。</p>
+            </article>
+            <article class="timeline-feature">
+              <span class="timeline-year">2015.07.14</span>
+              <h3>第一次近距离相遇</h3>
+              <p>
+                新视野号飞掠冥王星系统，带回冰原、山脉、薄雾与冥卫一的细节。一次短暂经过，改写了我们对这里的想象。
+              </p>
+            </article>
+            <article>
+              <span class="timeline-year">2019</span>
+              <h3>继续走向柯伊伯带</h3>
+              <p>
+                1 月 1 日，探测器又飞掠了阿罗科思。冥王星之外，还有许多保存太阳系早期线索的小世界。
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="identity" class="identity panel" aria-labelledby="identity-title">
+          <div>
+            <p class="eyebrow">04 / A DIFFERENT CATEGORY, THE SAME WORLD</p>
+            <h2 id="identity-title">名字里的“行星”，<br />与今天的分类。</h2>
+            <p>
+              冥王星在 2006
+              年被国际天文学联合会归入矮行星。它绕太阳运行，也足够接近球形，但没有清除轨道邻域中的其他天体。
+            </p>
+            <p>
+              分类帮助我们理解太阳系的结构；它不会让山脉、冰原或薄雾变得不值得探索。在这份总览里，冥王星作为矮行星拥有自己的档案。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/dwarf-planets/pluto/facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 冥王星事实与分类</a
+            >
+          </div>
+          <div class="identity-stamp" aria-hidden="true">
+            <span>♇</span><strong>PLUTO</strong><small>DWARF PLANET<br />KUIPER BELT</small>
+          </div>
+        </section>
+        <footer>
+          <div>
+            <p class="eyebrow">EMPTY610 / SOLAR LABORATORY</p>
+            <p>世界的大小，从来不是故事的长度。</p>
+          </div>
+          <a href="../terminal/index.html">返回太阳系总览</a>
+          <details>
+            <summary>资料、影像与模型来源</summary>
+            <p>
+              科学资料与影像：NASA / Johns Hopkins APL / Southwest Research
+              Institute。三维模型：NASA VTAD。影像为 2015
+              年飞掠所得，部分为增强色；颜色与贴图清晰度不应解读为实时、完整的精密测绘。
+            </p>
+            <p>
+              参数为近似值。完整来源、使用说明与演示限制见
+              <a href="SOURCES.md">SOURCES.md</a>。本项目不代表上述机构背书。
+            </p>
+          </details>
+        </footer>
+      </main>
+    </div>
+    <a class="top-link" href="#top" aria-label="回到页面顶部">TOP</a>
+    <dialog id="photo-dialog" aria-labelledby="photo-title">
+      <button id="photo-close" type="button" aria-label="关闭影像">×</button
+      ><img id="photo-image" alt="" />
+      <div class="dialog-copy">
+        <p class="eyebrow" id="photo-kicker"></p>
+        <h2 id="photo-title"></h2>
+        <p id="photo-description"></p>
+        <p class="credit">NASA / Johns Hopkins APL / SwRI</p>
+        <a id="photo-source" class="source" target="_blank" rel="noopener">查看原始资料</a>
+      </div>
+    </dialog>
+    <noscript
+      ><p class="no-script">
+        三维与轨道交互需要 JavaScript；文字、图片和页面导航仍可阅读。
+      </p></noscript
+    >
+  </body>
+</html>

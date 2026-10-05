@@ -1,0 +1,43 @@
+[
+  {
+    "key": "tharsis",
+    "title": "塔尔西斯火山群",
+    "description": "维京号影像中的塔尔西斯隆起，三座大型盾状火山呈链状排列。",
+    "credit": "NASA/JPL/USGS · PIA00408",
+    "source": "https://science.nasa.gov/photojournal/tharsis/",
+    "note": "维京号轨道拼接影像，色彩经过处理。"
+  },
+  {
+    "key": "craters",
+    "title": "南半球高地撞击坑群",
+    "description": "普罗米修斯高地的大小撞击坑，保留着撞击与后期侵蚀的痕迹。",
+    "credit": "ESA/DLR/FU Berlin (G. Neukum)",
+    "source": "https://www.esa.int/ESA_Multimedia/Images/2004/09/Close-up_view_of_Promethei_Terra_craters",
+    "note": "火星快车 HRSC 影像。CC BY-SA 3.0 IGO，卡片仅裁切显示，点击查看完整原图。"
+  },
+  {
+    "key": "ice",
+    "title": "极地冰盖",
+    "description": "北极水冰盖与螺旋状暗色沟槽，记录着极区冰与尘埃的积累。",
+    "credit": "Ernst Hauber & HRSC Team · DLR",
+    "source": "https://helmholtz-imaging.de/best-scientific-image-gallery/best-scientific-image-2021/",
+    "note": "火星快车 HRSC 于 2014 年 5 月 2 日拍摄，右侧为北极冰盖，左侧为云层；点击查看完整原图。",
+    "file": "landform-ice-clouds.png"
+  },
+  {
+    "key": "water",
+    "title": "水成地貌",
+    "description": "埃伯斯瓦尔德三角洲的古河道与沉积结构，留下流水塑造地表的证据。",
+    "credit": "NASA/JPL/MSSS · PIA04293",
+    "source": "https://science.nasa.gov/photojournal/eberswalde-delta-in-high-resolution/",
+    "note": "火星全球勘测者 MOC 轨道影像，展示古三角洲局部。"
+  },
+  {
+    "key": "wind",
+    "title": "风成地貌",
+    "description": "北极附近的新月形沙丘与风成沙脊，展现风对砂粒的搬运和堆积。",
+    "credit": "NASA/JPL-Caltech/Univ. of Arizona · PIA20469",
+    "source": "https://science.nasa.gov/photojournal/summer-sand-dunes/",
+    "note": "火星勘测轨道器 HiRISE 增强色彩影像，蓝色不代表液态水。"
+  }
+]

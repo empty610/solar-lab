@@ -1,0 +1,77 @@
+[
+  {
+    "id": "perseverance",
+    "mapSource": "https://science.nasa.gov/photojournal/1000-days-of-perseverance/",
+    "coverage": "前 1,000 个火星日",
+    "scienceSources": [
+      [
+        "NASA · 毅力号科学成果",
+        "https://science.nasa.gov/mission/mars-2020-perseverance/science-highlights/"
+      ],
+      [
+        "NASA · 火星样品档案",
+        "https://science.nasa.gov/mission/mars-2020-perseverance/mars-rock-samples/"
+      ]
+    ]
+  },
+  {
+    "id": "opportunity",
+    "mapSource": "https://science.nasa.gov/photojournal/opportunitys-final-traverse-map/",
+    "coverage": "最终路线 · 45.16 km",
+    "scienceSources": [
+      [
+        "NASA ARES · MER 主要发现",
+        "https://ares.jsc.nasa.gov/missions/mer/important-discoveries.html"
+      ],
+      [
+        "NASA · 火星水环境的变化",
+        "https://www.nasa.gov/news-release/nasas-opportunity-rover-yields-more-data-on-changes-to-mars-environment/"
+      ]
+    ]
+  },
+  {
+    "id": "curiosity",
+    "mapSource": "https://www.nasa.gov/history/curiosity-celebrates-10-years-on-mars/",
+    "coverage": "着陆至 2022 年 7 月",
+    "scienceSources": [
+      [
+        "NASA · 好奇号科学成果",
+        "https://science.nasa.gov/mission/msl-curiosity/science-highlights/"
+      ],
+      [
+        "NASA · 十年探索回顾",
+        "https://www.nasa.gov/history/curiosity-celebrates-10-years-on-mars/"
+      ]
+    ]
+  },
+  {
+    "id": "spirit",
+    "mapSource": "https://science.nasa.gov/resource/spirits-traverse-map-through-sol-2555/",
+    "coverage": "最终行驶区域 · Sol 2555 档案",
+    "scienceSources": [
+      [
+        "NASA ARES · MER 主要发现",
+        "https://ares.jsc.nasa.gov/missions/mer/important-discoveries.html"
+      ],
+      [
+        "NASA · 勇气号任务档案",
+        "https://science.nasa.gov/mission/mer-spirit/"
+      ]
+    ]
+  },
+  {
+    "id": "zhurong",
+    "mapSource": "https://www.cas.cn/syky/202311/t20231124_4988326.shtml",
+    "coverage": "Sol 11—113 · 研究所用路段",
+    "scienceSources": [
+      [
+        "中国科学院 · 近期水活动线索",
+        "https://www.cas.cn/cm/202205/t20220513_4834519.shtml"
+      ],
+      [
+        "中国科学院 · 地下古多边形地貌",
+        "https://www.cas.cn/syky/202311/t20231124_4988326.shtml"
+      ]
+    ]
+  }
+]

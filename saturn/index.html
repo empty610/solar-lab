@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#eee9de" />
+    <meta
+      name="description"
+      content="土星观察档案：三维探索土星环、土卫六与土卫二，阅读卡西尼影像，理解轨道、季节与海洋世界。"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>土星 Saturn · Solar Laboratory</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="saturn.css" />
+    <script defer src="vendor/three.min.js"></script>
+    <script defer src="vendor/OrbitControls.js"></script>
+    <script defer src="assets/models.js"></script>
+    <script defer src="data.js"></script>
+    <script defer src="model.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body id="top">
+    <a class="skip" href="#main">跳到正文</a>
+    <a class="floating back" href="#top" aria-label="返回页首"
+      ><svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m9 4-6 6 6 6M3 10h9a8 8 0 0 1 8 8" /></svg
+      >BACK</a
+    >
+    <button
+      class="floating music"
+      id="music"
+      type="button"
+      aria-pressed="false"
+      aria-label="播放音乐"
+    >
+      <span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span
+      ><span id="music-text">MUSIC OFF</span>
+    </button>
+    <header class="masthead wrap">
+      <a href="#top" class="brand">EMPTY610 <span>/ SOLAR LABORATORY</span></a
+      ><span class="edition">FIELD NOTES — 06</span>
+    </header>
+    <main id="main" class="wrap">
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">SATURN OBSERVATION SYSTEM</p>
+          <h1 id="title">土星<span>SATURN</span></h1>
+          <p class="hero-copy">光环之外，仍有世界。<br />从一圈碎冰，走向云层与海洋深处。</p>
+        </div>
+        <div class="hero-side">
+          <span class="live-dot"></span> 外太阳系 · 气态巨行星
+          <p>9.5 AU FROM THE SUN<br />ONE YEAR / 29.4 EARTH YEARS</p>
+        </div>
+      </section>
+      <nav class="section-nav" aria-label="土星章节导航">
+        <a href="#observatory">三维观察</a><a href="#portrait">行星档案</a
+        ><a href="#rings">读懂光环</a><a href="#gallery">影像札记</a><a href="#moons">两个世界</a
+        ><a href="#orbit">轨道实验</a><a href="#exploration">探索历程</a>
+      </nav>
+      <section id="observatory" class="panel observatory" aria-labelledby="model-heading">
+        <div class="panel-top">
+          <h2 id="model-heading"><span class="section-no">00</span> 三维观察台</h2>
+          <span class="status" id="model-status" role="status">正在准备模型</span>
+        </div>
+        <div class="model-tabs" aria-label="选择观察对象">
+          <button type="button" data-view="saturn" aria-pressed="true">土星与环</button
+          ><button type="button" data-view="rings" aria-pressed="false">俯瞰行星环</button
+          ><button type="button" data-view="titan" aria-pressed="false">土卫六</button
+          ><button type="button" data-view="enceladus" aria-pressed="false">土卫二</button
+          ><button type="button" data-view="system" aria-pressed="false">系统全景</button>
+        </div>
+        <div class="model-layout">
+          <aside class="model-profile">
+            <p class="eyebrow" id="body-tag">THE SIXTH PLANET</p>
+            <h3 id="body-title">光环不是一件装饰。</h3>
+            <p id="body-copy">
+              它不是一整块薄圆盘，而是无数冰粒与碎块各自绕行的结果。先拖动土星，看一看环的倾角，再切到俯视寻找那道深色的卡西尼缝。
+            </p>
+            <dl id="body-facts">
+              <div>
+                <dt>赤道直径</dt>
+                <dd>120,536 <small>km</small></dd>
+              </div>
+              <div>
+                <dt>自转周期</dt>
+                <dd>约 10.7 <small>小时</small></dd>
+              </div>
+              <div>
+                <dt>行星分类</dt>
+                <dd>气态巨行星</dd>
+              </div>
+            </dl>
+            <details>
+              <summary>模型说明与比例</summary>
+              <p>
+                球体、原始 UV 与环的透明贴图来自 NASA
+                VTAD。照明和纹理用于展示，不代表此刻的日照或严格自然色。土卫六显示表面地图，并非隔着厚雾用肉眼看到的模样。
+              </p>
+              <p>
+                系统全景只演示土卫六和土卫二，球体与轨道距离保留相对比例，轨道近似为共面圆轨道，初始位置任意。自转、公转共享模拟时间；近景将卫星放大，不能跨视图直接比较大小。
+              </p>
+            </details>
+          </aside>
+          <div class="model-view" id="model-stage">
+            <div id="model-mount"></div>
+            <div class="model-loading" id="model-loading"><span></span>正在展开土星世界</div>
+            <div id="model-fallback" class="model-fallback" hidden>
+              <img src="assets/panorama-photo.jpg" alt="卡西尼拍摄的土星与环" />
+              <p>当前设备无法显示三维视图，图文与轨道演示仍可阅读。</p>
+            </div>
+            <span class="model-watermark" aria-hidden="true">S / 06</span
+            ><span class="moon-label" id="titan-label" hidden>土卫六 · TITAN</span
+            ><span class="moon-label" id="enceladus-label" hidden>土卫二 · ENCELADUS</span>
+            <p class="model-hint">拖动旋转 · 滚轮 / 双指缩放</p>
+          </div>
+        </div>
+        <div class="model-bottom">
+          <span id="model-note">NASA VTAD / 原始模型与环贴图</span>
+          <div class="button-row">
+            <button id="lighting" type="button" aria-pressed="false">昼夜照明</button
+            ><button id="spin" type="button" aria-pressed="true">暂停自转</button
+            ><button id="reset" type="button">重置视角 ↺</button>
+          </div>
+        </div>
+      </section>
+      <div class="stat-strip reveal">
+        <div>
+          <span>赤道直径约为地球的</span><strong>9.4<span>倍</span></strong
+          ><small>不包含行星环</small>
+        </div>
+        <div>
+          <span>漫长的一年</span><strong>29.4<span>年</span></strong
+          ><small>地球年 · 近似公转周期</small>
+        </div>
+        <div>
+          <span>太阳光仍在赶路</span><strong>80<span>分钟</span></strong
+          ><small>太阳至土星的单程时间，约值</small>
+        </div>
+        <div>
+          <span>光环与行星共同倾斜</span><strong>26.7<span>°</span></strong
+          ><small>自转轴相对轨道法线的倾角</small>
+        </div>
+      </div>
+      <aside class="reading-prompt reveal">
+        <span class="eyebrow">START WITH A QUESTION</span>
+        <p>
+          不必先记住所有数字。你可以从一个问题开始：<a href="#rings">环为什么不会连成一整块？</a
+          ><a href="#moons">远离太阳，也能有海洋吗？</a>
+        </p>
+      </aside>
+      <section id="portrait" class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">01 / PLANETARY PORTRAIT</p>
+          <h2>我们记住了光环，<br />却容易忘记那颗行星。</h2>
+          <p>
+            它不只是一颗适合画在封面上的星球。<br />云层、内部与卫星，组成了一个仍在变化的系统。
+          </p>
+        </div>
+        <div class="essay-grid">
+          <article class="panel essay">
+            <span class="article-num">A / A GAS GIANT</span>
+            <h3>如果降落，地面在哪里？</h3>
+            <p>
+              土星是距离太阳第六近的行星，也是太阳系第二大的行星。虽然中文名字里有个“土”，但如果你打算在这里寻找一片坚实的土地，恐怕要失望了。它主要由氢和氦构成，我们看到的浅黄色条纹是云层，而不是裸露的地表。
+            </p>
+            <p>
+              继续往下，压力和温度会显著上升，物质逐渐进入更致密的状态。所谓气态巨行星，并不是一团能让航天器随意穿过去的轻雾；同样，也没有一条像地球海岸那样清晰、可以让你停下来站稳的边界。
+            </p>
+            <p>
+              读到这里，或许就能理解为什么卡西尼的故事最终以进入大气结束，而不是“在土星上着陆”。我们对内部的认识，更多来自引力、振荡等间接线索，不是一趟真的抵达核心的旅行。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/saturn/facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 土星概况 ↗</a
+            >
+          </article>
+          <article class="panel essay">
+            <span class="article-num">B / A RESTLESS ATMOSPHERE</span>
+            <h3>看似柔和的颜色，不意味着温和</h3>
+            <p>
+              与木星相比，土星的云带常显得不那么鲜明，很容易给人一种安静的印象。但颜色柔和与天气温和是两回事。云层中的高速气流与风暴不断改写这张面孔，土星也不是一颗可以用一张照片永久标记的球。
+            </p>
+            <p>
+              最有名的例子，是北极附近那道六边形急流图案。它不是岩石铺成的围墙，也不是一个六角形的洞；流动中的大气形成了近似六边形的波动结构，中央还有极地涡旋。规则的形状，不一定需要一副坚硬的骨架。
+            </p>
+            <p>
+              下面的增强色影像会帮你看清它。不过，在为颜色惊叹之前，记得先看看图片说明：这幅图用不同波段突出结构，不是把人眼看到的景象原样搬了过来。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/mission/cassini/science/saturn/hexagon-in-motion/"
+              target="_blank"
+              rel="noopener"
+              >Cassini · 北极六边形 ↗</a
+            >
+          </article>
+        </div>
+      </section>
+      <section id="rings" class="section-block reveal">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">02 / AN ORCHESTRA OF ICE</p>
+            <h2>无数碎片，<br />看起来像一个整体。</h2>
+          </div>
+          <p>行星环不是实体圆盘。<br />每一粒冰，都在沿自己的轨道前进。</p>
+        </div>
+        <div class="ring-story">
+          <article>
+            <h3>一圈环里，藏着不同的速度</h3>
+            <p>
+              如果能靠近土星环，眼前不会出现一条可以着陆的银白色道路，而是大量以水冰为主的粒子与碎块。距离土星更近的粒子绕行更快，远处则更慢；远看连续的环，其实并没有像唱片那样整块转动。
+            </p>
+            <p>
+              环中的缝隙同样不是简单的裂口。卫星引力与轨道共振会改变粒子的分布，形成间隙、波纹和其他结构。A
+              环与 B 环之间醒目的卡西尼缝，也不是绝对真空，那里仍有较稀疏的物质。
+            </p>
+            <p>
+              至于这些环到底有多古老、如何形成，不能仅凭它们看起来明亮干净就断言。冰的污染、物质输运与观测解释之间仍有讨论；这里不把某一种年龄估计写成已经结束的定论。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/saturn/facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 环系统概况 ↗</a
+            >
+          </article>
+          <div class="ring-table">
+            <div>
+              <span>C RING / C 环</span><strong>74,490—91,980 <small>km</small></strong>
+            </div>
+            <div>
+              <span>B RING / B 环</span><strong>91,980—117,500 <small>km</small></strong>
+            </div>
+            <div>
+              <span>CASSINI DIVISION</span><strong>117,500—122,050 <small>km</small></strong>
+            </div>
+            <div>
+              <span>A RING / A 环</span><strong>122,050—136,770 <small>km</small></strong>
+            </div>
+            <p class="fineprint">
+              从土星中心量起的近似半径范围，不是离云顶的高度；这里只列主要可见结构。<a
+                href="https://planetarynames.wr.usgs.gov/Page/Rings"
+                target="_blank"
+                rel="noopener"
+                >USGS · 环与环缝资料 ↗</a
+              >
+            </p>
+            <a class="jump-link" href="#observatory" data-look="rings">回到模型，俯瞰行星环 ↗</a>
+          </div>
+        </div>
+      </section>
+      <section id="gallery" class="section-block reveal">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">03 / IMAGE FIELD NOTES</p>
+            <h2>换一个角度，<br />就会多一个问题。</h2>
+          </div>
+          <p>单击图片展开分段介绍。<br />阅读光照、色彩与地形，而不只看一张漂亮照片。</p>
+        </div>
+        <div class="image-grid">
+          <button type="button" class="image-card" data-photo="panorama">
+            <img
+              src="assets/panorama-photo.jpg"
+              width="1800"
+              height="700"
+              loading="lazy"
+              alt="逆光中的土星轮廓和发亮的行星环"
+            /><span class="image-caption"
+              ><small>CASSINI · PIA17172</small><strong>当土星挡住太阳</strong
+              ><span>土星全景 / 自然色拼接 <b>↗</b></span></span
+            >
+          </button>
+          <button type="button" class="image-card" data-photo="hexagon">
+            <img
+              src="assets/hexagon-photo.jpg"
+              width="1024"
+              height="1024"
+              loading="lazy"
+              alt="增强色影像中的土星北极六边形急流"
+            /><span class="image-caption"
+              ><small>CASSINI · PIA17652</small><strong>风，也能画出六边形</strong
+              ><span>北极大气 / 增强色 <b>↗</b></span></span
+            >
+          </button>
+          <button type="button" class="image-card" data-photo="enceladus">
+            <img
+              src="assets/enceladus-photo.jpg"
+              width="1200"
+              height="1514"
+              loading="lazy"
+              alt="土卫二南半球的断裂与虎纹地形"
+            /><span class="image-caption"
+              ><small>CASSINI · PIA07800</small><strong>白色外壳上的蓝色裂纹</strong
+              ><span>土卫二 / 增强色拼接 <b>↗</b></span></span
+            >
+          </button>
+        </div>
+      </section>
+      <section id="moons" class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">04 / WORLDS AROUND A WORLD</p>
+          <h2>一颗行星身边，<br />还有两种理解海洋的方式。</h2>
+          <p>
+            一个让液体流在地表，一个把海洋藏进冰壳。<br />不过，“有液体”与“有生命”，始终是两件事。
+          </p>
+        </div>
+        <div class="moon-stories">
+          <article class="panel moon-story">
+            <div class="moon-heading">
+              <span class="article-num">TITAN / 土卫六</span>
+              <h3>下雨的世界，<br />雨却不是水。</h3>
+              <a class="jump-link" href="#observatory" data-look="titan">观察土卫六 ↗</a>
+            </div>
+            <div>
+              <p>
+                土卫六是土星最大的卫星。它有浓厚的大气，还有云、降雨、河道与湖海。如果只读到这些词，你或许会觉得它与地球很像；但先别急着把它当成另一处家园，地表参与循环的主要是液态甲烷和乙烷，而不是水。
+              </p>
+              <p>
+                这里的低温让熟悉的物质换了角色：在地球常温下作为气体存在的烃类，可以在土卫六形成液体；水冰则能成为坚硬地表的一部分。相似的地貌，不一定由同一种物质塑造。这也是比较行星时很有趣、却很容易忽略的一点。
+              </p>
+              <p>
+                2005
+                年，惠更斯探测器穿过雾霾并着陆，让我们第一次直接接触这个世界。厚雾之下不再只有猜测，但许多问题仍然留着：复杂有机化学如何发展，不同环境里又可能走到哪一步？有机物并不等于生物，我们寻找的是证据，而不是一个预先写好的答案。
+              </p>
+              <div class="small-facts">
+                <div><strong>≈ 5,150 km</strong><span>直径</span></div>
+                <div><strong>15.95 天</strong><span>同步自转 / 公转</span></div>
+                <div><strong>氮为主</strong><span>大气成分</span></div>
+              </div>
+              <a
+                class="source"
+                href="https://science.nasa.gov/saturn/moons/titan/facts/"
+                target="_blank"
+                rel="noopener"
+                >NASA · 土卫六资料 ↗</a
+              >
+            </div>
+          </article>
+          <article class="panel moon-story">
+            <div class="moon-heading">
+              <span class="article-num">ENCELADUS / 土卫二</span>
+              <h3>冰封的外表，<br />并没有封住一切。</h3>
+              <a class="jump-link" href="#observatory" data-look="enceladus">观察土卫二 ↗</a>
+            </div>
+            <div>
+              <p>
+                与土卫六相比，直径约 504
+                千米的土卫二小得多。但它带来的惊喜并不小：卡西尼在南极附近发现了向太空喷出的水汽与冰粒。冰壳不再是一道完全封闭的门，内部的物质以这种方式，来到了航天器能够采样的地方。
+              </p>
+              <p>
+                重力、摆动与喷流成分等证据共同支持冰壳下存在全球性咸水海洋。为什么远离太阳还能有液态水？能量不只来自阳光，卫星受到周期性的潮汐变形，内部也可能被持续加热。理解它，需要把土星与其他卫星的引力作用一起考虑。
+              </p>
+              <p>
+                更重要的是，这些样本给了我们讨论潜在宜居性的依据，而不是宣布发现生命的资格。水、化学原料与能量来源值得期待，但“具备某些条件”和“条件真的孕育了生命”之间，仍有一段必须靠探测填上的距离。
+              </p>
+              <div class="small-facts">
+                <div><strong>≈ 504 km</strong><span>直径</span></div>
+                <div><strong>1.37 天</strong><span>同步自转 / 公转</span></div>
+                <div><strong>E 环</strong><span>喷出冰粒参与补给</span></div>
+              </div>
+              <a
+                class="source"
+                href="https://science.nasa.gov/saturn/moons/enceladus/"
+                target="_blank"
+                rel="noopener"
+                >NASA · 土卫二资料 ↗</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="orbit" class="panel orbit-section reveal">
+        <div class="panel-top">
+          <h2><span class="section-no">05</span> 日心轨道实验室</h2>
+          <span class="eyebrow">TIME / RINGS / SEASONS</span>
+        </div>
+        <div class="orbit-layout">
+          <div class="orbit-canvas">
+            <svg
+              id="orbit-svg"
+              viewBox="0 0 600 530"
+              role="group"
+              aria-label="土星与地球绕日周期示意"
+            >
+              <defs>
+                <radialGradient id="sun-fill">
+                  <stop stop-color="#fff6c8" />
+                  <stop offset=".45" stop-color="#f9ce77" />
+                  <stop offset="1" stop-color="#dba447" />
+                </radialGradient>
+                <radialGradient id="saturn-fill">
+                  <stop stop-color="#e7d8b0" />
+                  <stop offset="1" stop-color="#a58b63" />
+                </radialGradient>
+              </defs>
+              <circle class="orbit-path" cx="300" cy="265" r="208" />
+              <circle class="orbit-path inner" cx="300" cy="265" r="78" />
+              <g
+                id="sun-toggle"
+                role="button"
+                tabindex="0"
+                aria-label="播放日心轨道演示"
+                aria-pressed="false"
+              >
+                <title>单击或按回车，播放 / 暂停</title>
+                <circle class="sun-hit" cx="300" cy="265" r="34" fill="transparent" />
+                <circle cx="300" cy="265" r="22" fill="url(#sun-fill)" />
+                <text x="300" y="310" text-anchor="middle">太阳</text>
+              </g>
+              <g id="earth-dot">
+                <circle r="6" fill="#819e9b" />
+                <text y="-16" text-anchor="middle">地球</text>
+              </g>
+              <g id="saturn-dot">
+                <ellipse
+                  rx="24"
+                  ry="8"
+                  transform="rotate(-24)"
+                  fill="none"
+                  stroke="#ba9d68"
+                  stroke-width="4"
+                />
+                <circle r="12" fill="url(#saturn-fill)" />
+                <text y="-26" text-anchor="middle">土星</text>
+              </g>
+              <text class="orbit-label" x="300" y="512" text-anchor="middle">
+                单击太阳，开始 / 暂停
+              </text>
+            </svg>
+          </div>
+          <div class="orbit-copy">
+            <p class="eyebrow">A SLOW JOURNEY AROUND THE SUN</p>
+            <h3>地球已经过了一代人的时光，<br />它才绕行一周。</h3>
+            <p>
+              把土星的一年压缩到这条时间轴上，你会看到地球一圈圈超过它。约 29.4
+              个地球年，才换来一次完整的土星公转。时间的数字，只有放在熟悉的生活尺度里，才会显得具体。
+            </p>
+            <p>
+              土星的自转轴是倾斜的，因此也有季节。随着轨道位置变化，太阳照亮环的角度会改变；而我们从地球看到的环张开多少，还取决于观察方向。环看起来变窄，并不意味着那一整圈冰突然消失了。
+            </p>
+            <div class="orbit-reading">
+              <strong id="year-value">0.0</strong><span>已过地球年</span
+              ><small id="orbit-progress">土星公转 0.0%</small>
+            </div>
+            <label for="orbit-time">拖动时间轴 <span>0 — 29.4 年</span></label
+            ><input id="orbit-time" type="range" min="0" max="29.4" step="0.01" value="0" />
+            <div class="button-row">
+              <button id="orbit-play" type="button" aria-pressed="false">播放演示</button
+              ><button id="orbit-reset" type="button">从头开始 ↺</button
+              ><label class="speed-label"
+                >速度
+                <select id="orbit-speed">
+                  <option value=".2">0.2×</option>
+                  <option value=".5" selected>0.5×</option>
+                  <option value="1">1×</option>
+                </select></label
+              >
+            </div>
+            <p class="fineprint">
+              圆轨道俯视示意，距离与天体大小不按比例，周期比近似真实。1× 表示每秒 1
+              地球年；太阳、播放按钮与时间轴共享状态。图中不模拟具体日期的环倾角或季节，也不是实时星历。
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="exploration" class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">06 / LEARNING TO STAY</p>
+          <h2>从匆匆经过，<br />到留下来等待变化。</h2>
+        </div>
+        <div class="timeline">
+          <article>
+            <time>1979</time>
+            <div>
+              <h3>先驱者十一号：先确认能够到达</h3>
+              <p>
+                首次近距离飞掠，把望远镜中的土星变成了航天器身边的世界。穿过环系统附近的环境并带回数据，也为后续任务提供了重要经验。一次经过能回答不少问题，但无法替代长期陪伴。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>1980–81</time>
+            <div>
+              <h3>旅行者：看见一个复杂的系统</h3>
+              <p>
+                两艘旅行者接力揭示云层、环与卫星的细节。光环不再只是一圈明暗相间的轮廓，卫星也不再只是陪伴土星的小光点；每个目标都开始拥有自己的地形与问题。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>2004–17</time>
+            <div>
+              <h3>卡西尼—惠更斯：终于能够停留</h3>
+              <p>
+                卡西尼进入土星轨道，惠更斯则在 2005
+                年降落土卫六。十余年的环绕，让人类看到风暴、季节与卫星活动如何变化。那些看似遥远的世界，因此拥有了不止一张快照。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>2017.09</time>
+            <div>
+              <h3>以最后一次下降，保护尚未回答的问题</h3>
+              <p>
+                9 月 15
+                日，卡西尼进入土星大气，结束任务。这样的安排也降低了航天器未来意外撞上潜在宜居卫星、造成污染的风险。探测器的旅程结束了，数据的研究却还在继续；有时，认真探索也意味着知道该怎样告别。
+              </p>
+            </div>
+          </article>
+        </div>
+        <a
+          class="source"
+          href="https://science.nasa.gov/mission/cassini/"
+          target="_blank"
+          rel="noopener"
+          >NASA · Cassini—Huygens 任务档案 ↗</a
+        >
+      </section>
+      <footer>
+        <div>
+          <p class="eyebrow">BEYOND THE RINGS</p>
+          <h2>我们看见光，也追问光没有照到的地方。</h2>
+          <p class="closing-copy">
+            如果你最初只是因为光环来到这里，希望离开时，也能记住一颗下着甲烷雨的卫星、一片藏在冰下的海洋，以及人类还没有回答的那些问题。
+          </p>
+          <p>SATURN / 独立本地预览 · EMPTY610 SOLAR LABORATORY</p>
+        </div>
+        <a href="SOURCES.md">素材、数据与模型说明 ↗</a>
+      </footer>
+    </main>
+    <dialog id="photo-dialog" aria-labelledby="photo-title">
+      <button id="close-photo" class="dialog-close" type="button" aria-label="关闭影像介绍">
+        ×</button
+      ><img id="photo-image" alt="" />
+      <div class="dialog-copy">
+        <p class="eyebrow" id="photo-tag"></p>
+        <h2 id="photo-title"></h2>
+        <div id="photo-description"></div>
+        <a class="source" id="photo-source" target="_blank" rel="noopener">查看官方原始资料 ↗</a>
+      </div>
+    </dialog>
+    <noscript
+      ><p class="noscript">当前未启用 JavaScript，三维与互动不可用，图文资料仍可阅读。</p></noscript
+    >
+  </body>
+</html>

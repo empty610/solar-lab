@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1ede4" />
+    <meta
+      name="description"
+      content="太阳系探索总览。从持续运转的星图出发，选择行星、冥王星与木卫二，进入各自的观察档案。"
+    />
+    <title>太阳系 · Solar Laboratory</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="refinement.css" />
+    <link rel="stylesheet" href="motion.css" />
+    <script defer src="app.js"></script>
+    <script defer src="motion.js"></script>
+    <script defer src="labels.js"></script>
+  </head>
+  <body id="top">
+    <a class="skip" href="#explorer">跳到天体选择</a>
+    <div class="site-shell">
+      <header class="masthead">
+        <a class="brand" href="#top" aria-label="Solar Laboratory 首页"
+          ><svg viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="5" />
+            <ellipse cx="20" cy="20" rx="18" ry="9" transform="rotate(-35 20 20)" />
+            <path d="M20 1v5M20 34v5M1 20h5M34 20h5" /></svg
+          ><span>EMPTY610<span class="brand-sub">SOLAR LABORATORY</span></span></a
+        >
+        <div class="atlas-tabs" role="tablist" aria-label="太阳系探索视图">
+          <button
+            type="button"
+            role="tab"
+            id="explorer-tab"
+            aria-controls="explorer"
+            aria-selected="true"
+          >
+            星图总览
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="catalog-tab"
+            aria-controls="catalog"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            天体目录
+          </button>
+        </div>
+        <span class="edition">FIELD NOTES <span>/</span> VOL. 00</span>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">A FIELD GUIDE TO OUR COSMIC NEIGHBOURHOOD</p>
+            <h1 id="page-title">太阳系<span>SOLAR SYSTEM</span></h1>
+            <p class="intro-copy">从一颗恒星出发，走近每一个不同的世界。</p>
+          </div>
+          <div class="intro-note">
+            <span class="archive-count">08<small>OPEN ARCHIVES</small></span>
+            <p>六颗行星 · 一颗冰月 · 冥王星<br /><span>一份持续展开的观察笔记</span></p>
+          </div>
+        </section>
+
+        <section
+          class="observatory"
+          id="explorer"
+          role="tabpanel"
+          aria-labelledby="explorer-tab"
+          tabindex="0"
+        >
+          <div class="panel-top">
+            <h2 id="explorer-title"><span class="section-number">00</span> 选择你的下一站</h2>
+            <span class="selection-indicator"
+              >正在观察 <strong id="selection-label">土星</strong></span
+            >
+          </div>
+          <div class="explorer-layout">
+            <div class="map-panel">
+              <div class="map-caption">
+                <span class="eyebrow">HELIOCENTRIC VIEW</span>
+                <p>点选星球，展开它的故事</p>
+              </div>
+              <div
+                class="star-map"
+                id="star-map"
+                role="group"
+                aria-label="太阳系示意星图，选择天体查看档案"
+              >
+                <svg class="orbit-chart" viewBox="0 0 920 630" aria-hidden="true">
+                  <path class="axis" d="M40 315H880M450 32V603" />
+                  <g class="orbital-paths" transform="translate(450 315)">
+                    <ellipse data-orbit="mercury" rx="62" ry="44" />
+                    <ellipse data-orbit="venus" rx="103" ry="73" />
+                    <ellipse data-orbit="earth" rx="146" ry="104" />
+                    <ellipse data-orbit="mars" rx="191" ry="136" />
+                    <ellipse class="belt" rx="228" ry="161" />
+                    <ellipse data-orbit="jupiter" rx="266" ry="188" />
+                    <ellipse data-orbit="saturn" rx="321" ry="226" />
+                    <ellipse data-orbit="uranus" rx="371" ry="261" />
+                    <ellipse data-orbit="neptune" rx="421" ry="294" />
+                    <ellipse data-orbit="pluto" class="dwarf-orbit" rx="445" ry="308" />
+                  </g>
+                  <g class="map-registration">
+                    <path d="M18 36V18h18M884 18h18v18M902 594v18h-18M36 612H18v-18" />
+                    <path d="M443 315h14M450 308v14" />
+                  </g>
+                  <text class="map-zone" x="565" y="153">小行星带</text>
+                  <text class="map-zone english" x="565" y="168">ASTEROID BELT</text>
+                </svg>
+                <div class="sun" aria-label="太阳，太阳系的恒星">
+                  <span class="sun-disc"></span><span class="sun-name">太阳<small>SUN</small></span>
+                </div>
+                <div id="map-bodies"></div>
+              </div>
+              <div class="motion-controls" aria-label="星图运转控制">
+                <button type="button" id="atlas-play" aria-pressed="true">暂停运转</button
+                ><label
+                  >速度
+                  <select id="atlas-speed" aria-label="星图运转速度">
+                    <option value="0.5">0.5×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="2">2×</option>
+                  </select></label
+                ><button type="button" id="atlas-reset">回到起点</button
+                ><span id="atlas-motion-status" role="status">持续运转 · 悬停可停驻</span>
+              </div>
+              <div class="map-bottom">
+                <span
+                  ><i class="legend-line"></i> 轨道示意
+                  <i class="legend-dot"></i> 可选择的天体</span
+                ><span>大小、间距与位置均为示意</span>
+              </div>
+            </div>
+
+            <aside
+              class="destination"
+              id="destination"
+              aria-labelledby="destination-name"
+              tabindex="-1"
+            >
+              <div class="destination-top">
+                <span class="eyebrow" id="destination-index">DESTINATION / 06</span
+                ><span class="type-tag" id="destination-type">气态巨行星</span>
+              </div>
+              <div class="planet-portrait" id="planet-portrait">
+                <span class="portrait-word" id="portrait-word" aria-hidden="true">SATURN</span
+                ><img
+                  id="portrait-image"
+                  src="assets/saturn.png"
+                  alt="土星与它的行星环"
+                  width="640"
+                  height="640"
+                /><span class="portrait-placeholder" id="portrait-placeholder" hidden></span
+                ><span class="portrait-cross" aria-hidden="true">+</span>
+              </div>
+              <div class="destination-copy">
+                <div class="destination-title">
+                  <h3 id="destination-name">土星</h3>
+                  <span id="destination-english">SATURN</span>
+                </div>
+                <p class="destination-poem" id="destination-poem">把时间，写成一圈光环。</p>
+                <p class="destination-description" id="destination-description">
+                  冰粒与尘埃围成宽阔的环。走近这颗巨行星，看看环的缝隙，也看看它身边那些独特的卫星。
+                </p>
+                <dl class="destination-facts">
+                  <div>
+                    <dt id="fact-one-label">平均日心距离</dt>
+                    <dd><span id="fact-one">9.58</span><small id="fact-one-unit">AU</small></dd>
+                  </div>
+                  <div>
+                    <dt id="fact-two-label">绕太阳一周</dt>
+                    <dd>
+                      <span id="fact-two">29.45</span><small id="fact-two-unit">地球年</small>
+                    </dd>
+                  </div>
+                </dl>
+                <a class="enter-link" id="enter-link" href="../saturn/index.html"
+                  ><span id="enter-text">进入土星档案</span
+                  ><svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M4 2h9v16H4zM13 5h3v13M7 6h3M7 9h3" /></svg
+                ></a>
+                <p class="unavailable-note" id="unavailable-note" hidden>
+                  介绍页尚未收录，可先探索其他已开放的档案。
+                </p>
+                <p class="entry-note" id="entry-note">三维观察 · 行星档案 · 探索历程</p>
+                <a class="back-to-map" href="#explorer">回到星图，继续选择</a>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section
+          class="catalog"
+          id="catalog"
+          role="tabpanel"
+          aria-labelledby="catalog-tab"
+          tabindex="0"
+          hidden
+        >
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">THE PLANETARY INDEX</p>
+              <h2 id="catalog-title">沿轨道，认识我们的邻居</h2>
+            </div>
+            <p class="catalog-hint">
+              选中查看简介，或直接进入档案。<span>按日心距离，由近及远排列</span>
+            </p>
+          </div>
+          <div class="planet-catalog" id="planet-catalog"></div>
+          <div class="satellite-note dwarf-note">
+            <div class="moon-thumbnail">
+              <img src="assets/pluto.png" alt="冥王星的冰质地表" width="640" height="640" />
+            </div>
+            <div class="satellite-copy">
+              <p class="eyebrow">BEYOND NEPTUNE <span>/</span> 矮行星特别篇</p>
+              <h3>冥王星 <span>PLUTO</span></h3>
+              <p>在太阳系远方，遇见一颗有“心”的世界。</p>
+            </div>
+            <button type="button" class="moon-select" data-select="pluto">
+              选中冥王星 <span>柯伊伯带 · 矮行星</span></button
+            ><a class="moon-entry" data-open="pluto" href="../pluto/index.html"
+              >进入冥王星档案</a
+            >
+          </div>
+          <div class="satellite-note">
+            <div class="moon-thumbnail">
+              <img src="assets/europa.png" alt="木卫二冰封的表面" width="640" height="640" />
+            </div>
+            <div class="satellite-copy">
+              <p class="eyebrow">BEYOND THE PLANETS <span>/</span> 卫星特别篇</p>
+              <h3>木卫二 <span>EUROPA</span></h3>
+              <p>越过冰面，寻找海洋的答案。</p>
+            </div>
+            <button type="button" class="moon-select" data-select="europa">
+              选中木卫二 <span>Ⅱ / 木星的卫星</span></button
+            ><a class="moon-entry" href="../europa/index.html">进入卫星档案</a>
+          </div>
+        </section>
+        <noscript
+          ><div class="no-script">
+            <p>请选择要进入的天体档案：</p>
+            <a href="../mercury/index.html">水星</a
+            ><a href="../venus/index.html">金星</a
+            ><a href="../mars/index.html">火星</a
+            ><a href="../jupiter/index.html">木星</a
+            ><a href="../saturn/index.html">土星</a
+            ><a href="../neptune/index.html">海王星</a
+            ><a href="../pluto/index.html">冥王星</a
+            ><a href="../europa/index.html">木卫二</a>
+          </div></noscript
+        >
+      </main>
+      <footer>
+        <p>EMPTY610 <span>/</span> SOLAR LABORATORY</p>
+        <p>运转速度为展示处理，非实时星历 · 1 AU 为日地平均距离</p>
+        <a href="#top">回到顶部</a>
+      </footer>
+    </div>
+    <div class="selection-dock" id="selection-dock" hidden aria-label="当前选择的快捷入口">
+      <img id="dock-image" src="assets/saturn.png" alt="" width="640" height="640" />
+      <div>
+        <span class="dock-label">当前选择</span
+        ><strong id="dock-name">土星 <small>SATURN</small></strong>
+      </div>
+      <a id="dock-enter" href="../saturn/index.html" aria-label="进入土星介绍页"
+        >进入档案</a
+      >
+    </div>
+    <p class="sr-only" id="selection-status" role="status" aria-live="polite"></p>
+  </body>
+</html>

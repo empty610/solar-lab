@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#f2ecdf" />
+    <meta
+      name="description"
+      content="一个关于木卫二的本地交互页面：三维观察冰封的表面，探索地下海洋、潮汐作用与 Europa Clipper。"
+    />
+    <title>木卫二 · Europa | Solar Laboratory</title>
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="interface.css" />
+    <script src="vendor/three.min.js" defer></script>
+    <script src="vendor/OrbitControls.js" defer></script>
+    <script src="data.js" defer></script>
+    <script src="assets/textures.js" defer></script>
+    <script src="assets/jupiter-geometry.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="model.js" defer></script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#surface">跳到木卫二介绍</a>
+    <main class="app">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Solar laboratory / Jovian moon Ⅱ</p>
+          <h1>木卫二 <span>EUROPA</span></h1>
+          <p class="subtitle">正在呼吸的冰层与尚在沉默的海。</p>
+        </div>
+        <div class="header-utility">
+          即将被揭开的神秘。<span class="edition-label"></span
+          ><button id="music" class="music-button" aria-label="播放背景音乐" aria-pressed="false">
+            <span aria-hidden="true">♪</span> 背景音乐 <strong id="music-label">关</strong>
+          </button>
+        </div>
+      </header>
+      <div class="reading-intro">
+        <!-- 行内标签与段落相邻，保留两者之间无空格的排版。 -->
+        <!-- prettier-ignore -->
+        <div>
+          <span class="label-tag">阅读路线</span><p>先来看看冰面，再去冰层下的海洋。</p>
+          <small>沿着地形、海洋证据与潮汐，了解下一次人类将要回答什么。</small>
+        </div>
+        <div class="reading-actions">
+          <a class="guide-link" href="#surface">开始阅读 <span aria-hidden="true">↓</span></a
+          ><a class="text-link" href="#tides">直接试试潮汐演示 ↓</a>
+        </div>
+      </div>
+      <nav class="reading-nav" id="reading-nav" aria-label="章节导航">
+        <div class="chapter-links">
+          <a href="#observatory" data-chapter="observatory" aria-current="location"
+            ><span class="chapter-number" aria-hidden="true">00</span
+            ><span><strong>观察台</strong><small>转动与比较</small></span></a
+          ><a href="#surface" data-chapter="surface"
+            ><span class="chapter-number" aria-hidden="true">01</span
+            ><span><strong>冰面</strong><small>读懂地形</small></span></a
+          ><a href="#ocean" data-chapter="ocean"
+            ><span class="chapter-number" aria-hidden="true">02</span
+            ><span><strong>地下海洋</strong><small>寻找证据</small></span></a
+          ><a href="#tides" data-chapter="tides"
+            ><span class="chapter-number" aria-hidden="true">03</span
+            ><span><strong>引力与潮汐</strong><small>动手观察</small></span></a
+          ><a href="#missions" data-chapter="missions"
+            ><span class="chapter-number" aria-hidden="true">04</span
+            ><span><strong>探索</strong><small>接近答案</small></span></a
+          >
+        </div>
+        <div class="reading-position">
+          <span id="reading-current">正在阅读 · 观察台</span
+          ><progress id="reading-progress" max="100" value="0" aria-label="页面阅读位置"></progress
+          ><span id="reading-percent">0%</span>
+        </div>
+      </nav>
+
+      <section class="panel model-panel" id="observatory" aria-labelledby="model-title">
+        <div class="panel-heading">
+          <div>
+            <span class="index">00</span>
+            <h2 id="model-title">木卫二观察台</h2>
+          </div>
+          <span class="status" id="model-status" role="status">正在载入模型</span>
+        </div>
+        <div class="view-switch" role="group" aria-label="选择三维观察目标">
+          <button data-view="europa" aria-pressed="true" class="europa-tab">
+            木卫二近景 <small>看冰面</small></button
+          ><button data-view="jupiter" aria-pressed="false">
+            木星近景 <small>看引力伙伴</small></button
+          ><button data-view="system" aria-pressed="false">
+            轨道全景 <small>看位置关系</small>
+          </button>
+        </div>
+        <div class="interaction-line">
+          <p id="view-tip">从冰面开始：拖动画面以寻找交错的裂纹。</p>
+          <span id="camera-state" class="camera-state" role="status">正在准备观察台</span>
+        </div>
+        <div class="model-stage europa-view" id="model-stage">
+          <div class="planet-lettering" id="planet-lettering" aria-hidden="true">EUROPA</div>
+          <div
+            class="model-mount"
+            id="model-mount"
+            aria-label="可拖动旋转、滚轮或双指缩放的木卫二三维观察视图"
+          ></div>
+          <div class="model-labels" id="model-labels" hidden></div>
+          <aside class="profile">
+            <p class="eyebrow" id="profile-kicker">木星第二颗伽利略卫星 / OCEAN WORLD</p>
+            <h3 id="profile-heading">一层冰壳，<br />一个海洋世界。</h3>
+            <details id="profile-details">
+              <summary>
+                <span id="profile-summary">木卫二档案 · 展开了解</span><span class="plus">+</span>
+              </summary>
+              <div>
+                <p id="profile-description">
+                  木卫二，木星四颗伽利略卫星中的第二颗，位于木卫一与木卫三之间。它比月球略小，每隔约
+                  3.55
+                  个地球日便绕木星一周。浅色的水冰覆盖着表面，红褐色的裂纹纵横交错，为这个遥远的世界留下了鲜明的轮廓。
+                </p>
+                <p id="profile-feature">
+                  如果你继续向冰面之下追问，就会来到木卫二最有趣的地方：一片可能环绕全球的咸水海洋。支持它的线索来自磁场与地质观测，海洋的具体性质和宜居条件仍待调查。我们现在能做的，是沿着这些线索，一步步接近那个尚未抵达的世界。
+                </p>
+              </div>
+            </details>
+            <a class="text-link profile-europa" id="profile-europa" href="#ocean">前往冰下海洋 ↓</a>
+          </aside>
+          <div class="model-loading" id="model-loading">
+            <span class="spinner"></span>
+            <p>正在准备木卫二的冰面<small>LOADING LOCAL SURFACE MAPS</small></p>
+          </div>
+          <div class="model-fallback" id="model-fallback" hidden>
+            <img id="fallback-image" src="assets/europa-global.jpg" alt="木卫二全球影像" />
+            <p>当前设备未能启动三维视图。</p>
+            <p>老天，这是在搞什么？算了，我们先把这玩意放着，来看看下面的文本吧。</p>
+          </div>
+          <div class="model-caption">
+            <span>+</span>
+            <p id="model-caption">
+              拖动环绕 · 滚轮 / 双指缩放<br /><small>NASA / VTAD · 全球冰面拼接纹理</small>
+            </p>
+          </div>
+          <div class="model-controls">
+            <button id="rotate-model" aria-pressed="true">暂停环绕</button
+            ><button id="light-model" aria-pressed="false">均匀照明</button
+            ><button id="reset-model">复位视角</button>
+          </div>
+        </div>
+        <dl class="body-facts" id="body-facts">
+          <div>
+            <dt>平均半径</dt>
+            <dd>1,560.8 <small>km</small></dd>
+          </div>
+          <div>
+            <dt>公转周期</dt>
+            <dd>3.551 <small>地球日</small></dd>
+          </div>
+          <div>
+            <dt>平均轨道半径</dt>
+            <dd>67.11 <small>万 km</small></dd>
+          </div>
+          <div>
+            <dt>同步自转</dt>
+            <dd>1 : 1 <small>自转 / 公转</small></dd>
+          </div>
+        </dl>
+        <div class="model-guide" id="model-help">
+          <div>
+            <span class="label-tag">我该怎么观察？</span>
+            <p>拖动旋转，滚轮或双指缩放。不妨先暂停环绕，看清你感兴趣的细节。</p>
+            <details>
+              <summary>键盘操作说明</summary>
+              <p>
+                选中三维画面后，用 <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> 转动，<kbd
+                  >+</kbd
+                >
+                / <kbd>−</kbd> 缩放，<kbd>0</kbd> 复位视角。
+              </p>
+            </details>
+          </div>
+          <div>
+            <span class="label-tag">如何比较</span>
+            <p>切到轨道全景比较位置关系；点击天体标签再靠近。近景画面大小不代表真实尺寸。</p>
+            <details>
+              <summary>模型比例与轨道说明</summary>
+              <p>
+                切换对象只让镜头移动与拉近，木星与木卫二始终保持原有尺寸和同一长度比例。近景屏幕大小不能直接用来比较真实尺寸。轨道位置与下方演示同步，非实时星历。
+              </p>
+            </details>
+          </div>
+        </div>
+        <div class="chapter-next">
+          <div>
+            <span>先看表面</span>
+            <p>一道裂纹，能留下什么线索？</p>
+          </div>
+          <a href="#surface">阅读冰面 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section id="surface" class="surface-section" aria-labelledby="surface-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">01 / A landscape written in ice</p>
+            <h2 id="surface-title">裂纹，是冰壳的笔迹。</h2>
+          </div>
+          <p>明亮的水冰、交错的脊与带、破碎的冰块。<br />每一种地形，都保存着表面更新的线索。</p>
+        </div>
+        <div class="surface-intro">
+          <div>
+            <h3>比月球略小，<br />却并不平静。</h3>
+            <p>
+              木卫二属于木星的四颗伽利略卫星，位于木卫一与木卫三之间，平均半径约为 1,560.8
+              km，直径大概是月球的九成。如果你把它与月球放在一起比较，会发现两者的尺度十分接近，表面的样貌却有着明显差异：木卫二的浅色冰面上，最醒目的是一道道交错延伸的线条。
+            </p>
+            <p>
+              这些线条对应着裂纹、脊和宽带，旁边还有被打碎、重新排列的冰块。大型撞击坑反而比较少，这让科学家想到，表面曾经经历过更新，较早留下的痕迹可能已经被后来的活动改写。单纯从外观来看，这是一层冻结的外壳；继续研究地形之间的关系，便能读到它活动过的历史。
+            </p>
+            <p>
+              红褐色的区域也很有趣。水冰之间混入了其他材料，它们的颜色又会受到木星辐射环境与影像处理的影响，因此我们还需要光谱等测量来判断具体成分。木卫二还拥有极稀薄的氧气大气，不过这种“有氧”与地球上的空气相去甚远，无法供人类呼吸。冰面的明亮与漂亮，并不意味着那里有温和的地表环境。
+            </p>
+            <a
+              class="text-link"
+              href="https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 木卫二档案 ↗</a
+            >
+          </div>
+          <figure class="size-comparison">
+            <svg
+              viewBox="0 0 430 220"
+              role="img"
+              aria-label="木卫二与月球按平均半径比较，木卫二直径约为月球的百分之九十"
+            >
+              <circle cx="114" cy="95" r="66.477" fill="#d8e1d6" stroke="#638d8e" />
+              <path
+                d="m97 33 12 29-21 22 15 25-14 28m42-99-15 46 14 12-6 45"
+                fill="none"
+                stroke="#a48d71"
+                stroke-width="1.5"
+              />
+              <circle cx="318" cy="95" r="74" fill="#c4beb2" stroke="#aaa18e" />
+              <circle cx="295" cy="83" r="14" fill="#b4ac9e" />
+              <circle cx="337" cy="111" r="21" fill="#b5ad9f" />
+              <circle cx="329" cy="66" r="9" fill="#d6d0c3" />
+              <text x="114" y="188" text-anchor="middle">木卫二 · 3,121.6 km</text>
+              <text x="318" y="188" text-anchor="middle">月球 · 3,474.8 km</text>
+              <text x="216" y="214" text-anchor="middle" class="svg-note">
+                平均直径同比例 · 图案为示意
+              </text>
+            </svg>
+            <figcaption>
+              <strong>≈ 90%</strong><span>月球的直径</span><small>半径数据：JPL</small>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="surface-grid">
+          <article class="terrain-card">
+            <button class="photo-button" data-photo="bands" aria-label="放大交错的脊与带状地形">
+              <img
+                src="assets/bands.jpg"
+                alt="伽利略号拍摄的木卫二冰面，蓝白色冰与红褐色脊和宽带交错"
+                width="1275"
+                height="1282"
+                loading="lazy"
+              /><span class="photo-tag">真实影像 · 增强色 / PIA23872</span
+              ><span class="expand">放大影像 ↗</span>
+            </button>
+            <div>
+              <p class="eyebrow">Ridges & bands</p>
+              <h3>一道裂纹，反复打开与闭合。</h3>
+              <p>
+                如果你仔细看这张影像，会发现细长的脊与宽阔的带并不是同一种地形。脊可能与裂纹反复开合、材料逐渐堆积有关；较平坦的宽带，则提示两侧冰壳曾持续分离，新的材料填进了中间的空隙。
+              </p>
+              <p>
+                更有趣的是，这些线条会彼此切割和覆盖。沿着它们的交叉处观察，就有机会判断哪些活动发生在前，哪些发生在后。我们现在看到的这一张冰面，实际上叠加着不止一次的地质变化。
+              </p>
+              <p class="image-credit">
+                1998 年影像 · 增强色处理<br />NASA/JPL-Caltech/SETI Institute
+              </p>
+            </div>
+          </article>
+          <article class="terrain-card">
+            <button
+              class="photo-button"
+              data-photo="chaos"
+              aria-label="放大阿革诺尔线附近的混沌地形"
+            >
+              <img
+                src="assets/chaos.jpg"
+                alt="木卫二混沌地形中的破碎冰块与阿革诺尔线宽带"
+                width="1265"
+                height="1265"
+                loading="lazy"
+              /><span class="photo-tag">真实影像 · 增强色 / PIA23873</span
+              ><span class="expand">放大影像 ↗</span>
+            </button>
+            <div>
+              <p class="eyebrow">Chaos terrain</p>
+              <h3>冰块移动后，重新冻结。</h3>
+              <p>
+                这里的地形看起来像一块被打乱的拼图：原本相连的冰壳破碎成许多块体，一些冰块曾平移、旋转或倾斜，随后在新的位置重新冻结。原先连续的纹路，也跟着分散到了不同方向。
+              </p>
+              <p>
+                “混沌”描述的正是这种破碎而复杂的样貌。它让我们继续追问，冰壳内部发生了怎样的变化，液态水有没有参与其中？具体形成机制仍在研究，这张影像记录的是冰面，距离直接看见地下海洋还有很长一段路。
+              </p>
+              <p class="image-credit">
+                1998 年影像 · 增强色处理<br />NASA/JPL-Caltech/SETI Institute
+              </p>
+            </div>
+          </article>
+        </div>
+        <div class="chapter-next">
+          <div>
+            <span>从表面到内部</span>
+            <p>这些冰面线索，为什么让人想到海洋？</p>
+          </div>
+          <a href="#ocean">寻找海洋证据 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section id="ocean" class="europa-section" aria-labelledby="europa-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / Beneath the ice</p>
+            <h2 id="europa-title">越过冰面，寻找海洋的答案。</h2>
+          </div>
+          <span class="europa-mark">THE OCEAN WITHIN</span>
+        </div>
+        <div class="europa-hero">
+          <button class="europa-photo" data-photo="europa" aria-label="放大木卫二伽利略号影像">
+            <img
+              src="assets/europa-global.jpg"
+              alt="伽利略号拍摄的木卫二，浅色冰壳上遍布红褐色裂纹"
+              width="2300"
+              height="2300"
+              loading="lazy"
+            /><span class="photo-tag">真实影像 · 近自然色</span
+            ><span class="expand">放大影像 ↗</span>
+          </button>
+          <div class="europa-hero-copy">
+            <p class="eyebrow">A small moon. A profound question.</p>
+            <h3>冰壳之下，<br />会是什么样的世界？</h3>
+            <p>
+              接着，我们来到了木卫二最吸引人的地方：冰壳之下可能存在一片全球性的液态海洋。按照一些内部结构模型的估计，这颗比月球还小的卫星，甚至可能保存着约为地球全部海洋两倍的水量。这样的尺度，让一层看似普通的冰壳成了人类探索海洋世界的重要入口。
+            </p>
+            <p>
+              我们还没有钻穿冰层，也没有拍到海底。海洋的判断来自磁场、地质与内部结构等多条证据，水量同样是模型估计。于是，下一个问题自然出现了：这片水怎样与冰壳和岩石交换物质，那里有没有足够的能量，能否形成适合生命存在的环境？下方的剖面可以帮助你把这些问题放回各自的位置。
+            </p>
+            <div class="europa-hero-facts">
+              <div><strong>3.55</strong><span>地球日 / 绕木星一周</span></div>
+              <div><strong>≈ 2×</strong><span>地球海洋水量 / 模型估计</span></div>
+            </div>
+            <p class="europa-caption">影像：NASA/JPL-Caltech/SETI Institute · PIA19048</p>
+          </div>
+        </div>
+
+        <div class="europa-study panel">
+          <div class="panel-heading">
+            <div>
+              <span class="index">A</span>
+              <h3>从冰壳到岩石深处</h3>
+            </div>
+            <span class="micro">内部模型 · 层厚示意</span>
+          </div>
+          <div class="interior-grid">
+            <div class="cutaway-wrap">
+              <svg
+                class="cutaway"
+                viewBox="0 0 440 340"
+                role="img"
+                aria-label="木卫二推测内部结构示意：外侧冰壳、液态海洋、岩石层与金属核心，图中层厚不按比例"
+              >
+                <defs>
+                  <radialGradient id="ice-grad">
+                    <stop stop-color="#f4eee0" />
+                    <stop offset="1" stop-color="#b6cbd0" />
+                  </radialGradient>
+                  <radialGradient id="rock-grad">
+                    <stop stop-color="#c9a577" />
+                    <stop offset="1" stop-color="#8c7158" />
+                  </radialGradient>
+                </defs>
+                <circle cx="204" cy="165" r="132" fill="url(#ice-grad)" />
+                <circle cx="204" cy="165" r="114" fill="#5e929e" />
+                <circle cx="204" cy="165" r="86" fill="url(#rock-grad)" />
+                <circle cx="204" cy="165" r="34" fill="#68676a" />
+                <path d="M204 33A132 132 0 0 0 204 297Z" fill="#dde1d3" />
+                <path
+                  d="M173 40L139 96l17 31-46 27 15 46-2 26 46 45M112 70l24 63-53 49 30 70M193 60l-22 41 13 22-26 57 30 32-23 57"
+                  stroke="#9c8c74"
+                  stroke-opacity=".65"
+                  fill="none"
+                  stroke-width="2"
+                />
+                <path
+                  d="M285 61H356M300 105H384M270 203H369M221 179L284 246H359"
+                  fill="none"
+                  stroke="#8f9d9b"
+                  stroke-width="1"
+                />
+                <g class="cutaway-labels">
+                  <text x="360" y="65" data-layer-label="ice">冰壳</text>
+                  <text x="387" y="109" data-layer-label="ocean">海洋</text>
+                  <text x="374" y="207" data-layer-label="rock">岩石</text>
+                  <text x="363" y="250" data-layer-label="core">核心</text>
+                </g>
+                <text x="204" y="331" text-anchor="middle" class="svg-note">
+                  结构为推测示意 · 层厚经过放大
+                </text>
+              </svg>
+              <p class="note">图中金色轮廓对应当前层次。点选标签，或用左右方向键切换。</p>
+            </div>
+            <div class="layer-content">
+              <div class="tab-guide">
+                <span class="label-tag">点选内部层次</span><span id="layer-step">1 / 4</span>
+              </div>
+              <div class="layer-tabs" role="tablist" aria-label="木卫二内部层次">
+                <button
+                  id="tab-ice"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="layer-panel"
+                  data-layer="ice"
+                >
+                  冰壳</button
+                ><button
+                  id="tab-ocean"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="ocean"
+                >
+                  海洋</button
+                ><button
+                  id="tab-rock"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="rock"
+                >
+                  岩石</button
+                ><button
+                  id="tab-core"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="core"
+                >
+                  核心
+                </button>
+              </div>
+              <div id="layer-panel" role="tabpanel" aria-labelledby="tab-ice" tabindex="0">
+                <p class="eyebrow" id="layer-kicker">01 / Ice shell</p>
+                <h4 id="layer-title">一层会变形的冰</h4>
+                <p id="layer-copy">
+                  我们先从最外侧的冰壳开始。交错的裂纹、脊和带记录着它的拉伸与更新，破碎后重新排列的冰块则提示，这层外壳并没有一直保持原来的样貌。冰壳有多厚、内部如何变形、表面材料能不能抵达下方的海洋，都是重要问题。剖面中这一圈的宽度只是示意，不能用来读出真实厚度。
+                </p>
+              </div>
+              <div class="research-update">
+                <span>研究更新 · 2026</span>
+                <p>
+                  2022 年飞掠取得的 Juno 微波数据，在 2026 年公布的研究解读中给出了所观测区域约
+                  <strong>29 km</strong>
+                  的冷硬导热冰层估计。这个结果采用纯水冰等模型假设；盐分与更深处可能存在的对流冰层，都会影响对厚度的解释。它为不同冰壳模型增加了约束，全球结构仍需要继续测量。
+                </p>
+                <a
+                  href="https://www.nasa.gov/missions/juno/nasas-juno-measures-thickness-of-europas-ice-shell/"
+                  target="_blank"
+                  rel="noopener"
+                  >阅读测量范围与假设 ↗</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="evidence-grid">
+          <article>
+            <span class="evidence-number">01</span>
+            <h3>为什么认为有海洋？</h3>
+            <p>
+              最关键的线索之一来自磁场：木星的磁场随时间变化，木卫二表现出的感应响应，可以由冰下导电的咸水层解释。表面的裂纹、宽带与混沌地形，又为活动的冰壳提供了地质线索。不同测量从各自的角度指向内部有液态水的模型，下一次探测则要让这个模型变得更具体。
+            </p>
+            <span class="evidence-label">较强证据 · 仍需进一步约束</span>
+          </article>
+          <article>
+            <span class="evidence-number">02</span>
+            <h3>远离太阳，热从哪里来？</h3>
+            <p>
+              离太阳这么远，内部为什么还能保持液态水？木星引力与卫星间的共振，让木卫二的轨道维持轻微偏心，周期性的形变可以把部分机械能转化为热，内部放射性衰变也能贡献热量。海洋能否长期维持，还与冰壳如何散热有关。继续看下方的潮汐演示，就能理解其中一部分能量从哪里来。
+            </p>
+            <span class="evidence-label">研究重点 · 能量与海底交换</span>
+          </article>
+          <article>
+            <span class="evidence-number">03</span>
+            <h3>有水，就一定有生命吗？</h3>
+            <p>
+              “木卫二上有生命吗？”这是很自然的追问，目前我们还没有发现。以已知生命为参照，液态水之外，还需要可利用的能量、合适的化学条件与足够持久的环境。检测到有机物也不能直接证明生命存在，因为非生物过程同样可以生成它们。疑似羽流是否存在、是否与海洋相通，也需要继续验证。
+            </p>
+            <span class="evidence-label">开放问题 · 宜居性尚待调查</span>
+          </article>
+        </div>
+        <div class="clipper-note">
+          <span class="clipper-symbol" aria-hidden="true">↗</span>
+          <div>
+            <p class="eyebrow">The next close look</p>
+            <h3>Europa Clipper：为海洋世界做一次体检。</h3>
+            <p>
+              这些问题也构成了 Europa Clipper 的调查方向。它于 2024 年发射，计划在 2030 年 4
+              月抵达木星，随后通过 49
+              次木卫二近距离飞掠，把冰壳、成分与地质的线索放在一起研究。人类对这片冰海的探测，正在走向更详细的宜居性调查：先了解环境能够提供什么，再为未来的探索确定方向。
+            </p>
+          </div>
+          <a
+            class="text-link"
+            href="https://science.nasa.gov/mission/europa-clipper/"
+            target="_blank"
+            rel="noopener"
+            >任务档案 ↗</a
+          >
+        </div>
+        <div class="chapter-next">
+          <div>
+            <span>把线索连起来</span>
+            <p>远离太阳，内部能量从哪里来？</p>
+          </div>
+          <a href="#tides">试试潮汐演示 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section id="tides" class="panel orbit-panel" aria-labelledby="tide-title">
+        <div class="panel-heading">
+          <div>
+            <span class="index">03</span>
+            <h2 id="tide-title">引力，让冰海有了节奏。</h2>
+          </div>
+          <span class="micro">教学演示 · 形变放大</span>
+        </div>
+        <div class="orbit-grid">
+          <div class="orbit-visual">
+            <svg
+              id="orbit-svg"
+              viewBox="0 0 610 530"
+              role="img"
+              aria-label="木卫二绕木星的椭圆轨道示意，绿色点标记近似朝向木星的一面"
+            >
+              <defs>
+                <radialGradient id="jupiter-fill">
+                  <stop stop-color="#e6cfaa" />
+                  <stop offset="1" stop-color="#ad805b" />
+                </radialGradient>
+              </defs>
+              <path id="orbit-path" fill="none" stroke="#759b9b" stroke-opacity=".6" />
+              <line id="tidal-link" stroke="#91adac" stroke-dasharray="3 7" stroke-opacity=".65" />
+              <circle cx="305" cy="258" r="23.44" fill="url(#jupiter-fill)" />
+              <text x="305" y="298" text-anchor="middle">木星</text>
+              <g id="europa-dot">
+                <circle r="8" fill="#e0e7da" stroke="#648b8e" stroke-width="1.5" />
+                <circle id="face-mark" r="2.3" fill="#4f777a" />
+                <text id="orbit-moon-label" x="0" y="-17" text-anchor="middle">木卫二</text>
+              </g>
+              <text x="22" y="26" class="svg-note">从轨道北侧看 · 椭圆与距离按参数计算</text>
+              <text x="305" y="497" text-anchor="middle" class="svg-note">
+                木卫二标记放大 · 绿色点标记同一侧
+              </text>
+            </svg>
+          </div>
+          <aside class="orbit-readout">
+            <p class="eyebrow">One orbit / One rotation</p>
+            <h3>1 <span>:</span> 1</h3>
+            <p>
+              如果你从木星附近持续观察木卫二，会发现它近似总以同一面朝向木星：自转一圈的时间，也正好够它绕木星一周。这与月球近似总以同一面朝向地球的规律相似，我们称其为同步自转。
+            </p>
+            <p>
+              不过，同一面朝向木星，并不意味着引力作用始终相同。木卫二的轨道略有偏心，距离在公转过程中周期变化，身体所承受的潮汐作用也随之改变。内部材料在反复形变时，可以把部分机械能耗散成热；这一过程为冰下海洋的能量来源提供了重要解释。
+            </p>
+            <div class="phase-explanation">
+              <span class="label-tag" id="phase-label">近木点</span>
+              <p id="tide-explanation">距离较近，潮汐作用比平均距离处更强。</p>
+            </div>
+            <div class="orbit-readings">
+              <div class="orbit-reading">
+                <span>距木星中心</span><strong id="distance-label">665,060 km</strong>
+              </div>
+              <div class="orbit-reading">
+                <span>相对潮汐强度</span><strong id="tide-label">1.027 ×</strong>
+              </div>
+              <div class="orbit-reading">
+                <span>公转进度</span><strong id="turn-label">0.00 圈</strong>
+              </div>
+            </div>
+            <div class="flexing-demo">
+              <svg
+                viewBox="0 0 220 120"
+                role="img"
+                aria-label="木卫二的拉伸和回缩教学示意，形变经过放大"
+              >
+                <defs>
+                  <linearGradient id="flex-fill">
+                    <stop stop-color="#d8e3db" />
+                    <stop offset="1" stop-color="#b2c9c8" />
+                  </linearGradient>
+                </defs>
+                <path d="M30 58h29m103 0h29" stroke="#658e91" />
+                <path d="m30 58 8-5m-8 5 8 5m153-5-8-5m8 5-8 5" stroke="#658e91" fill="none" />
+                <ellipse
+                  id="flex-ice"
+                  cx="110"
+                  cy="58"
+                  rx="44"
+                  ry="30"
+                  fill="url(#flex-fill)"
+                  stroke="#6e9495"
+                />
+                <path
+                  id="flex-cracks"
+                  d="m103 25-9 20 10 14-9 25m25-55-5 26 10 15-12 14"
+                  fill="none"
+                  stroke="#a18770"
+                /></svg
+              ><span>形变放大展示 · 非真实冰壳形变量</span>
+            </div>
+            <p class="note">
+              木卫三绕木星一圈时，木卫二约绕两圈，木卫一约绕四圈。这种 4 : 2 : 1
+              共振中的引力牵动，帮助木卫二维持偏心轨道。相对强度以平均距离处为
+              1，按距离的三次方反比估算；它表示相对潮汐作用，不是产热量。
+            </p>
+            <button class="text-button" data-focus="system">在三维全景中观察 ↗</button>
+          </aside>
+        </div>
+        <div class="timeline">
+          <div class="experiment-guide">
+            <span class="label-tag">试一试</span>
+            <p>先比较「近木点」与「远木点」的距离和强度，再播放完整公转。</p>
+          </div>
+          <div class="timeline-head">
+            <label for="time-slider">演示时间 <strong id="day-label">0.00</strong> 地球日</label
+            ><span id="orbit-state" role="status">已暂停 · 可以拖动时间轴</span>
+          </div>
+          <input
+            id="time-slider"
+            type="range"
+            min="0"
+            max="3.551"
+            step="0.001"
+            value="0"
+            aria-describedby="orbit-feedback"
+            aria-label="木卫二轨道演示时间，地球日"
+          />
+          <div class="phase-presets" role="group" aria-label="选择公转阶段">
+            <button data-day="0">近木点</button><button data-day="0.88775">四分之一周</button
+            ><button data-day="1.7755">远木点</button><button data-day="2.66325">四分之三周</button>
+          </div>
+          <div class="timeline-actions">
+            <div>
+              <button id="play-orbits" class="primary" aria-pressed="false">播放轨道</button
+              ><button id="reset-time">回到起点</button>
+            </div>
+            <label
+              >速度
+              <select id="orbit-speed">
+                <option value=".1">0.1 日 / 秒</option>
+                <option value=".3" selected>0.3 日 / 秒</option>
+                <option value=".6">0.6 日 / 秒</option>
+              </select></label
+            >
+          </div>
+          <p class="interaction-feedback" id="orbit-feedback" role="status">
+            已选近木点。绿色点标记木卫二的同一侧。
+          </p>
+        </div>
+        <p class="model-note">
+          二维与三维共用同一时间。采用偏心率 0.009
+          的开普勒椭圆轨道、平均周期与均匀同步自转；不计算摄动、轨道进动、潮汐响应或产热量。第 0
+          日为假定近木点，不能用于实际观测预报。
+        </p>
+        <div class="chapter-next">
+          <div>
+            <span>走向下一次探测</span>
+            <p>探测器会怎样验证这些线索？</p>
+          </div>
+          <a href="#missions">认识探测任务 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section id="missions" aria-labelledby="missions-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">04 / The next close look</p>
+            <h2 id="missions-title">下一次靠近，为海洋寻找答案。</h2>
+          </div>
+          <p>任务与计划核对：2026-10-03<br />未来日期以任务公布的计划为准。</p>
+        </div>
+        <div class="clipper-feature panel">
+          <div class="clipper-feature-intro">
+            <p class="eyebrow">EUROPA CLIPPER / NASA</p>
+            <h3>49 次飞掠，<br />拼出一个冰海世界。</h3>
+            <p>
+              如果你留意这次任务的路线，会发现探测器选择环绕木星，再一次次从木卫二附近经过。这样的安排能够减少它在强辐射区域长期停留的时间，并从不同位置取得测量。每一次靠近，都为冰壳、海洋与地表材料之间的关系补上一部分信息。
+            </p>
+            <p>
+              为什么需要许多种仪器共同调查？冰面影像能告诉我们地形是什么样，雷达能寻找冰内界面，磁场与成分测量又提供另外的线索。它们需要相互检验，才能判断这里是否具备支持生命的条件。Europa
+              Clipper
+              的任务目标是评估宜居性，本身并非生命探测任务。你可以切换调查方法，看看每一种测量具体在回答什么。
+            </p>
+            <a
+              class="text-link"
+              href="https://science.nasa.gov/mission/europa-clipper/"
+              target="_blank"
+              rel="noopener"
+              >任务档案 ↗</a
+            >
+          </div>
+          <div class="instrument-study">
+            <div class="tab-guide">
+              <span class="label-tag">选择调查方法</span><span id="instrument-step">1 / 3</span>
+            </div>
+            <div class="layer-tabs" role="tablist" aria-label="Europa Clipper 科学调查">
+              <button
+                id="instrument-radar"
+                role="tab"
+                aria-selected="true"
+                aria-controls="instrument-panel"
+                data-instrument="radar"
+              >
+                穿透冰壳</button
+              ><button
+                id="instrument-magnetic"
+                role="tab"
+                aria-selected="false"
+                aria-controls="instrument-panel"
+                tabindex="-1"
+                data-instrument="magnetic"
+              >
+                感应磁场</button
+              ><button
+                id="instrument-chemistry"
+                role="tab"
+                aria-selected="false"
+                aria-controls="instrument-panel"
+                tabindex="-1"
+                data-instrument="chemistry"
+              >
+                成分线索
+              </button>
+            </div>
+            <div
+              id="instrument-panel"
+              role="tabpanel"
+              aria-labelledby="instrument-radar"
+              tabindex="0"
+            >
+              <p class="eyebrow" id="instrument-kicker">RADAR / REASON</p>
+              <h4 id="instrument-title">用雷达追踪冰中的界面。</h4>
+              <p id="instrument-copy">
+                雷达向冰壳发送电磁信号，再接收从不同界面返回的回波。通过比较这些信号，研究人员寻找冰中的层次、液态水线索，以及冰壳与海洋可能存在的联系。实际探测深度受冰的成分和结构影响；能否辨认某个界面，还要结合其他测量判断。这样的调查，是在逐步约束冰下结构。
+              </p>
+            </div>
+            <a
+              class="text-link"
+              href="https://science.nasa.gov/mission/europa-clipper/spacecraft-instruments/"
+              target="_blank"
+              rel="noopener"
+              >认识科学仪器 ↗</a
+            >
+          </div>
+        </div>
+        <ol class="journey">
+          <li>
+            <span>2024.10</span><strong>从地球出发</strong>
+            <p>10 月 14 日发射。</p>
+          </li>
+          <li>
+            <span>2025.03</span><strong>飞掠火星</strong>
+            <p>完成第一次引力助推。</p>
+          </li>
+          <li class="future">
+            <span>2026.12 · 计划</span><strong>再借地球的引力</strong>
+            <p>第二次引力助推。</p>
+          </li>
+          <li class="future">
+            <span>2030.04 · 计划</span><strong>进入木星轨道</strong>
+            <p>准备木卫二飞掠轨道。</p>
+          </li>
+          <li class="future">
+            <span>2031 春 · 计划</span><strong>首次飞掠木卫二</strong>
+            <p>随后开始科学调查。</p>
+          </li>
+        </ol>
+        <a
+          class="text-link journey-source"
+          href="https://science.nasa.gov/mission/europa-clipper/mission-timeline/"
+          target="_blank"
+          rel="noopener"
+          >NASA · 完整任务时间表 ↗</a
+        >
+        <div class="mission-grid">
+          <article>
+            <span>1979 / VOYAGER</span>
+            <h3>第一次看清冰面</h3>
+            <p>
+              1979
+              年，旅行者号让人类第一次较清楚地看见木卫二的冰面。遍布表面的线条与较少的大撞击坑，提示这层外壳经历过变化。一个问题由此变得具体：在这个遥远而寒冷的世界，是什么让表面不断留下新的痕迹？
+            </p>
+            <a href="https://science.nasa.gov/mission/voyager/" target="_blank" rel="noopener"
+              >旅行者号 ↗</a
+            >
+          </article>
+          <article>
+            <span>1995—2003 / GALILEO</span>
+            <h3>海洋的关键线索</h3>
+            <p>
+              随后，伽利略号带来了更细致的冰面影像，也测到了支持冰下导电层的磁场信号。海洋的可能性有了新的观测依据，我们对木卫二的认识因此向内部推进了一步。今天页面上这些交错的脊、宽带与破碎冰块，正来自它留下的影像档案。
+            </p>
+            <a href="https://science.nasa.gov/mission/galileo/" target="_blank" rel="noopener"
+              >伽利略号 ↗</a
+            >
+          </article>
+          <article>
+            <span>2022 / JUNO FLYBY</span>
+            <h3>微波看向冰层</h3>
+            <p>
+              2022
+              年，朱诺号从木卫二附近飞过，补充了表面影像与微波数据。后续研究用这些数据约束所观测区域的冰层厚度，让我们开始更具体地讨论冰壳的内部结构。测量范围与模型假设仍然重要：一次飞掠得到的结果，还需要放进更完整的全球图景中。
+            </p>
+            <a
+              href="https://www.nasa.gov/missions/juno/nasas-juno-measures-thickness-of-europas-ice-shell/"
+              target="_blank"
+              rel="noopener"
+              >朱诺号研究 ↗</a
+            >
+          </article>
+          <article class="mission-featured">
+            <span>2031 / PLANNED ARRIVAL</span>
+            <h3>Juice 的比较视角</h3>
+            <p>
+              ESA 的 Juice 计划于 2031
+              年抵达木星，也将飞掠木卫二，研究木星系统中的冰卫星。把不同卫星放在一起比较，有助于理解它们为什么形成各自的表面与内部环境。木卫二的故事，也将因此与木卫三、木卫四的演化联系得更加紧密。
+            </p>
+            <a
+              href="https://www.esa.int/Science_Exploration/Space_Science/Juice"
+              target="_blank"
+              rel="noopener"
+              >Juice ↗</a
+            >
+          </article>
+        </div>
+
+        <article class="exploration-essay" aria-labelledby="exploration-question">
+          <div>
+            <p class="eyebrow">After reading / A question beyond the ice</p>
+            <h3 id="exploration-question">为什么人类要去<br />这一片冰海？</h3>
+            <span class="label-tag">读到这里，再想一步</span>
+          </div>
+          <div>
+            <p>
+              读到这里，你或许会想到火星。研究火星时，我们常常沿着古河床与含水矿物，追问它过去拥有过怎样的水环境；研究木卫二时，我们则希望了解一片可能仍然存在的冰下海洋。两条探索路线，让人类从不同环境出发，逐渐认识水、能量与行星演化之间的关系。
+            </p>
+            <p>
+              木卫二尤其让人好奇的地方，是它把宜居性的问题带到了厚厚的冰层之下。按照目前的模型，那里可能有水，也可能有水岩反应提供的化学能，但这些条件能否长期共存、物质能否有效交换，仍是需要测量的问题。它让我们继续思考，一个可能支持生命的世界，究竟需要满足哪些条件？
+            </p>
+            <p>
+              编者同样好奇，冰壳之下最终会呈现怎样的答案。无论未来的测量把哪些设想证实、修改或排除，我们都会更清楚地知道，地球上的海洋与生命赖以存在的条件，在太阳系里还有怎样的可能。下一次探测器靠近木卫二时，它带回的每一组数据，都将让这些问题再向前走一步。
+            </p>
+            <a
+              class="text-link"
+              href="https://science.nasa.gov/mission/europa-clipper/why-europa-ingredients-for-life/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 宜居条件与生命研究 ↗</a
+            >
+          </div>
+        </article>
+        <div class="chapter-next">
+          <div>
+            <span>回顾阅读线索</span>
+            <p>冰面 → 海洋证据 → 潮汐作用 → 下一次探测</p>
+          </div>
+          <a href="#sources">查看资料来源 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <footer id="sources">
+        <p class="eyebrow">Solar laboratory · Europa / A world beneath the ice</p>
+        <p>先读懂冰壳的故事，再向海洋提问。</p>
+        <details>
+          <summary>资料来源、影像署名与模型说明</summary>
+          <p>
+            科学与任务资料来自 NASA、JPL 和 ESA。完整来源与科学近似范围见本地
+            <a href="SOURCES.md">SOURCES.md</a>。
+          </p>
+          <p>
+            木卫二与木星的球面贴图来自 NASA
+            VTAD；图像经过拼接和填补，近景光照用于观察。所有贴图与脚本已保存在本地，支持离线打开。
+          </p>
+          <p>
+            轨道位置、潮汐强度和内部剖面均为教学展示。冰下海洋有较强证据，具体厚度、成分、物质交换及宜居条件仍待调查。剖面层厚和形变图不按真实比例。
+          </p>
+        </details>
+      </footer>
+    </main>
+    <a class="back-top" href="#top" aria-label="返回顶部" hidden>↑</a>
+    <div
+      class="action-toast"
+      id="action-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+    <span class="sr-only" id="music-status" role="status"></span
+    ><audio id="background-audio" src="assets/ad-astra.mp3" loop preload="none"></audio>
+    <dialog id="photo-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-toolbar">
+        <span class="label-tag">影像观察</span><span id="photo-count">1 / 3</span>
+        <div>
+          <button id="photo-prev" aria-label="上一张影像">←</button
+          ><button id="photo-next" aria-label="下一张影像">→</button
+          ><button class="dialog-close" aria-label="关闭图片">×</button>
+        </div>
+      </div>
+      <div class="dialog-visual">
+        <img id="dialog-image" alt="" />
+        <div class="photo-state" id="photo-state" role="status" hidden></div>
+        <button id="photo-retry" hidden>重新加载影像</button>
+      </div>
+      <div class="dialog-copy">
+        <p class="eyebrow" id="dialog-kicker"></p>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-description"></p>
+        <a id="dialog-source" class="text-link" target="_blank" rel="noopener">查看影像来源 ↗</a>
+        <p class="dialog-hint">← / → 切换影像 · Esc 关闭<br />影像呈现冰面，不是地下海洋的照片。</p>
+      </div>
+    </dialog>
+    <noscript
+      ><p class="noscript">
+        启用 JavaScript 后可使用三维与轨道交互；页面文字与影像可直接阅读。
+      </p></noscript
+    >
+  </body>
+</html>

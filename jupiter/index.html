@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#f2ecdf" />
+    <meta
+      name="description"
+      content="探索木星与木卫一、木卫二、木卫三、木卫四，深入了解木卫二的冰壳、海洋证据与探索任务。"
+    />
+    <title>木星与伽利略卫星 · Jupiter | Solar Laboratory</title>
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="vendor/three.min.js" defer></script>
+    <script src="vendor/OrbitControls.js" defer></script>
+    <script src="data.js" defer></script>
+    <script src="assets/textures.js" defer></script>
+    <script src="assets/jupiter-geometry.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="model.js" defer></script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#moons">跳到卫星介绍</a>
+    <main class="app">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Solar laboratory / Planet 05</p>
+          <h1>木星 <span>JUPITER</span></h1>
+          <p class="subtitle">从翻涌的云海，到冰封的海洋。</p>
+        </div>
+        <nav aria-label="页面导航">
+          <a href="#weather">云海</a><a href="#moons">四颗卫星</a><a href="#europa">木卫二专题</a
+          ><a href="#orbits">轨道</a><a href="#missions">探索</a>
+        </nav>
+      </header>
+
+      <section class="panel model-panel" id="observatory" aria-labelledby="model-title">
+        <div class="panel-heading">
+          <div>
+            <span class="index">00</span>
+            <h2 id="model-title">木星系统观察台</h2>
+          </div>
+          <span class="status" id="model-status" role="status">正在载入模型</span>
+        </div>
+        <div class="view-switch" role="group" aria-label="选择三维观察目标">
+          <button data-view="system" aria-pressed="false">系统全景</button
+          ><button data-view="jupiter" aria-pressed="true">木星 <small>Jupiter</small></button
+          ><button data-view="io" aria-pressed="false">木卫一 <small>Io</small></button
+          ><button data-view="europa" aria-pressed="false" class="europa-tab">
+            木卫二 <small>Europa</small></button
+          ><button data-view="ganymede" aria-pressed="false">木卫三 <small>Ganymede</small></button
+          ><button data-view="callisto" aria-pressed="false">木卫四 <small>Callisto</small></button>
+        </div>
+        <div class="model-stage" id="model-stage">
+          <div class="planet-lettering" id="planet-lettering" aria-hidden="true">JUPITER</div>
+          <div
+            class="model-mount"
+            id="model-mount"
+            aria-label="可拖动旋转、滚轮或双指缩放的三维观察视图"
+          ></div>
+          <div class="model-labels" id="model-labels" hidden></div>
+          <aside class="profile">
+            <p class="eyebrow" id="profile-kicker">气态巨行星 / GAS GIANT</p>
+            <h3 id="profile-heading">一颗行星，<br />一个小宇宙。</h3>
+            <details id="profile-details">
+              <summary>
+                <span id="profile-summary">Jupiter profile · 木星档案</span
+                ><span class="plus">+</span>
+              </summary>
+              <div>
+                <p id="profile-description">
+                  木星是太阳系最大的行星，主要由氢和氦构成。明暗相间的云带和巨大的风暴，是这颗气态巨行星最鲜明的标志。
+                </p>
+                <p id="profile-feature">
+                  四颗伽利略卫星环绕在外，呈现火山、冰壳、磁场与古老撞击记录等不同面貌。
+                </p>
+              </div>
+            </details>
+            <a class="text-link profile-europa" id="profile-europa" href="#europa" hidden
+              >进入木卫二专题 ↗</a
+            >
+          </aside>
+          <div class="model-loading" id="model-loading">
+            <span class="spinner"></span>
+            <p>正在准备木星与四颗卫星<small>LOADING LOCAL SURFACE MAPS</small></p>
+          </div>
+          <div class="model-fallback" id="model-fallback" hidden>
+            <img id="fallback-image" src="assets/jupiter.jpg" alt="木星表面纹理图" />
+            <p>当前设备未能启动三维视图；下面的影像、介绍与轨道演示仍可阅读。</p>
+          </div>
+          <div class="model-caption">
+            <span>+</span>
+            <p id="model-caption">
+              拖动旋转 · 滚轮 / 双指缩放<br /><small>NASA / JPL · 云层影像贴图</small>
+            </p>
+          </div>
+          <div class="model-controls">
+            <button id="rotate-model" aria-pressed="true">暂停环绕</button
+            ><button id="light-model" aria-pressed="false">均匀照明</button
+            ><button id="reset-model">复位视角</button>
+          </div>
+        </div>
+        <dl class="body-facts" id="body-facts">
+          <div>
+            <dt>平均半径</dt>
+            <dd>69,911 <small>km</small></dd>
+          </div>
+          <div>
+            <dt>自转周期</dt>
+            <dd>9.9 <small>小时</small></dd>
+          </div>
+          <div>
+            <dt>公转周期</dt>
+            <dd>11.86 <small>地球年</small></dd>
+          </div>
+          <div>
+            <dt>平均日距</dt>
+            <dd>5.2 <small>AU</small></dd>
+          </div>
+        </dl>
+        <p class="model-note">
+          切换观察对象时，镜头平滑移动并拉近；木星与四颗卫星始终保持原位和同一真实比例。全景标签的圆点仅用于定位。轨道与光照为教学示意，非实时星历。
+        </p>
+      </section>
+
+      <section id="weather" class="weather-grid" aria-labelledby="weather-title">
+        <article class="weather-copy">
+          <p class="eyebrow">01 / A world in motion</p>
+          <h2 id="weather-title">眼前的条纹，<br />是一整片流动的天空。</h2>
+          <p>
+            木星没有清晰的固体表面。明亮的“带”和较暗的“条纹”是不同纬度的云层与大气环流，它们沿不同方向飞快地运动。
+          </p>
+          <p>
+            大红斑是一场持续数百年的巨大风暴。它的大小与形态会变化；我们看到的每张照片，都是这片云海在某一刻的模样。
+          </p>
+          <dl class="weather-facts">
+            <div>
+              <dt>主要组成</dt>
+              <dd>氢 <span>与</span> 氦</dd>
+            </div>
+            <div>
+              <dt>一天，仅约</dt>
+              <dd>9.9 <small>小时</small></dd>
+            </div>
+          </dl>
+          <a
+            class="text-link"
+            href="https://science.nasa.gov/jupiter/jupiter-facts/"
+            target="_blank"
+            rel="noopener"
+            >NASA · 木星档案 ↗</a
+          >
+        </article>
+        <figure class="weather-image">
+          <button class="photo-button" data-photo="storm" aria-label="查看木星大红斑完整图片">
+            <img
+              src="assets/great-red-spot.jpg"
+              alt="朱诺号拍摄的木星大红斑及周围翻涌的云带"
+              width="1620"
+              height="1440"
+              loading="lazy"
+            /><span class="photo-tag">JUNO / 2017</span><span class="expand">↗</span>
+          </button>
+          <figcaption>
+            大红斑 · 接近自然色的处理影像<br /><small
+              >NASA/JPL-Caltech/SwRI/MSSS · Björn Jónsson</small
+            >
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="moons" aria-labelledby="moons-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">02 / The Galilean family</p>
+            <h2 id="moons-title">四颗卫星，四种世界。</h2>
+          </div>
+          <p>
+            1610 年，人类发现这些光点围绕木星运行。<br />从内向外，它们是木卫一、木卫二、木卫三、木卫四。
+          </p>
+        </div>
+        <div class="moon-grid">
+          <article class="moon-card">
+            <button class="moon-picture" data-focus="io" aria-label="在三维视图中观察木卫一">
+              <img
+                src="assets/io.jpg"
+                alt="木卫一黄色和深色相间的全球表面拼接纹理"
+                width="2048"
+                height="1024"
+                loading="lazy"
+              /><span>Ⅰ / VOLCANIC WORLD</span><i aria-hidden="true">↗</i>
+            </button>
+            <div class="moon-copy">
+              <p class="eyebrow">Io</p>
+              <h3>木卫一</h3>
+              <p>潮汐作用不断揉动内部，火山喷发重写地表。硫化合物让它看起来像一块斑斓的调色板。</p>
+              <dl>
+                <div>
+                  <dt>平均半径</dt>
+                  <dd>1,821.5 km</dd>
+                </div>
+                <div>
+                  <dt>绕木星一周</dt>
+                  <dd>1.769 日</dd>
+                </div>
+              </dl>
+              <button class="text-button" data-focus="io">观察这颗卫星 ↗</button>
+            </div>
+          </article>
+          <article class="moon-card featured">
+            <button class="moon-picture" data-focus="europa" aria-label="在三维视图中观察木卫二">
+              <img
+                src="assets/europa.jpg"
+                alt="木卫二水冰表面和密集的褐色裂纹拼接纹理"
+                width="2048"
+                height="1024"
+                loading="lazy"
+              /><span>Ⅱ / OCEAN WORLD</span><i aria-hidden="true">↗</i>
+            </button>
+            <div class="moon-copy">
+              <p class="eyebrow">Europa <span class="feature-badge">重点探索</span></p>
+              <h3>木卫二</h3>
+              <p>
+                冰壳划满裂纹，海洋的线索藏在深处。水、能量与化学原料，让它成为宜居环境研究的重点。
+              </p>
+              <dl>
+                <div>
+                  <dt>平均半径</dt>
+                  <dd>1,560.8 km</dd>
+                </div>
+                <div>
+                  <dt>绕木星一周</dt>
+                  <dd>3.551 日</dd>
+                </div>
+              </dl>
+              <a class="text-link" href="#europa">深入冰封世界 ↗</a>
+            </div>
+          </article>
+          <article class="moon-card">
+            <button class="moon-picture" data-focus="ganymede" aria-label="在三维视图中观察木卫三">
+              <img
+                src="assets/ganymede.jpg"
+                alt="木卫三深色古老地形与较浅色沟槽地形的拼接纹理"
+                width="2048"
+                height="1024"
+                loading="lazy"
+              /><span>Ⅲ / MAGNETIC WORLD</span><i aria-hidden="true">↗</i>
+            </button>
+            <div class="moon-copy">
+              <p class="eyebrow">Ganymede</p>
+              <h3>木卫三</h3>
+              <p>
+                太阳系最大的卫星，比水星还大；也是目前唯一已知拥有内禀磁场的卫星，深处有海洋的证据。
+              </p>
+              <dl>
+                <div>
+                  <dt>平均半径</dt>
+                  <dd>2,631.2 km</dd>
+                </div>
+                <div>
+                  <dt>绕木星一周</dt>
+                  <dd>7.155 日</dd>
+                </div>
+              </dl>
+              <button class="text-button" data-focus="ganymede">观察这颗卫星 ↗</button>
+            </div>
+          </article>
+          <article class="moon-card">
+            <button class="moon-picture" data-focus="callisto" aria-label="在三维视图中观察木卫四">
+              <img
+                src="assets/callisto.jpg"
+                alt="木卫四深色表面遍布明亮撞击坑的拼接纹理"
+                width="2048"
+                height="1024"
+                loading="lazy"
+              /><span>Ⅳ / ANCIENT WORLD</span><i aria-hidden="true">↗</i>
+            </button>
+            <div class="moon-copy">
+              <p class="eyebrow">Callisto</p>
+              <h3>木卫四</h3>
+              <p>
+                密布撞击坑的古老冰岩世界，保存了数十亿年的痕迹。相对平静的外表下，也可能藏有咸水层。
+              </p>
+              <dl>
+                <div>
+                  <dt>平均半径</dt>
+                  <dd>2,410.3 km</dd>
+                </div>
+                <div>
+                  <dt>绕木星一周</dt>
+                  <dd>16.689 日</dd>
+                </div>
+              </dl>
+              <button class="text-button" data-focus="callisto">观察这颗卫星 ↗</button>
+            </div>
+          </article>
+        </div>
+        <p class="section-note">
+          卡片上方展示全球拼接纹理的局部裁切。点击后镜头会移动并拉近对应卫星，可拖动环绕与缩放观察。
+        </p>
+      </section>
+
+      <section id="europa" class="europa-section" aria-labelledby="europa-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">03 / Special focus — Europa</p>
+            <h2 id="europa-title">越过冰面，寻找海洋的答案。</h2>
+          </div>
+          <span class="europa-mark">EUROPA / Ⅱ</span>
+        </div>
+        <div class="europa-hero">
+          <button class="europa-photo" data-photo="europa" aria-label="放大木卫二伽利略号影像">
+            <img
+              src="assets/europa-global.jpg"
+              alt="伽利略号拍摄的木卫二，浅色冰壳上遍布红褐色裂纹"
+              width="2300"
+              height="2300"
+              loading="lazy"
+            /><span class="photo-tag">GALILEO / REPROCESSED COLOR</span
+            ><span class="expand">↗</span>
+          </button>
+          <div class="europa-hero-copy">
+            <p class="eyebrow">A small moon. A profound question.</p>
+            <h3>冰壳之下，<br />会是什么样的世界？</h3>
+            <p>
+              一颗比月球还小的卫星，可能保存着比地球全部海洋更多的液态水。我们还没有钻穿冰层；海洋的判断来自磁场、地质与内部结构等多条证据。
+            </p>
+            <p>
+              木卫二最吸引人的问题，是这些水能否与岩石、能量和化学原料持续交换，从而形成适合生命存在的环境。
+            </p>
+            <div class="europa-hero-facts">
+              <div><strong>3.55</strong><span>地球日 / 绕木星一周</span></div>
+              <div><strong>≈ 2×</strong><span>地球海洋水量 / 模型估计</span></div>
+            </div>
+            <p class="europa-caption">影像：NASA/JPL-Caltech/SETI Institute · PIA19048</p>
+          </div>
+        </div>
+
+        <div class="europa-study panel">
+          <div class="panel-heading">
+            <div>
+              <span class="index">A</span>
+              <h3>从冰壳到岩石深处</h3>
+            </div>
+            <span class="micro">INTERIOR / 示意剖面</span>
+          </div>
+          <div class="interior-grid">
+            <div class="cutaway-wrap">
+              <svg
+                class="cutaway"
+                viewBox="0 0 440 340"
+                role="img"
+                aria-label="木卫二推测内部结构示意：外侧冰壳、液态海洋、岩石层与金属核心，图中层厚不按比例"
+              >
+                <defs>
+                  <radialGradient id="ice-grad">
+                    <stop stop-color="#f4eee0" />
+                    <stop offset="1" stop-color="#b6cbd0" />
+                  </radialGradient>
+                  <radialGradient id="rock-grad">
+                    <stop stop-color="#c9a577" />
+                    <stop offset="1" stop-color="#8c7158" />
+                  </radialGradient>
+                </defs>
+                <circle cx="204" cy="165" r="132" fill="url(#ice-grad)" />
+                <circle cx="204" cy="165" r="114" fill="#5e929e" />
+                <circle cx="204" cy="165" r="86" fill="url(#rock-grad)" />
+                <circle cx="204" cy="165" r="34" fill="#68676a" />
+                <path d="M204 33A132 132 0 0 0 204 297Z" fill="#dde1d3" />
+                <path
+                  d="M173 40L139 96l17 31-46 27 15 46-2 26 46 45M112 70l24 63-53 49 30 70M193 60l-22 41 13 22-26 57 30 32-23 57"
+                  stroke="#9c8c74"
+                  stroke-opacity=".65"
+                  fill="none"
+                  stroke-width="2"
+                />
+                <path
+                  d="M285 61H356M300 105H384M270 203H369M221 179L284 246H359"
+                  fill="none"
+                  stroke="#8f9d9b"
+                  stroke-width="1"
+                />
+                <g class="cutaway-labels">
+                  <text x="360" y="65">冰壳</text>
+                  <text x="387" y="109">海洋</text>
+                  <text x="374" y="207">岩石</text>
+                  <text x="363" y="250">核心</text>
+                </g>
+                <text x="204" y="331" text-anchor="middle" class="svg-note">
+                  结构为推测示意 · 层厚经过放大
+                </text>
+              </svg>
+              <p class="note">选择右侧层次，看看每一层如何影响这个世界。</p>
+            </div>
+            <div class="layer-content">
+              <div class="layer-tabs" role="tablist" aria-label="木卫二内部层次">
+                <button
+                  id="tab-ice"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="layer-panel"
+                  data-layer="ice"
+                >
+                  冰壳</button
+                ><button
+                  id="tab-ocean"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="ocean"
+                >
+                  海洋</button
+                ><button
+                  id="tab-rock"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="rock"
+                >
+                  岩石</button
+                ><button
+                  id="tab-core"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="layer-panel"
+                  tabindex="-1"
+                  data-layer="core"
+                >
+                  核心
+                </button>
+              </div>
+              <div id="layer-panel" role="tabpanel" aria-labelledby="tab-ice" tabindex="0">
+                <p class="eyebrow" id="layer-kicker">01 / Ice shell</p>
+                <h4 id="layer-title">一层会变形的冰</h4>
+                <p id="layer-copy">
+                  褐色线条标记裂纹、脊和不同材料。局部冰块似乎曾断裂、漂移并重新冻结，说明表面经历过更新；表层与海洋之间如何交换物质，仍有待查明。
+                </p>
+              </div>
+              <div class="research-update">
+                <span>研究更新 · 2026</span>
+                <p>
+                  Juno 微波数据给出所观测区域约
+                  <strong>29 km</strong>
+                  的冷硬导热冰层估计。它依赖成分与热结构模型，不等于全球冰壳已被精确测定。
+                </p>
+                <a
+                  href="https://www.nasa.gov/missions/juno/nasas-juno-measures-thickness-of-europas-ice-shell/"
+                  target="_blank"
+                  rel="noopener"
+                  >阅读测量范围与假设 ↗</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="evidence-grid">
+          <article>
+            <span class="evidence-number">01</span>
+            <h3>为什么认为有海洋？</h3>
+            <p>
+              伽利略号测到的感应磁场，可以由冰下导电的咸水层解释。年轻的表面、裂纹与混沌地形，也与活动的冰壳相吻合。
+            </p>
+            <span class="evidence-label">较强证据 · 仍需进一步约束</span>
+          </article>
+          <article>
+            <span class="evidence-number">02</span>
+            <h3>远离太阳，热从哪里来？</h3>
+            <p>
+              木星引力与卫星间的共振使轨道保持轻微偏心。周期性的拉伸和释放能产生潮汐热，内部放射性衰变也可贡献热量。
+            </p>
+            <span class="evidence-label">研究重点 · 能量与海底交换</span>
+          </article>
+          <article>
+            <span class="evidence-number">03</span>
+            <h3>有水，就一定有生命吗？</h3>
+            <p>
+              还需要可利用的能量、合适的化学条件与稳定环境。目前没有发现木卫二生命；疑似羽流及其与海洋的联系也仍需验证。
+            </p>
+            <span class="evidence-label">开放问题 · 宜居性尚待调查</span>
+          </article>
+        </div>
+        <div class="clipper-note">
+          <span class="clipper-symbol" aria-hidden="true">↗</span>
+          <div>
+            <p class="eyebrow">The next close look</p>
+            <h3>Europa Clipper：为海洋世界做一次体检。</h3>
+            <p>
+              2024 年发射，计划于 2030 年 4 月抵达木星。探测器将环绕木星，并进行 49
+              次木卫二近距离飞掠，联合调查冰壳、成分和地质，判断冰下是否存在宜居环境。它的任务目标是评估宜居条件，并非直接寻找生命个体。
+            </p>
+          </div>
+          <a
+            class="text-link"
+            href="https://science.nasa.gov/mission/europa-clipper/"
+            target="_blank"
+            rel="noopener"
+            >任务档案 ↗</a
+          >
+        </div>
+      </section>
+
+      <section id="orbits" class="panel orbit-panel" aria-labelledby="orbit-title">
+        <div class="panel-heading">
+          <div>
+            <span class="index">04</span>
+            <h2 id="orbit-title">一个小型行星系统</h2>
+          </div>
+          <span class="micro">ORBITAL LABORATORY</span>
+        </div>
+        <div class="orbit-grid">
+          <div class="orbit-visual">
+            <svg
+              id="orbit-svg"
+              viewBox="0 0 610 530"
+              role="img"
+              aria-label="木星四颗伽利略卫星的共面圆轨道教学动画，距离按比例、天体圆点放大"
+            >
+              <defs>
+                <radialGradient id="jupiter-dot-fill">
+                  <stop stop-color="#e6cfaa" />
+                  <stop offset="1" stop-color="#ad805b" />
+                </radialGradient>
+              </defs>
+              <g id="orbit-rings"></g>
+              <g id="orbit-trails"></g>
+              <circle cx="305" cy="258" r="14" fill="url(#jupiter-dot-fill)" />
+              <text x="305" y="286" text-anchor="middle">木星</text>
+              <text x="22" y="26" class="svg-note">从木星北极上方看 · 轨道距离同比例</text>
+              <g id="orbit-dots"></g>
+              <text x="305" y="513" text-anchor="middle" class="svg-note">
+                天体圆点放大以便辨认 · 起始相位为示意
+              </text>
+            </svg>
+          </div>
+          <aside class="orbit-readout">
+            <p class="eyebrow">Four moons / One rhythm</p>
+            <h3>4 <span>:</span> 2 <span>:</span> 1</h3>
+            <p>
+              木卫一转四圈，木卫二约转两圈，木卫三约转一圈。这是拉普拉斯共振的节奏；精确运动还包含摄动与进动。
+            </p>
+            <div id="orbit-readings" class="orbit-readings"></div>
+            <p class="note">
+              木卫四不在这组共振中。这里用平均周期和共面圆轨道演示，各行显示从第 0
+              日起累计的公转圈数。
+            </p>
+            <button class="text-button" data-focus="system">到三维全景中观察 ↗</button>
+          </aside>
+        </div>
+        <div class="timeline">
+          <div class="timeline-head">
+            <label for="time-slider">演示时间 <strong id="day-label">0.00</strong> 地球日</label
+            ><span>0 → 木卫四公转一周</span>
+          </div>
+          <input
+            id="time-slider"
+            type="range"
+            min="0"
+            max="16.689"
+            step="0.001"
+            value="0"
+            aria-label="轨道演示时间，地球日"
+          />
+          <div class="timeline-actions">
+            <div>
+              <button id="play-orbits" class="primary" aria-pressed="false">播放轨道</button
+              ><button id="reset-time">回到起点</button>
+            </div>
+            <label
+              >速度
+              <select id="orbit-speed">
+                <option value=".2">0.2 日 / 秒</option>
+                <option value=".5" selected>0.5 日 / 秒</option>
+                <option value="1">1 日 / 秒</option>
+              </select></label
+            >
+          </div>
+        </div>
+        <p class="model-note">
+          上方三维系统与此时间轴同步。模型不计算卫星食、凌木、轨道倾角与引力摄动，不能用于预报实际观测事件。
+        </p>
+      </section>
+
+      <section id="missions" aria-labelledby="missions-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">05 / Explorers of the Jovian system</p>
+            <h2 id="missions-title">从第一次靠近，到下一次追问。</h2>
+          </div>
+          <p>任务时间与计划核对：2026-10-03</p>
+        </div>
+        <div class="mission-grid">
+          <article>
+            <span>1995—2003</span>
+            <h3>Galileo</h3>
+            <p>首次长期环绕木星。它的卫星影像与磁场观测，为冰下海洋研究留下关键线索。</p>
+            <a href="https://science.nasa.gov/mission/galileo/" target="_blank" rel="noopener"
+              >伽利略号 ↗</a
+            >
+          </article>
+          <article>
+            <span>2016 起进入木星轨道</span>
+            <h3>Juno</h3>
+            <p>研究木星云层深处与磁场，并近距离飞掠木卫三、木卫二和木卫一，带来新的影像与测量。</p>
+            <a href="https://science.nasa.gov/mission/juno/" target="_blank" rel="noopener"
+              >朱诺号 ↗</a
+            >
+          </article>
+          <article class="mission-featured">
+            <span>2030 · 计划抵达</span>
+            <h3>Europa Clipper</h3>
+            <p>围绕木卫二的宜居性展开调查，通过多次飞掠测量冰壳、地表成分与内部海洋的性质。</p>
+            <a
+              href="https://science.nasa.gov/mission/europa-clipper/mission-timeline/"
+              target="_blank"
+              rel="noopener"
+              >木卫二快船 ↗</a
+            >
+          </article>
+          <article>
+            <span>2031 · 计划抵达</span>
+            <h3>Juice</h3>
+            <p>考察木卫二、木卫三与木卫四，最终将重点转向木卫三轨道，比较不同冰卫星的演化。</p>
+            <a
+              href="https://www.esa.int/Science_Exploration/Space_Science/Juice"
+              target="_blank"
+              rel="noopener"
+              >木星冰卫星探测器 ↗</a
+            >
+          </article>
+        </div>
+      </section>
+      <footer>
+        <p class="eyebrow">Solar laboratory · Jupiter & the Galilean moons</p>
+        <p>一颗巨行星的引力，牵起四个世界的故事。</p>
+        <details>
+          <summary>资料来源、影像署名与模型说明</summary>
+          <p>
+            科学资料：<a
+              href="https://science.nasa.gov/jupiter/jupiter-facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA 木星</a
+            >
+            ·
+            <a
+              href="https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA 木卫二</a
+            >
+            ·
+            <a href="https://ssd.jpl.nasa.gov/sats/phys_par/sep.html" target="_blank" rel="noopener"
+              >JPL 卫星参数</a
+            >。完整来源、许可、日期与近似范围见本地 <a href="SOURCES.md">SOURCES.md</a>。
+          </p>
+          <p>
+            球面贴图来自 NASA 3D Resources /
+            VTAD，基于公开探测影像的可视化产品，包含拼接和填补，不是实时天气或精密测绘产品。木卫一原始
+            Voyager 贴图存在极区数据缺口。近景照明与环绕速度用于观察展示。
+          </p>
+          <p>
+            轨道模拟采用平均轨道距离与周期，起始位置任意设置。三维全景使用统一长度比例；木星按赤道与极半径呈现扁率。二维图仅轨道距离同比例，圆点已放大。内部剖面为推测示意，层厚不按比例。
+          </p>
+        </details>
+      </footer>
+    </main>
+    <a class="back-top" href="#top" aria-label="返回顶部">↑ <span>TOP</span></a
+    ><button class="music-button" id="music" aria-label="播放背景音乐" aria-pressed="false">
+      ♪</button
+    ><span class="sr-only" id="music-status" role="status"></span>
+    <audio id="background-audio" src="assets/ad-astra.mp3" preload="none" loop></audio>
+    <dialog id="photo-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" aria-label="关闭大图">×</button><img id="dialog-image" alt="" />
+      <div class="dialog-copy">
+        <p class="eyebrow" id="dialog-kicker"></p>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-description"></p>
+        <a id="dialog-source" class="text-link" target="_blank" rel="noopener"
+          >查看 NASA 原始影像 ↗</a
+        >
+      </div>
+    </dialog>
+    <noscript
+      ><p class="noscript">
+        启用 JavaScript 后可使用三维与轨道交互；页面文字和影像可直接阅读。
+      </p></noscript
+    >
+  </body>
+</html>

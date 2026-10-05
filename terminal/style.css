@@ -1,0 +1,1563 @@
+@charset "UTF-8";
+:root {
+  --paper: #f1ede4;
+  --card: #faf8f2;
+  --ink: #383e39;
+  --muted: #7c7e72;
+  --line: #dcdcd0;
+  --accent: #82704d;
+  --accent-soft: #eee7d7;
+  --mono: 'Consolas', 'SFMono-Regular', monospace;
+  --sans: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --radius: 20px;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+body {
+  margin: 0;
+  color: var(--ink);
+  font: 14px/1.8 var(--sans);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(#85795408 1px, transparent 1px),
+    linear-gradient(90deg, #85795408 1px, transparent 1px);
+  background-size: 112px 112px;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  color: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+}
+button {
+  border: 0;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+[hidden] {
+  display: none !important;
+}
+::selection {
+  background: #d9d6be;
+}
+.site-shell {
+  width: min(1480px, calc(100% - 104px));
+  margin: auto;
+}
+.sr-only,
+.skip:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip:focus {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  background: var(--card);
+  padding: 12px;
+}
+.masthead {
+  height: 108px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  gap: 50px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font: 12px/1.7 var(--mono);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+.brand svg {
+  width: 38px;
+  height: 38px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+}
+.brand svg circle {
+  fill: var(--accent);
+  stroke: none;
+}
+.brand-sub {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+}
+.masthead nav {
+  display: flex;
+  align-self: stretch;
+  gap: 36px;
+  margin-left: auto;
+  font-size: 12px;
+}
+.masthead nav a {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: var(--muted);
+}
+.masthead nav a:hover,
+.masthead nav a:focus-visible {
+  color: var(--ink);
+}
+.masthead .nav-current {
+  color: var(--ink);
+}
+.nav-current::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  width: 100%;
+}
+.edition {
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+  padding-left: 32px;
+}
+.edition > span,
+.slash {
+  margin: 0 9px;
+  color: #aeafa1;
+}
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 42px 0 37px;
+  gap: 25px;
+}
+.eyebrow {
+  font: 10px/1.6 var(--mono);
+  letter-spacing: 0.13em;
+  color: var(--accent);
+}
+h1 {
+  display: flex;
+  align-items: baseline;
+  gap: 25px;
+  font-size: clamp(36px, 4vw, 54px);
+  font-weight: 550;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+h1 > span {
+  font:
+    normal clamp(15px, 1.8vw, 24px) / 1.3 Georgia,
+    'Times New Roman',
+    serif;
+  letter-spacing: 0.11em;
+  color: var(--accent);
+}
+.intro-copy {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.intro-note {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 3px;
+}
+.small-orbit {
+  font:
+    44px/1 Georgia,
+    serif;
+  color: #a3987e;
+}
+.intro-note p {
+  font-size: 11px;
+  line-height: 2;
+  color: #777a6d;
+}
+.intro-note p span {
+  font-size: 10px;
+  color: #929386;
+}
+.observatory {
+  border: 1px solid #d9d9cd;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: 0 14px 32px -22px #726b5140;
+}
+.panel-top {
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding: 0 26px;
+  gap: 16px;
+}
+.panel-top h2,
+.section-heading h2 {
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: 0.09em;
+}
+.section-number {
+  font: 10px var(--mono);
+  color: #9a9b88;
+  margin-right: 14px;
+}
+.micro {
+  font: 10px/1.7 var(--mono);
+  color: #85877b;
+  letter-spacing: 0.035em;
+}
+.explorer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  min-height: 573px;
+}
+.map-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 45% 54%, #eae5d538, transparent 65%);
+}
+.map-caption {
+  position: absolute;
+  left: 27px;
+  top: 24px;
+  z-index: 1;
+  pointer-events: none;
+}
+.map-caption .eyebrow {
+  font-size: 9px;
+  color: #898c7d;
+}
+.map-caption p {
+  font-size: 11px;
+  color: #909183;
+  margin-top: 3px;
+}
+.star-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 920/630;
+}
+.orbit-chart {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.axis {
+  stroke: #e3e2d8;
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+}
+.orbital-paths ellipse {
+  fill: none;
+  stroke: #d7d6c9;
+  stroke-width: 1;
+  transition:
+    stroke 0.35s,
+    stroke-width 0.35s;
+}
+.orbital-paths ellipse.selected {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+.orbital-paths .belt {
+  stroke: #bfbba4;
+  stroke-width: 15;
+  stroke-dasharray: 1 8;
+  opacity: 0.35;
+}
+.map-registration {
+  stroke: #bdbfad;
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.7;
+}
+.map-zone {
+  fill: #a1a18f;
+  font: 9px var(--sans);
+  letter-spacing: 2px;
+}
+.map-zone.english {
+  font: 7px var(--mono);
+  letter-spacing: 1px;
+}
+.sun {
+  position: absolute;
+  left: 48.913%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 37px;
+  text-align: center;
+}
+.sun-disc {
+  display: block;
+  width: 37px;
+  height: 37px;
+  border: 1px solid #ddbe7d;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f9eab9, #e9c577 60%, #d9b269);
+  box-shadow:
+    0 0 0 7px #e6c97614,
+    0 0 0 16px #e6c9760c;
+}
+.sun-name {
+  display: block;
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: #90815e;
+  font-size: 10px;
+}
+.sun-name small {
+  font: 7px var(--mono);
+  letter-spacing: 0.13em;
+  display: block;
+  opacity: 0.7;
+}
+.body-point {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: var(--hit);
+  height: var(--hit);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.body-point::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--size) + 13px);
+  height: calc(var(--size) + 13px);
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    border-color 0.25s,
+    background 0.25s;
+  z-index: -1;
+}
+.body-point:hover::before,
+.body-point:focus-visible::before {
+  border-color: #b4ae97;
+  background: #eee8d459;
+}
+.body-point[aria-pressed='true']::before {
+  border-color: var(--accent);
+  background: #e9e2cf39;
+  box-shadow: 0 0 0 5px #baab810b;
+}
+.body-point img {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  max-width: none;
+  object-fit: contain;
+  filter: drop-shadow(2px 5px 3px #6e624e16);
+  transition: transform 0.3s;
+}
+.body-point:hover img {
+  transform: scale(1.09);
+}
+.body-point[data-select='saturn'] img {
+  width: calc(var(--size) * 1.5);
+  height: calc(var(--size) * 1.5);
+}
+.body-label {
+  position: absolute;
+  top: calc(50% + var(--size) / 2 + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: nowrap;
+  color: #656e62;
+  transition: color 0.25s;
+}
+.body-label small {
+  display: block;
+  font: 7px/1.7 var(--mono);
+  letter-spacing: 0.1em;
+  color: #9c9f90;
+}
+.body-point[aria-pressed='true'] .body-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+.body-point[aria-pressed='true'] .body-label::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  display: inline-block;
+  margin: 0 5px 2px 0;
+  border-radius: 50%;
+}
+.body-point.unavailable .body-label {
+  color: #979b8d;
+}
+.body-point.unavailable .body-label small {
+  font: 8px/1.7 var(--sans);
+  letter-spacing: 0.06em;
+}
+.schematic-planet {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #bcc8bf;
+  box-shadow: inset -4px -2px 3px #728d8038;
+  opacity: 0.75;
+  border: 1px solid #90a89966;
+}
+.schematic-planet.uranus {
+  width: 25px;
+  height: 25px;
+  background: #c9dddd;
+  box-shadow: inset -6px -3px 5px #93b5b642;
+  border-color: #a9c7c766;
+}
+.map-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 25px 20px;
+  color: #929485;
+  font-size: 9px;
+  line-height: 1.6;
+  margin-top: auto;
+}
+.map-bottom > span:first-child {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.legend-line {
+  width: 15px;
+  border-top: 1px solid #aba993;
+  display: inline-block;
+  margin-right: 7px;
+}
+.legend-dot {
+  height: 4px;
+  width: 4px;
+  background: #9a9f88;
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0 7px 0 17px;
+}
+.destination {
+  border-left: 1px solid var(--line);
+  background: linear-gradient(145deg, #f8f6ef, #f4f1e8);
+  padding: 25px 25px 20px;
+  display: flex;
+  flex-direction: column;
+  --accent: #82704d;
+}
+.destination-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+}
+.destination-top .eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.type-tag {
+  font-size: 9px;
+  color: var(--accent);
+  padding: 2px 7px;
+  border: 1px solid #b3aa8b5c;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.planet-portrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  aspect-ratio: 1.5;
+  margin-top: 3px;
+}
+.planet-portrait::before {
+  content: '';
+  width: 134px;
+  height: 134px;
+  border-radius: 50%;
+  border: 1px solid #c6c4b42b;
+  position: absolute;
+  z-index: -1;
+}
+.planet-portrait img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  max-width: 100%;
+  filter: drop-shadow(0 12px 7px #81765711);
+  animation: arrive 0.5s both;
+}
+.planet-portrait[data-body='saturn'] img {
+  width: 265px;
+  height: 215px;
+  max-width: 120%;
+}
+.portrait-word {
+  font:
+    54px/0.9 Georgia,
+    serif;
+  letter-spacing: 0.05em;
+  color: #8e886f0c;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  white-space: nowrap;
+}
+.portrait-cross {
+  position: absolute;
+  bottom: 5px;
+  right: 3px;
+  color: #b5b5a3;
+  font: 15px var(--mono);
+}
+.portrait-placeholder {
+  width: 110px;
+  height: 110px;
+  border: 1px dashed #a4bcb0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e2e9dc, #a2b5a94d);
+  position: relative;
+}
+.portrait-placeholder::after {
+  content: '档案待补充';
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  color: #8a958a;
+}
+.destination-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 3px 0;
+}
+.destination-title h3 {
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+}
+.destination-title > span {
+  font: 10px var(--mono);
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.destination-poem {
+  font-size: 12px;
+  color: var(--accent);
+  margin-top: 9px;
+}
+.destination-description {
+  font-size: 11px;
+  color: #828577;
+  line-height: 1.95;
+  margin-top: 8px;
+  min-height: 65px;
+}
+.destination-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+  margin: 15px 0 19px;
+}
+.destination-facts div + div {
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+.destination-facts dt {
+  font-size: 9px;
+  color: #8a8d7d;
+}
+.destination-facts dd {
+  font: 22px/1.6 var(--mono);
+  margin: 2px 0 0;
+  letter-spacing: -0.05em;
+}
+.destination-facts small {
+  font: 9px var(--sans);
+  letter-spacing: 0;
+  margin-left: 6px;
+  color: #969987;
+}
+.enter-link {
+  background: var(--accent);
+  color: #fcfbf6;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  transition:
+    filter 0.2s,
+    transform 0.2s;
+}
+.enter-link:hover {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+.enter-link svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.7;
+}
+.entry-note {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: #999a89;
+  text-align: center;
+  margin-top: 9px;
+}
+.unavailable-note {
+  padding: 12px 14px;
+  background: #e8eadd;
+  border: 1px solid #d4d9c7;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #74806c;
+}
+.catalog {
+  margin-top: 32px;
+}
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 17px;
+  gap: 20px;
+}
+.planet-catalog {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 10px;
+}
+.planet-card {
+  position: relative;
+  min-width: 0;
+  padding: 13px 10px 12px;
+  border: 1px solid #dadbcf;
+  background: #f8f6ef9c;
+  border-radius: 12px;
+  text-align: left;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+.planet-card:hover {
+  transform: translateY(-3px);
+  background: #fdfcf7;
+  border-color: #b4b9a4;
+}
+.planet-card[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 2px 8px #7166490c;
+}
+.planet-card[aria-pressed='true'] .card-marker {
+  background: var(--accent);
+  color: var(--card);
+  border-color: var(--accent);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 8px var(--mono);
+  color: #a3a38e;
+}
+.card-marker {
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #c1c4b3;
+  border-radius: 50%;
+  font-size: 9px;
+  color: transparent;
+}
+.card-image {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px -5px;
+}
+.card-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 4px #7e715911);
+}
+.planet-card[data-select='saturn'] img {
+  width: 113px;
+  max-width: none;
+  height: 90px;
+}
+.card-image .schematic-planet {
+  width: 39px;
+  height: 39px;
+  border-style: dashed;
+  opacity: 0.55;
+  box-shadow: inset -8px -6px 12px #63847236;
+}
+.planet-card h3 {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+.card-english {
+  font: 8px var(--mono);
+  letter-spacing: 0.08em;
+  color: #8f9485;
+  margin-top: 2px;
+}
+.card-status {
+  font-size: 9px;
+  line-height: 1.8;
+  color: #959984;
+  margin-top: 9px;
+  border-top: 1px solid #d8dac956;
+  padding-top: 7px;
+  white-space: nowrap;
+}
+.planet-card.unavailable {
+  background: #eeefe568;
+  border-style: dashed;
+}
+.planet-card.unavailable .card-marker {
+  width: auto;
+  border: 0;
+  color: #9d9f90;
+  font: 8px var(--sans);
+}
+.planet-card.unavailable[aria-pressed='true'] {
+  background: #e5ebdf;
+}
+.satellite-note {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: 25px;
+  padding: 18px 5px;
+}
+.moon-thumbnail {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #e6e7d780;
+}
+.moon-thumbnail img {
+  width: 88px;
+  height: 88px;
+}
+.satellite-copy .eyebrow {
+  font-size: 8px;
+}
+.satellite-copy .eyebrow > span {
+  padding: 0 8px;
+  color: #a4ac99;
+}
+.satellite-copy h3 {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.satellite-copy h3 > span {
+  font: 10px var(--mono);
+  color: #8a9784;
+  letter-spacing: 0.13em;
+  margin-left: 12px;
+}
+.satellite-copy > p:last-child {
+  color: #8a8f7d;
+  font-size: 10px;
+  margin-top: 2px;
+}
+.moon-select {
+  margin-left: auto;
+  padding: 10px 19px;
+  border: 1px solid #c5cebb;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  font-size: 11px;
+  transition: background 0.2s;
+}
+.moon-select span {
+  display: block;
+  font: 8px/1.8 var(--sans);
+  color: #9ba38c;
+  letter-spacing: 0.02em;
+  margin-top: 3px;
+}
+.moon-select:hover,
+.moon-select[aria-pressed='true'] {
+  background: #e2e7d7;
+}
+.moon-entry {
+  font-size: 11px;
+  border-bottom: 1px solid #b8c1a9;
+  line-height: 2.3;
+  margin: 0 20px;
+  color: #6d7d63;
+}
+.moon-entry:hover {
+  color: #374a2c;
+  border-color: #374a2c;
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  padding: 30px 0 35px;
+  font: 8px/1.8 var(--mono);
+  color: #a0a18e;
+  letter-spacing: 0.055em;
+}
+footer p span {
+  padding: 0 8px;
+}
+footer > p:nth-child(2) {
+  font: 9px var(--sans);
+  letter-spacing: 0.03em;
+}
+footer a {
+  font: 10px var(--sans);
+  color: #828970;
+  white-space: nowrap;
+}
+.no-script {
+  margin: 25px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+}
+.no-script a {
+  display: inline-block;
+  padding: 10px;
+  text-decoration: underline;
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (min-width: 1500px) {
+  .explorer-layout {
+    grid-template-columns: minmax(0, 1fr) 370px;
+  }
+  .destination {
+    padding: 27px 30px 24px;
+    justify-content: space-between;
+  }
+  .planet-portrait {
+    margin-top: 8px;
+    max-height: 260px;
+    flex: 1;
+  }
+  .planet-portrait img {
+    width: 260px;
+    height: 260px;
+  }
+  .planet-portrait[data-body='saturn'] img {
+    width: 310px;
+    height: 260px;
+  }
+  .destination-description {
+    font-size: 12px;
+  }
+  .destination-title h3 {
+    font-size: 33px;
+  }
+  .card-image {
+    height: 78px;
+  }
+}
+@media (max-width: 1100px) {
+  .site-shell {
+    width: calc(100% - 56px);
+  }
+  .masthead {
+    height: 94px;
+    gap: 28px;
+  }
+  .edition {
+    padding-left: 22px;
+  }
+  .intro {
+    padding: 30px 0;
+  }
+  .explorer-layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .destination {
+    padding: 22px;
+  }
+  .star-map {
+    min-height: 425px;
+  }
+  .map-caption {
+    top: 24px;
+    left: 20px;
+  }
+  .map-caption p {
+    max-width: 140px;
+  }
+  .map-bottom {
+    flex-direction: column;
+    gap: 7px;
+    padding-inline: 20px;
+  }
+  .planet-catalog {
+    gap: 7px;
+  }
+  .planet-card {
+    padding-inline: 8px;
+  }
+  .card-status {
+    font-size: 8px;
+  }
+  .body-label small {
+    font-size: 6px;
+  }
+  .section-heading .micro {
+    font-size: 9px;
+  }
+  .intro-note {
+    gap: 12px;
+  }
+  .small-orbit {
+    font-size: 34px;
+  }
+  .intro-note p {
+    font-size: 10px;
+  }
+}
+@media (max-width: 850px) {
+  .site-shell {
+    width: calc(100% - 40px);
+  }
+  .edition {
+    display: none;
+  }
+  .masthead {
+    height: 86px;
+  }
+  .intro-note {
+    display: none;
+  }
+  .intro {
+    padding: 27px 0;
+  }
+  .panel-top {
+    padding: 0 20px;
+    height: 57px;
+  }
+  .panel-top .micro {
+    font-size: 8px;
+  }
+  .explorer-layout {
+    grid-template-columns: 1fr;
+  }
+  .map-panel {
+    min-height: 480px;
+  }
+  .star-map {
+    min-height: 0;
+    max-height: none;
+  }
+  .map-caption {
+    top: 20px;
+  }
+  .map-bottom {
+    flex-direction: row;
+    padding-bottom: 17px;
+  }
+  .destination {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    column-gap: 23px;
+    padding: 22px;
+  }
+  .destination-top {
+    grid-column: 1/-1;
+    margin-bottom: 12px;
+  }
+  .planet-portrait {
+    align-self: center;
+    margin-top: 0;
+    grid-column: 1;
+    grid-row: 2;
+    aspect-ratio: 1;
+  }
+  .planet-portrait img {
+    width: 210px;
+    height: 210px;
+  }
+  .planet-portrait[data-body='saturn'] img {
+    width: 230px;
+    height: 230px;
+    max-width: 115%;
+  }
+  .portrait-word {
+    font-size: 43px;
+  }
+  .portrait-cross {
+    bottom: 20px;
+  }
+  .destination-copy {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .destination-title h3 {
+    font-size: 27px;
+  }
+  .destination-poem {
+    margin-top: 7px;
+  }
+  .destination-description {
+    min-height: 0;
+    font-size: 11px;
+  }
+  .destination-facts {
+    margin: 13px 0;
+    padding-top: 10px;
+  }
+  .destination-facts dd {
+    font-size: 20px;
+  }
+  .planet-catalog {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .planet-card {
+    padding: 12px 15px;
+  }
+  .card-image {
+    height: 68px;
+  }
+  .card-image img {
+    width: 85px;
+    height: 85px;
+  }
+  .card-status {
+    font-size: 9px;
+  }
+  .catalog {
+    margin-top: 27px;
+  }
+  .section-heading .micro {
+    display: none;
+  }
+  .satellite-note {
+    gap: 16px;
+  }
+  .moon-entry {
+    margin: 0 7px;
+  }
+  .satellite-copy .eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.03em;
+  }
+  footer > p:nth-child(2) {
+    max-width: 200px;
+    line-height: 1.7;
+    text-align: center;
+  }
+}
+@media (max-width: 540px) {
+  .site-shell {
+    width: calc(100% - 28px);
+  }
+  .masthead {
+    height: 76px;
+    gap: 15px;
+  }
+  .brand {
+    gap: 8px;
+    font-size: 10px;
+  }
+  .brand svg {
+    width: 31px;
+    height: 31px;
+  }
+  .brand-sub {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+  }
+  .masthead nav {
+    gap: 18px;
+    font-size: 10px;
+  }
+  .intro {
+    padding: 22px 2px 26px;
+  }
+  .intro .eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+  }
+  h1 {
+    font-size: 36px;
+    gap: 16px;
+    line-height: 1.75;
+  }
+  h1 > span {
+    font-size: 14px;
+    letter-spacing: 0.08em;
+  }
+  .intro-copy {
+    font-size: 10px;
+    letter-spacing: 0.035em;
+  }
+  .observatory {
+    border-radius: 15px;
+  }
+  .panel-top {
+    height: 52px;
+    padding: 0 15px;
+  }
+  .panel-top h2 {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+  .section-number {
+    margin-right: 9px;
+    font-size: 9px;
+  }
+  .panel-top .micro {
+    font-size: 0;
+  }
+  .panel-top .micro::after {
+    content: '点击星球，选择目的地';
+    font: 8px var(--sans);
+  }
+  .panel-top .slash {
+    display: none;
+  }
+  .map-panel {
+    min-height: 340px;
+    justify-content: center;
+    padding-top: 34px;
+  }
+  .map-caption {
+    left: 16px;
+    top: 14px;
+  }
+  .map-caption .eyebrow {
+    font-size: 7px;
+  }
+  .map-caption p {
+    display: none;
+  }
+  .star-map {
+    aspect-ratio: 920/700;
+    margin: 14px 0 24px;
+  }
+  .orbit-chart {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .body-point {
+    --size: var(--mobile-size) !important;
+  }
+  .body-point img {
+    max-width: 70px;
+  }
+  .body-label {
+    font-size: 9px;
+    top: calc(50% + var(--size) / 2 + 4px);
+  }
+  .body-label small {
+    display: none;
+  }
+  .body-point.unavailable .body-label small {
+    display: none;
+  }
+  .sun {
+    width: 24px;
+  }
+  .sun-disc {
+    width: 24px;
+    height: 24px;
+    box-shadow: 0 0 0 5px #e6c97614;
+  }
+  .sun-name {
+    font-size: 8px;
+    top: 29px;
+  }
+  .sun-name small {
+    font-size: 6px;
+  }
+  .map-zone {
+    font-size: 11px;
+  }
+  .map-zone.english {
+    display: none;
+  }
+  .map-bottom {
+    font-size: 7px;
+    padding: 5px 15px 15px;
+    gap: 5px;
+  }
+  .legend-dot {
+    margin-left: 8px;
+  }
+  .legend-line {
+    width: 10px;
+    margin-right: 4px;
+  }
+  .destination {
+    padding: 17px;
+    grid-template-columns: 105px minmax(0, 1fr);
+    column-gap: 13px;
+  }
+  .destination-top {
+    margin-bottom: 12px;
+  }
+  .destination-top .eyebrow {
+    font-size: 8px;
+  }
+  .type-tag {
+    font-size: 8px;
+  }
+  .planet-portrait {
+    align-self: start;
+    position: relative;
+    margin-top: 9px;
+    width: 105px;
+    height: 118px;
+  }
+  .planet-portrait::before {
+    width: 92px;
+    height: 92px;
+  }
+  .planet-portrait img {
+    width: 126px;
+    height: 126px;
+    max-width: none;
+  }
+  .planet-portrait[data-body='saturn'] img {
+    width: 155px;
+    height: 155px;
+    max-width: none;
+  }
+  .portrait-word {
+    font-size: 22px;
+    top: 80%;
+    color: #8e886f12;
+  }
+  .portrait-cross {
+    display: none;
+  }
+  .destination-title {
+    gap: 9px;
+    margin: 2px 0;
+  }
+  .destination-title h3 {
+    font-size: 24px;
+  }
+  .destination-title > span {
+    font-size: 8px;
+    letter-spacing: 0.09em;
+  }
+  .destination-poem {
+    font-size: 10px;
+    margin-top: 8px;
+  }
+  .destination-description {
+    font-size: 10px;
+    margin-top: 6px;
+    line-height: 1.9;
+  }
+  .destination-copy {
+    display: contents;
+  }
+  .destination-title,
+  .destination-poem,
+  .destination-description {
+    grid-column: 2;
+  }
+  .destination-title {
+    grid-row: 2;
+    align-self: start;
+    height: 34px;
+  }
+  .destination-poem {
+    grid-row: 2;
+    align-self: start;
+    margin-top: 41px;
+  }
+  .destination-description {
+    grid-row: 2;
+    align-self: start;
+    margin-top: 69px;
+    min-height: 70px;
+  }
+  .destination-facts {
+    grid-column: 1/-1;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    gap: 12px;
+    grid-row: 3;
+  }
+  .destination-facts dt {
+    font-size: 9px;
+  }
+  .destination-facts dd {
+    font-size: 21px;
+  }
+  .destination-facts div + div {
+    padding-left: 25px;
+  }
+  .enter-link,
+  .unavailable-note {
+    grid-column: 1/-1;
+    grid-row: 4;
+    min-height: 44px;
+    font-size: 11px;
+  }
+  .entry-note {
+    grid-column: 1/-1;
+    grid-row: 5;
+    font-size: 8px;
+  }
+  .portrait-placeholder {
+    width: 74px;
+    height: 74px;
+  }
+  .portrait-placeholder::after {
+    font-size: 8px;
+  }
+  .section-heading h2 {
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  .catalog {
+    margin-top: 26px;
+  }
+  .section-heading {
+    margin-bottom: 14px;
+  }
+  .planet-catalog {
+    gap: 8px;
+  }
+  .planet-card {
+    padding: 10px 8px;
+  }
+  .card-top {
+    font-size: 7px;
+  }
+  .card-image {
+    height: 57px;
+    margin: 3px -7px;
+  }
+  .card-image img {
+    width: 68px;
+    height: 68px;
+  }
+  .planet-card[data-select='saturn'] img {
+    width: 90px;
+    height: 80px;
+  }
+  .card-image .schematic-planet {
+    width: 32px;
+    height: 32px;
+  }
+  .planet-card h3 {
+    font-size: 11px;
+  }
+  .card-english {
+    font-size: 7px;
+    letter-spacing: 0.02em;
+  }
+  .card-status {
+    font-size: 8px;
+    margin-top: 7px;
+    padding-top: 6px;
+    letter-spacing: -0.01em;
+  }
+  .planet-card.unavailable .card-marker {
+    font-size: 7px;
+  }
+  .satellite-note {
+    display: grid;
+    grid-template-columns: 67px 1fr;
+    gap: 10px 13px;
+    padding: 18px 3px;
+    margin-top: 23px;
+  }
+  .moon-thumbnail {
+    width: 65px;
+    height: 65px;
+  }
+  .moon-thumbnail img {
+    width: 65px;
+    height: 65px;
+  }
+  .satellite-copy .eyebrow {
+    font-size: 7px;
+  }
+  .satellite-copy h3 {
+    font-size: 16px;
+    margin-top: 2px;
+  }
+  .satellite-copy h3 > span {
+    font-size: 8px;
+  }
+  .satellite-copy > p:last-child {
+    font-size: 9px;
+  }
+  .moon-select {
+    grid-column: 1/-1;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    padding: 10px 12px;
+    min-height: 42px;
+  }
+  .moon-select span {
+    margin: 0;
+  }
+  .moon-entry {
+    grid-column: 1/-1;
+    justify-self: center;
+    font-size: 10px;
+    margin-top: 3px;
+  }
+  footer {
+    padding: 23px 0;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 7px;
+  }
+  footer > p:nth-child(2) {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    text-align: left;
+    font-size: 8px;
+  }
+  footer a {
+    font-size: 9px;
+  }
+}
+@media (max-width: 540px) {
+  .star-map {
+    aspect-ratio: 920/630;
+  }
+  .body-point {
+    width: max(44px, var(--mobile-size));
+    height: max(44px, var(--mobile-size));
+  }
+  .planet-portrait img {
+    width: 105px;
+    height: 105px;
+  }
+  .planet-portrait[data-body='saturn'] img {
+    width: 120px;
+    height: 120px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

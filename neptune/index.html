@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#eeece5" />
+    <meta
+      name="description"
+      content="海王星观察档案：探索蓝色冰巨星、风暴与行星环，走近逆行卫星海卫一。独立本地交互科普项目。"
+    />
+    <title>海王星 · Neptune Observatory</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="vendor/three.min.js"></script>
+    <script defer src="vendor/OrbitControls.js"></script>
+    <script defer src="assets/models.js"></script>
+    <script defer src="data.js"></script>
+    <script defer src="model.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body id="top">
+    <a class="skip" href="#main">跳到正文</a>
+    <a class="floating back" href="#top" aria-label="回到页面顶部"
+      ><svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m9 4-6 6 6 6M3 10h9a8 8 0 0 1 8 8" /></svg
+      >BACK</a
+    >
+    <button
+      class="floating music"
+      id="music"
+      type="button"
+      aria-pressed="false"
+      aria-label="播放音乐"
+    >
+      <span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span
+      ><span id="music-text">MUSIC OFF</span>
+    </button>
+    <header class="masthead wrap">
+      <a href="#top" class="brand">EMPTY610 <span>/ SOLAR LABORATORY</span></a
+      ><span class="edition">FIELD NOTES — 08</span>
+    </header>
+    <main id="main" class="wrap">
+      <section class="hero" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">NEPTUNE OBSERVATION SYSTEM</p>
+          <h1 id="title">海王星<span>NEPTUNE</span></h1>
+          <p class="hero-copy">抵达光的远岸。<br />在漫长的蓝色寂静里，风暴从未停息。</p>
+        </div>
+        <div class="hero-side">
+          <span class="live-dot"></span> 外太阳系 · 冰巨星
+          <p>30 AU FROM THE SUN<br />ONE YEAR / 165 EARTH YEARS</p>
+        </div>
+      </section>
+      <nav class="section-nav" aria-label="本页导航">
+        <a href="#observatory">三维观察</a><a href="#portrait">行星档案</a
+        ><a href="#gallery">影像札记</a><a href="#triton">海卫一</a><a href="#orbit">轨道实验室</a
+        ><a href="#exploration">探索历程</a>
+      </nav>
+      <section id="observatory" class="panel observatory" aria-labelledby="model-heading">
+        <div class="panel-top">
+          <h2 id="model-heading"><span class="section-no">00</span> 三维观察台</h2>
+          <span class="status" id="model-status" role="status">正在准备模型</span>
+        </div>
+        <div class="model-tabs" aria-label="选择观察对象">
+          <button data-view="neptune" aria-pressed="true">海王星</button
+          ><button data-view="rings" aria-pressed="false">行星环</button
+          ><button data-view="triton" aria-pressed="false">海卫一</button
+          ><button data-view="system" aria-pressed="false">系统全景</button>
+        </div>
+        <div class="model-layout">
+          <aside class="model-profile">
+            <p class="eyebrow" id="body-tag">THE EIGHTH PLANET</p>
+            <h3 id="body-title">蓝色，不等于平静。</h3>
+            <p id="body-copy">
+              看起来平静的蓝色，并不是一片海洋。你看到的是云层与大气；这里没有可供站立的地面，却有不断变化的风暴。往下阅读前，不妨先转动模型，找找明亮的云带。
+            </p>
+            <dl id="body-facts">
+              <div>
+                <dt>赤道直径</dt>
+                <dd>49,528 <small>km</small></dd>
+              </div>
+              <div>
+                <dt>自转周期</dt>
+                <dd>约 16 <small>小时</small></dd>
+              </div>
+              <div>
+                <dt>行星分类</dt>
+                <dd>冰巨星</dd>
+              </div>
+            </dl>
+            <details>
+              <summary>模型说明</summary>
+              <p>
+                使用 NASA VTAD 模型与原始 UV
+                贴图。色彩及照明经过展示处理，不代表严格的肉眼色彩。海卫一未完整成像区域不应解读为真实地貌。
+              </p>
+              <p>
+                系统全景保留球体和距离的相对尺度；轨道简化为圆，初始相位任意，不用于定位天体。行星环厚度与亮度放大以便观察。
+              </p>
+            </details>
+          </aside>
+          <div class="model-view" id="model-stage">
+            <div id="model-mount"></div>
+            <div class="model-loading" id="model-loading"><span></span>正在展开蓝色世界</div>
+            <div id="model-fallback" class="model-fallback" hidden>
+              <img src="assets/dark-spot.jpg" alt="旅行者二号拍摄的海王星大黑斑" />
+              <p>当前设备无法启用三维视图，仍可浏览全部图文资料。</p>
+            </div>
+            <span class="model-watermark" aria-hidden="true">N / 08</span
+            ><span id="moon-label" hidden>TRITON · 海卫一</span>
+            <p class="model-hint">拖动旋转 · 滚轮 / 双指缩放</p>
+          </div>
+        </div>
+        <div class="model-bottom">
+          <span id="model-note">NASA VTAD / 可视化模型</span>
+          <div class="button-row">
+            <button id="lighting" aria-pressed="false">昼夜照明</button
+            ><button id="spin" aria-pressed="true">暂停自转</button
+            ><button id="reset">重置视角 ↺</button>
+          </div>
+        </div>
+      </section>
+      <div class="stat-strip reveal">
+        <div>
+          <span>日地距离的</span><strong>30<span>倍</span></strong
+          ><small>平均日心距离</small>
+        </div>
+        <div>
+          <span>一个漫长的年</span><strong>165<span>年</span></strong
+          ><small>约一个公转周期</small>
+        </div>
+        <div>
+          <span>阳光仍在赶路</span><strong>4<span>小时</span></strong
+          ><small>太阳光单程传播时间，约值</small>
+        </div>
+        <div>
+          <span>迄今近距离造访</span><strong>1<span>次</span></strong
+          ><small>旅行者二号 · 1989</small>
+        </div>
+      </div>
+      <section id="portrait" class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">01 / PLANETARY PORTRAIT</p>
+          <h2>不是冰封的海洋，<br />而是一种极端的世界。</h2>
+          <p>
+            把海王星叫作“冰巨星”，说的是构成它的物质，<br
+              class="desktop"
+            />而不是说它是一颗可以站立的巨大冰球。
+          </p>
+        </div>
+        <div class="essay-grid">
+          <article class="panel essay">
+            <span class="article-num">A / ATMOSPHERE</span>
+            <h3>云层之下，没有一条“海岸线”</h3>
+            <p>
+              如果你是从水星、金星或火星来到这里，首先需要放下一个很自然的习惯：不要急着寻找落脚的地面。海王星外层主要由氢和氦构成，少量甲烷参与塑造了它的颜色；我们看到的轮廓是大气，而不是一层可以踩上去的蓝色外壳。
+            </p>
+            <p>
+              继续向下，压力与温度不断升高，气体逐渐过渡到更致密的流体。你不会像穿过地球云层那样，忽然发现下方展开了一片海岸。这里没有我们熟悉的、可以直接区分天空与陆地的坚硬地表。
+            </p>
+            <p>
+              那为什么还要叫它“冰巨星”？这里的“冰”更多是在谈成分：水、氨、甲烷等物质在太阳系形成时的低温环境里容易凝结，但进入行星深处后，状态并不一定还是我们冰箱里的冰块。高温与高压会让熟悉的物质表现得很陌生。
+            </p>
+            <p>
+              需要说明的是，我们并没有把探测器送进它的深处。这些内部结构认识来自观测约束与物理模型，而不是一张已经拍好的地下剖面照片。名字为我们提供分类，却不能替代对真实环境的理解。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/neptune/neptune-facts/"
+              target="_blank"
+              rel="noopener"
+              >NASA · 行星概况 ↗</a
+            >
+          </article>
+          <article class="panel essay">
+            <span class="article-num">B / COLOUR</span>
+            <h3>记忆中的深蓝，有一部分来自处理</h3>
+            <p>
+              说到海王星，你大概会想到一颗深蓝色的球。可如果有人告诉你，它并没有记忆中那么蓝，你会不会觉得照片“骗了人”？先别急着下结论：经典旅行者影像为了让云带与风暴更容易辨认，增强过颜色与对比度；后来在传播中，这层说明常常被省略了。
+            </p>
+            <p>
+              2024
+              年的重新校准研究表明，在可见光下，海王星与天王星其实都更接近浅蓝绿色，色差没有一些旧图那样强烈。这并不抹去原始观测，而是让我们更清楚地知道：照片里的哪些信息来自行星，哪些来自呈现方式。
+            </p>
+            <p>
+              因此，科学影像不能简单分成“真的”和“假的”。增强色帮助辨认结构，近红外揭示另一些物质和高度，自然色重建则试图接近人眼所见。阅读前先问一句“这张图用什么波段、想展示什么”，通常比争论它够不够蓝更有用。这里的模型保留了经典贴图，色彩只作可视化展示。
+            </p>
+            <a
+              class="source"
+              href="https://www.ox.ac.uk/news/2024-01-05-new-images-reveal-what-neptune-and-uranus-really-look-0"
+              target="_blank"
+              rel="noopener"
+              >Oxford · 色彩重建研究 ↗</a
+            >
+          </article>
+          <article class="panel essay">
+            <span class="article-num">C / WEATHER</span>
+            <h3>大黑斑不是一块永恒的标记</h3>
+            <p>
+              如果你在模型上看到一块暗斑，请不要把它当成像月海那样固定的地标。1989
+              年，旅行者二号拍到了著名的大黑斑；等到哈勃在 1994
+              年再次仔细观察时，那一个暗斑已经不见了。后来出现的新暗斑，也不能直接认作它换了个位置。
+            </p>
+            <p>
+              这是一颗会“换天气”的行星。暗色涡旋会形成、迁移和衰减，附近的亮云则能帮助我们追踪气流；当空气被抬升、冷却，甲烷可以凝结成高空云。看起来很安静的一张照片，记录的可能是一套剧烈变化的系统。
+            </p>
+            <p>
+              所以，要理解海王星，拍到一张清晰照片只是开始。我们还需要不断回来，看同一片区域在下一次自转、下一年、甚至更长时间里发生了什么。对气象研究而言，一连串不那么惊艳的记录，也许比一张最漂亮的照片更重要。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/missions/hubble/hubble-tracks-the-lifecycle-of-giant-storms-on-neptune/"
+              target="_blank"
+              rel="noopener"
+              >Hubble · 追踪风暴的生命周期 ↗</a
+            >
+          </article>
+          <article class="panel essay">
+            <span class="article-num">D / MAGNETIC WORLD</span>
+            <h3>偏斜的磁场，偏离两极的极光</h3>
+            <p>
+              接着，把视线从云层移到更高的大气。我们习惯把极光与南北极联系起来，但海王星并不完全遵循这幅图景：它的磁场轴与自转轴明显偏斜，因此控制带电粒子运动的“磁方向”，并不等同于地图上的南北方向。
+            </p>
+            <p>
+              2025
+              年公布的韦布观测首次直接探测到了海王星的极光发射，位置出现在地理中纬度附近。数据中的三氢阳离子（H₃⁺）发射，是辨认和研究高层大气的一条重要线索；这些红外信号并不等于人眼会看到同样颜色的光带。
+            </p>
+            <p>
+              有趣的是，即使远离太阳，海王星也没有与太阳风断开联系。极光让我们看到带电粒子、磁场和大气如何相互作用。它提醒我们，行星的范围不只到那颗圆球为止，周围看似空无一物的空间，同样是它的一部分环境。
+            </p>
+            <a
+              class="source"
+              href="https://science.nasa.gov/missions/webb/nasas-webb-captures-neptunes-auroras-for-first-time/"
+              target="_blank"
+              rel="noopener"
+              >Webb · 海王星极光 ↗</a
+            >
+          </article>
+        </div>
+      </section>
+      <section id="gallery" class="section-block reveal">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">02 / IMAGE FIELD NOTES</p>
+            <h2>三张影像，三种读法。</h2>
+          </div>
+          <p>单击展开影像与分段说明。<br />可见光、增强色与近红外，记录着不同的信息。</p>
+        </div>
+        <div class="image-grid">
+          <button class="image-card" data-photo="storm">
+            <img
+              src="assets/dark-spot.jpg"
+              width="700"
+              height="852"
+              loading="lazy"
+              alt="海王星大黑斑与白色高空云"
+            /><span class="image-caption"
+              ><small>VOYAGER 2 · 1989</small><strong>风暴边缘的白色云羽</strong
+              ><span>大黑斑 / 滤光片合成影像 <b>↗</b></span></span
+            >
+          </button>
+          <button class="image-card" data-photo="rings">
+            <img
+              src="assets/webb-rings.jpg"
+              width="1280"
+              height="1280"
+              loading="lazy"
+              alt="韦布近红外影像中的海王星和明亮行星环"
+            /><span class="image-caption"
+              ><small>WEBB · 2022</small><strong>当蓝色褪去，尘埃亮起</strong
+              ><span>行星环 / 近红外映射色 <b>↗</b></span></span
+            >
+          </button>
+          <button class="image-card" data-photo="triton">
+            <img
+              src="assets/triton-mosaic.jpg"
+              width="1400"
+              height="1400"
+              loading="lazy"
+              alt="旅行者二号海卫一全球彩色拼接影像"
+            /><span class="image-caption"
+              ><small>VOYAGER 2 · 1989</small><strong>一颗逆行冰月的面孔</strong
+              ><span>海卫一 / 多滤光片拼接 <b>↗</b></span></span
+            >
+          </button>
+        </div>
+      </section>
+      <section id="triton" class="section-block reveal triton-section">
+        <div class="triton-art">
+          <img
+            src="assets/triton-mosaic.jpg"
+            width="1400"
+            height="1400"
+            loading="lazy"
+            alt="海卫一的浅色极区与复杂地貌"
+          /><span>TRITON<br /><small>THE CAPTURED WORLD?</small></span>
+        </div>
+        <div class="triton-story">
+          <p class="eyebrow">03 / A MOON AGAINST THE CURRENT</p>
+          <h2>海卫一。<br />向相反方向，<em>绕行。</em></h2>
+          <p class="lead">
+            在太阳系的大型卫星中，海卫一的逆行轨道格外醒目。它的过去，可能不属于海王星。
+          </p>
+          <p>
+            海卫一绕海王星公转的方向，与行星自转方向相反。如果它和海王星身边的物质一起在同一个盘中形成，这样的方向就显得不太顺理成章。因此，一个重要解释是：它原本独立绕太阳运行，后来才被海王星捕获，可能来自柯伊伯带。不过，这是用现有线索重建过去的假说，并不是人类亲眼见证过的相遇。
+          </p>
+          <p>
+            这里还容易产生一个小误会：海卫一大致总以同一面朝向海王星，并不意味着它不自转。恰恰相反，它要在公转一圈的同时也自转一圈，才能维持同一面朝内。你可以用手拿着一个物体绕桌面中心走一圈，始终让同一面朝向中心，再看看它相对房间的朝向是不是已经转过一周。
+          </p>
+          <div class="small-facts">
+            <div><strong>≈ 2,707 km</strong><span>直径</span></div>
+            <div><strong>5.877 天</strong><span>公转 / 同步自转周期</span></div>
+            <div><strong>≈ −235 °C</strong><span>旅行者观测的极低表面温度</span></div>
+          </div>
+          <details class="expanded-note">
+            <summary>如此寒冷，为什么还能看到活动？</summary>
+            <p>
+              约 −235°C
+              的表面，听起来像一个把所有活动都冻结的地方。可旅行者二号偏偏拍到了羽状喷流，以及沿风向延伸的深色沉积。问题不在于它是否达到地球上“温暖”的标准，而在于当地物质对温度变化有怎样的反应。
+            </p>
+            <p>
+              在这样的环境里，氮等挥发性物质能参与冰与气体之间的交换。太阳加热引发的升华与压力积累，是解释喷流的重要思路；不要一看到“喷发”，就把它想象成地球上红热的岩浆。具体机制仍需要更多观测检验。
+            </p>
+            <p>
+              海卫一的氮质稀薄大气、冰质平原与复杂纹理，还留下了另一组问题：表面曾怎样被改造，哪些过程仍可能持续？部分地区撞击坑稀少是重要线索，但一次短暂飞掠不足以写完它的地质史。我们看到的惊喜不少，没有看到的地方与时刻更多。
+            </p>
+          </details>
+          <a
+            class="source"
+            href="https://science.nasa.gov/neptune/moons/triton/"
+            target="_blank"
+            rel="noopener"
+            >NASA · 海卫一档案 ↗</a
+          >
+        </div>
+      </section>
+      <section id="orbit" class="panel orbit-section reveal">
+        <div class="panel-top">
+          <h2><span class="section-no">04</span> 日心轨道实验室</h2>
+          <span class="eyebrow">TIME, ON ANOTHER SCALE</span>
+        </div>
+        <div class="orbit-layout">
+          <div class="orbit-canvas">
+            <svg
+              id="orbit-svg"
+              viewBox="0 0 600 530"
+              role="img"
+              aria-label="地球与海王星绕日周期的示意图"
+            >
+              <defs>
+                <radialGradient id="sun-fill">
+                  <stop stop-color="#fff6c8" />
+                  <stop offset=".45" stop-color="#f9ce77" />
+                  <stop offset="1" stop-color="#dba447" />
+                </radialGradient>
+                <radialGradient id="neptune-fill">
+                  <stop stop-color="#a2c8d3" />
+                  <stop offset="1" stop-color="#365c80" />
+                </radialGradient>
+              </defs>
+              <circle class="orbit-path" cx="300" cy="265" r="208" />
+              <circle class="orbit-path inner" cx="300" cy="265" r="78" />
+              <line x1="300" y1="265" x2="508" y2="265" class="orbit-guide" />
+              <g
+                id="sun-toggle"
+                role="button"
+                tabindex="0"
+                aria-label="暂停日心轨道演示"
+                aria-pressed="true"
+              >
+                <circle class="sun-hit" cx="300" cy="265" r="34" fill="transparent" />
+                <circle cx="300" cy="265" r="22" fill="url(#sun-fill)" />
+                <text x="300" y="310" text-anchor="middle">太阳</text>
+              </g>
+              <g id="earth-dot">
+                <circle r="6" fill="#8b9b85" />
+                <text y="-16" text-anchor="middle">地球</text>
+              </g>
+              <g id="neptune-dot">
+                <circle r="13" fill="url(#neptune-fill)" />
+                <text y="-25" text-anchor="middle">海王星</text>
+              </g>
+              <text class="orbit-label" x="300" y="512" text-anchor="middle">
+                单击太阳，开始 / 暂停
+              </text>
+            </svg>
+          </div>
+          <div class="orbit-copy">
+            <p class="eyebrow">A VERY LONG YEAR</p>
+            <h3>地球走过一生，<br />它仍在走一圈。</h3>
+            <p>
+              先点一下太阳，让两颗行星一起动起来。地球一次次回到起点时，海王星只前进了一小段；等它终于走完一圈，地球已经过去约
+              165 年。这里默认把这段时间压缩到一分钟左右，真实的等待则远超一个人的通常寿命。
+            </p>
+            <p>
+              海王星同样有轴倾角，也有季节，只是一个季节要持续数十个地球年。对我们来说，一个观测项目可能已经跨过几代仪器；对它而言，或许还只是同一个季节。轨道演示仅表现周期，不包含季节光照。
+            </p>
+            <div class="orbit-reading">
+              <strong id="year-value">0.0</strong><span>已过地球年</span
+              ><small id="orbit-progress">海王星公转 0.0%</small>
+            </div>
+            <label for="orbit-time">拖动时间轴 <span>0 — 164.8 年</span></label
+            ><input id="orbit-time" type="range" min="0" max="164.8" step="0.1" value="0" />
+            <div class="button-row">
+              <button id="orbit-play" aria-pressed="true">暂停演示</button
+              ><button id="orbit-reset">从头开始 ↺</button
+              ><label class="speed-label"
+                >速度
+                <select id="orbit-speed">
+                  <option value="1">1×</option>
+                  <option value="3" selected>3×</option>
+                  <option value="6">6×</option>
+                </select></label
+              >
+            </div>
+            <p class="fineprint">
+              圆轨道、俯视示意；轨道半径与天体大小不按比例，周期比近似真实。1× 为每秒 1
+              地球年；暂停按钮、太阳和时间轴共享同一状态。不是实时星历。
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">05 / THE FAINT RINGS</p>
+          <h2>不是土星的复制品。</h2>
+          <p>海王星也有环，只是纤细、暗弱，且并不均匀。</p>
+        </div>
+        <div class="ring-story">
+          <article>
+            <h3>从完整的环，到聚集的弧</h3>
+            <p>
+              如果你刚刚在三维模型里几乎找不到环，不一定是眼神不好。海王星环本来就暗弱，和土星那种醒目的宽环不是同一种视觉体验。主要环从内向外包括
+              Galle、Le Verrier、Lassell、Arago 和
+              Adams；模型为了可读性放大了它们的亮度，不能按画面判断真实可见程度。
+            </p>
+            <p>
+              更有趣的地方在最外侧 Adams
+              环：部分物质没有均匀铺成一圈，而是聚集成较亮的环弧。你可以把它想象成一条细线中更浓的几段，但这些并不是粘在固定支架上的装饰，每一个粒子都在绕行。
+            </p>
+            <p>
+              于是问题来了：不同半径处的粒子速度不同，聚在一起的物质为什么没有很快被拉散？卫星引力、轨道共振与粒子之间的相互作用，都进入了解释范围。关于环弧如何维持、又如何随时间变化，研究仍在继续。那条看起来很简单的细线，其实是一道正在运动的力学题。
+            </p>
+            <a class="source" href="https://arxiv.org/abs/1906.11728" target="_blank" rel="noopener"
+              >《The rings of Neptune》综述 ↗</a
+            >
+          </article>
+          <div class="ring-table">
+            <div>
+              <span>GALLE</span><strong>41,900 <small>km</small></strong>
+            </div>
+            <div>
+              <span>LE VERRIER</span><strong>53,200 <small>km</small></strong>
+            </div>
+            <div>
+              <span>LASSELL</span><strong>55,400 <small>km</small></strong>
+            </div>
+            <div>
+              <span>ARAGO</span><strong>57,600 <small>km</small></strong>
+            </div>
+            <div>
+              <span>ADAMS</span><strong>62,930 <small>km</small></strong>
+            </div>
+            <p class="fineprint">
+              到行星中心的近似距离。<a
+                href="https://planetarynames.wr.usgs.gov/Page/Rings"
+                target="_blank"
+                rel="noopener"
+                >USGS / 行星环命名资料 ↗</a
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="exploration" class="section-block reveal">
+        <div class="section-heading">
+          <p class="eyebrow">06 / A BRIEF HISTORY OF LOOKING OUTWARD</p>
+          <h2>先在纸上找到，<br />再从星空中确认。</h2>
+        </div>
+        <div class="timeline">
+          <article>
+            <time>1846</time>
+            <div>
+              <h3>引力留下的线索</h3>
+              <p>
+                故事不是从望远镜里突然冒出一颗蓝点开始的。天王星运动与预测之间的偏差，让人们怀疑还有未被辨认的行星在施加引力。勒维耶给出的位置指引了伽勒等人的观测，海王星终于在
+                1846
+                年被确认；同年，拉塞尔又发现海卫一。看不见的东西，也可能先通过它对别人的影响留下线索。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>1989</time>
+            <div>
+              <h3>旅行者二号：一次不可替代的掠过</h3>
+              <p>
+                旅行者二号在 8
+                月飞掠，带回大黑斑、细窄行星环和海卫一喷流的近景。许多后来反复出现在书本上的海王星形象，都来自这次相遇。但它没有留下来绕行，无法等待一个风暴从形成到消散。这份珍贵记录让我们看清了许多细节，也留下了大量关于变化过程的问题。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>1994 →</time>
+            <div>
+              <h3>把单次快照变成长时序</h3>
+              <p>
+                哈勃的后续观测发现，旧暗斑消失了，新暗斑又出现了。分辨率与近距离飞掠不同，但长期追踪补上了另一种能力：让我们看到同一颗行星如何随时间改变。一次看得近，和许多年一直看，各自回答着不同的问题。
+              </p>
+            </div>
+          </article>
+          <article>
+            <time>2022–25</time>
+            <div>
+              <h3>用红外重读这颗星球</h3>
+              <p>
+                韦布的红外观测让暗淡圆盘、明亮高空云与纤细行星环呈现出新的对比，随后公布的观测又揭示了极光。我们不是只给熟悉的照片换了一套颜色，而是换了一种提问方式：哪些物质在吸收光，哪些区域在发射光，原本看不见的变化藏在哪里？
+              </p>
+            </div>
+          </article>
+        </div>
+        <a
+          class="source"
+          href="https://science.nasa.gov/neptune/exploration/"
+          target="_blank"
+          rel="noopener"
+          >NASA · 海王星探索历程 ↗</a
+        >
+      </section>
+      <footer>
+        <div>
+          <p class="eyebrow">THE EDGE IS ANOTHER BEGINNING</p>
+          <h2>远处并不空无一物。</h2>
+          <p>
+            我们对海王星的认识，远没有它与太阳的距离那么长。愿这些影像与演示能让你在下一次看到那颗蓝色圆球时，多想到一点它尚未讲完的故事。
+          </p>
+          <p>NEPTUNE / 独立本地预览 · EMPTY610 SOLAR LABORATORY</p>
+        </div>
+        <a href="SOURCES.md">素材与数据来源 ↗</a>
+      </footer>
+    </main>
+    <dialog id="photo-dialog" aria-labelledby="photo-title">
+      <button id="close-photo" class="dialog-close" aria-label="关闭影像介绍">×</button
+      ><img id="photo-image" alt="" />
+      <div class="dialog-copy">
+        <p class="eyebrow" id="photo-tag"></p>
+        <h2 id="photo-title"></h2>
+        <div id="photo-description"></div>
+        <a class="source" id="photo-source" target="_blank" rel="noopener">查看官方原始资料 ↗</a>
+      </div>
+    </dialog>
+    <noscript
+      ><p class="noscript">
+        当前未启用 JavaScript，三维模型和交互不可用；下方介绍与图片仍可阅读。
+      </p></noscript
+    >
+  </body>
+</html>

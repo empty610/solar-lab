@@ -1,0 +1,142 @@
+.orbital-paths .dwarf-orbit {
+  stroke: #b9a899;
+  stroke-dasharray: 2 6;
+  stroke-width: 1;
+  opacity: 0.7;
+}
+.orbital-paths .dwarf-orbit.selected {
+  opacity: 1;
+}
+.body-point[data-select='pluto'] .body-label {
+  top: auto;
+  bottom: calc(50% + var(--size) / 2 + 5px);
+}
+.body-point {
+  will-change: left, top;
+}
+.motion-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 9px 15px;
+  padding: 10px 15px 0;
+  font-size: 11px;
+  color: #78816a;
+}
+.motion-controls button,
+.motion-controls select {
+  color: #62714f;
+  background: #f3f4e9;
+  border: 1px solid #d1d8c1;
+  border-radius: 6px;
+  padding: 6px 11px;
+  font: inherit;
+  min-height: 34px;
+}
+.motion-controls button:hover {
+  background: #e5ead9;
+}
+.motion-controls #atlas-play[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.motion-controls label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.motion-controls select {
+  padding-right: 7px;
+}
+.motion-controls span {
+  font-size: 10px;
+  color: #8a947c;
+  min-width: 125px;
+}
+.dwarf-note {
+  background: #eee5dc85;
+  border-color: #dccbbc;
+}
+.dwarf-note .eyebrow,
+.dwarf-note .moon-entry {
+  color: #8b6e56;
+}
+.dwarf-note .moon-select {
+  border-color: #cbb7a4;
+}
+.dwarf-note .moon-select:hover,
+.dwarf-note .moon-select[aria-pressed='true'] {
+  background: #e9dcd0;
+}
+.dwarf-note .moon-thumbnail {
+  background: #e5d8c780;
+}
+@media (max-width: 560px) {
+  .motion-controls {
+    padding: 5px 12px 0;
+    gap: 7px 9px;
+    font-size: 10px;
+  }
+  .motion-controls button,
+  .motion-controls select {
+    min-height: 36px;
+    padding: 5px 9px;
+  }
+  .motion-controls span {
+    flex-basis: 100%;
+    text-align: center;
+    font-size: 9px;
+  }
+  .body-point[data-select='pluto'] .body-label {
+    font-size: 10px;
+  }
+  .star-map {
+    margin-top: 18px;
+    margin-bottom: 27px;
+  }
+}
+.body-point .body-label {
+  pointer-events: none;
+}
+.body-point:hover,
+.body-point:focus-visible,
+.body-point[aria-pressed='true'] {
+  z-index: 1;
+}
+.map-label-layer,
+.map-label-leaders {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.map-label-leaders {
+  z-index: 2;
+  overflow: visible;
+}
+.map-label-leaders line {
+  stroke: #a2ab91;
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.map-label-layer {
+  z-index: 3;
+}
+.map-label-layer .body-label {
+  top: 0;
+  bottom: auto;
+  left: 0;
+  transform: none;
+  border-radius: 4px;
+  background: #faf8f2ed;
+}
+.map-label-layer .body-label[data-selected='true'] {
+  color: var(--accent);
+  font-weight: 600;
+}
+.map-label-layer .body-label[data-unavailable='true'] {
+  color: #8b9680;
+}

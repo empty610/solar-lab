@@ -1,0 +1,27 @@
+[
+  {
+    "id": "pluto",
+    "page": "https://science.nasa.gov/resource/pluto-3d-model/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/p/l/Pluto_1_2374.glb"
+  },
+  {
+    "id": "charon",
+    "page": "https://science.nasa.gov/resource/charon-3d-model/",
+    "url": "https://science.nasa.gov/wp-content/uploads/2023/09/Charon_1_2.glb"
+  },
+  {
+    "id": "pluto-global",
+    "page": "https://science.nasa.gov/resource/the-rich-color-variations-of-pluto/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/c/crop_p_color2_enhanced_release_detail.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg"
+  },
+  {
+    "id": "pluto-haze",
+    "page": "https://www.nasa.gov/image-article/plutos-blue-sky/",
+    "url": "https://www.nasa.gov/wp-content/uploads/2023/03/blue_skies_on_pluto-final-2.png"
+  },
+  {
+    "id": "pluto-mountains",
+    "page": "https://science.nasa.gov/resource/plutos-majestic-mountains-frozen-plains-and-foggy-hazes/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/p/i/a/1/PIA19948.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg"
+  }
+]
