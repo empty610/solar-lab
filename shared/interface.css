@@ -146,21 +146,6 @@
     transform: none;
   }
 }
-.archive-back {
-  position: fixed;
-  top: 20px;
-  right: 24px;
-  z-index: 80;
-  padding: 10px 16px;
-  border: 1px solid #9f968466;
-  border-radius: 24px;
-  background: #f8f5edea;
-  color: #49473c;
-  text-decoration: none;
-  font: 12px monospace;
-  letter-spacing: 0.1em;
-  backdrop-filter: blur(12px);
-}
 dialog.archive-dialog {
   width: min(1320px, calc(100vw - 40px));
   max-width: none;
@@ -315,11 +300,6 @@ dialog.archive-dialog > header button {
   margin-top: 24px;
 }
 @media (max-width: 760px) {
-  .archive-back {
-    top: 12px;
-    right: 12px;
-    padding: 8px 12px;
-  }
   dialog.archive-dialog {
     width: calc(100vw - 20px);
     height: calc(100dvh - 32px);

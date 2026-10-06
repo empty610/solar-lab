@@ -61,7 +61,6 @@
     );
     $('reading-progress').value = progress;
     $('reading-percent').textContent = progress + '%';
-    document.querySelector('.back-top').hidden = window.scrollY < 600;
   }
   function schedule() {
     if (!frame) frame = requestAnimationFrame(readPosition);

@@ -2,20 +2,31 @@
   'use strict';
   const settings = document.currentScript.dataset;
   if (settings.terminal) {
-    const back = document.querySelector('.back-button, .floating.back, .back-top');
-    if (back && !back.hasAttribute('hidden')) {
-      back.href = settings.terminal;
-      back.setAttribute('aria-label', '返回太阳系 Terminal');
-      back.title = '返回太阳系 Terminal';
-      if (back.classList.contains('back-top')) back.innerHTML = '← <span>BACK</span>';
-    } else {
-      const link = document.createElement('a');
-      link.className = 'archive-back';
-      link.href = settings.terminal;
-      link.textContent = '← BACK';
-      link.setAttribute('aria-label', '返回太阳系 Terminal');
-      document.body.append(link);
-    }
+    const back =
+      document.querySelector('.back-button, .floating.back') || document.createElement('a');
+    back.id = 'archive-back';
+    back.className = 'archive-back';
+    back.hidden = false;
+    back.href = settings.terminal;
+    back.setAttribute('data-idle-hide', '');
+    back.setAttribute('aria-label', '返回太阳系 Terminal');
+    back.title = '返回太阳系 Terminal';
+    back.innerHTML =
+      '<svg class="back-u-turn" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 5 9l4 4M5 9h8a5 5 0 0 1 5 5v1" /></svg><span>BACK</span>';
+    if (!back.isConnected) document.body.append(back);
+
+    const top = document.querySelector('.back-top, .top-link') || document.createElement('a');
+    top.id = 'archive-top';
+    top.className = 'archive-top';
+    top.hidden = false;
+    top.href = '#top';
+    top.setAttribute('data-idle-hide', '');
+    top.setAttribute('aria-label', '返回顶部');
+    top.title = '返回顶部';
+    top.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 10 6-6 6 6M12 4v16" /></svg>';
+    if (!document.getElementById('top')) document.body.id = 'top';
+    if (!top.isConnected) document.body.append(top);
   }
   const observedDialogs = new WeakSet();
   function prepareDialog(dialog) {
