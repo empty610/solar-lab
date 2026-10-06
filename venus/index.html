@@ -1414,7 +1414,14 @@
     <script src="vendor/three.min.js"></script>
     <script src="vendor/OrbitControls.js"></script>
     <link rel="stylesheet" href="../shared/interface.css" />
-    <script defer src="../shared/interface.js" data-terminal="../terminal/index.html"></script>
+    <script
+      defer
+      src="../shared/interface.js"
+      data-terminal="../terminal/index.html"
+    ></script>
+    <link rel="stylesheet" href="../shared/music-controls.css" />
+    <script defer src="../shared/idle-controls.js"></script>
+    <script defer src="../shared/music.js?v=20261006"></script>
   </head>
   <body>
     <main class="app">
@@ -2361,5 +2368,17 @@
         stage.classList.add('is-error');
       }
     </script>
+    <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio>
+    <button
+      id="music-toggle"
+      class="music-toggle"
+      type="button"
+      data-idle-hide
+      aria-label="播放或暂停音乐"
+      aria-pressed="false"
+      title="音乐"
+    >
+      <span aria-hidden="true">♪</span>
+    </button>
   </body>
 </html>

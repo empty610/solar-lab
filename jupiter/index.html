@@ -19,7 +19,14 @@
     <script src="app.js" defer></script>
     <script src="model.js" defer></script>
     <link rel="stylesheet" href="../shared/interface.css" />
-    <script defer src="../shared/interface.js" data-terminal="../terminal/index.html"></script>
+    <script
+      defer
+      src="../shared/interface.js"
+      data-terminal="../terminal/index.html"
+    ></script>
+    <link rel="stylesheet" href="../shared/music-controls.css" />
+    <script defer src="../shared/idle-controls.js"></script>
+    <script defer src="../shared/music.js?v=20261006"></script>
   </head>
   <body id="top">
     <a class="skip-link" href="#moons">跳到卫星介绍</a>
@@ -669,11 +676,8 @@
         </details>
       </footer>
     </main>
-    <a class="back-top" href="#top" aria-label="返回顶部">↑ <span>TOP</span></a
-    ><button class="music-button" id="music" aria-label="播放背景音乐" aria-pressed="false">
-      ♪</button
-    ><span class="sr-only" id="music-status" role="status"></span>
-    <audio id="background-audio" src="assets/ad-astra.mp3" preload="none" loop></audio>
+    <a class="back-top" href="#top" aria-label="返回顶部">↑ <span>TOP</span></a>
+
     <dialog id="photo-dialog" aria-labelledby="dialog-title">
       <button class="dialog-close" aria-label="关闭大图">×</button><img id="dialog-image" alt="" />
       <div class="dialog-copy">
@@ -690,5 +694,17 @@
         启用 JavaScript 后可使用三维与轨道交互；页面文字和影像可直接阅读。
       </p></noscript
     >
+    <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio>
+    <button
+      id="music-toggle"
+      class="music-toggle"
+      type="button"
+      data-idle-hide
+      aria-label="播放或暂停音乐"
+      aria-pressed="false"
+      title="音乐"
+    >
+      <span aria-hidden="true">♪</span>
+    </button>
   </body>
 </html>

@@ -49,7 +49,7 @@ git push origin main
 
 `shared/interface.css` 与 `shared/interface.js` 复用个人网站的金色双轨道、中心光点和深色遮罩，在跳转前显示约 1 秒的 `ESTABLISHING LINK` 连接动画；同时统一档案的 BACK 返回总览，以及左图右介绍的放大窗口（手机改为上下布局）。修改这些通用效果时，连同 `shared/` 一起提交。
 
-Terminal 的 `site-controls.css` 沿用 Venus 的 BACK 与音乐按钮样式；BACK 返回个人主页的“项目”区。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 与 `shared/audio/ad-astra.mp3` 提供同款音乐，点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度。修改这些控件时，连同对应的 `shared/` 文件一起提交。
+Terminal 的 `site-controls.css` 沿用 Venus 的 BACK 样式；BACK 返回个人主页的“项目”区。Terminal 与八个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 与 `shared/audio/ad-astra.mp3` 提供同款音乐，点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
 
 从原始工作区同步时，在 `E:\solar system` 运行 `node tools/export-site.mjs`，再在本仓库检查和提交变化。同步脚本保留本仓库元数据，复制当前版的页面依赖并更新目录链接；不会删除文件。
 

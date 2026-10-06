@@ -1,0 +1,38 @@
+/* The same Venus music control on Terminal and every archive. */
+#music-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1px solid #b8943880;
+  color: #e9e5dc;
+  background: #14120ee6;
+  cursor: pointer;
+  font:
+    20px/1 Arial,
+    sans-serif;
+  letter-spacing: normal;
+  transition:
+    opacity 0.28s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+.music-playing #music-toggle {
+  color: #d9b95a;
+  border-color: #d9b95a;
+}
+#music-toggle.is-idle-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+#music-toggle:focus-visible {
+  outline: 2px solid #b89438;
+  outline-offset: 4px;
+}

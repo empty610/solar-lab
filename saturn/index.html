@@ -23,7 +23,14 @@
     <script defer src="model.js"></script>
     <script defer src="app.js"></script>
     <link rel="stylesheet" href="../shared/interface.css" />
-    <script defer src="../shared/interface.js" data-terminal="../terminal/index.html"></script>
+    <script
+      defer
+      src="../shared/interface.js"
+      data-terminal="../terminal/index.html"
+    ></script>
+    <link rel="stylesheet" href="../shared/music-controls.css" />
+    <script defer src="../shared/idle-controls.js"></script>
+    <script defer src="../shared/music.js?v=20261006"></script>
   </head>
   <body id="top">
     <a class="skip" href="#main">跳到正文</a>
@@ -32,16 +39,7 @@
         <path d="m9 4-6 6 6 6M3 10h9a8 8 0 0 1 8 8" /></svg
       >BACK</a
     >
-    <button
-      class="floating music"
-      id="music"
-      type="button"
-      aria-pressed="false"
-      aria-label="播放音乐"
-    >
-      <span class="music-bars" aria-hidden="true"><i></i><i></i><i></i></span
-      ><span id="music-text">MUSIC OFF</span>
-    </button>
+
     <header class="masthead wrap">
       <a href="#top" class="brand">EMPTY610 <span>/ SOLAR LABORATORY</span></a
       ><span class="edition">FIELD NOTES — 06</span>
@@ -552,5 +550,17 @@
     <noscript
       ><p class="noscript">当前未启用 JavaScript，三维与互动不可用，图文资料仍可阅读。</p></noscript
     >
+    <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio>
+    <button
+      id="music-toggle"
+      class="music-toggle"
+      type="button"
+      data-idle-hide
+      aria-label="播放或暂停音乐"
+      aria-pressed="false"
+      title="音乐"
+    >
+      <span aria-hidden="true">♪</span>
+    </button>
   </body>
 </html>

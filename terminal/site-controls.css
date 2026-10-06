@@ -55,35 +55,7 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.music-toggle {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 40;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid #b8943880;
-  color: #e9e5dc;
-  background: #14120ee6;
-  cursor: pointer;
-  font-size: 20px;
-  display: grid;
-  place-items: center;
-}
-.music-playing .music-toggle {
-  color: #d9b95a;
-  border-color: #d9b95a;
-}
-.music-toggle {
-  transition: opacity 0.28s ease;
-}
-.music-toggle.is-idle-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-#terminal-back:focus-visible,
-.music-toggle:focus-visible {
+#terminal-back:focus-visible {
   outline: 2px solid #b89438;
   outline-offset: 4px;
 }

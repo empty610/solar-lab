@@ -9,6 +9,7 @@
   const set = (key, value) => { try { sessionStorage.setItem(key, value); } catch {} };
   let mainEnabled = get(preference) === '1';
   let resumePending = false;
+  let resumePosition = 0;
 
   function savePosition() {
     if (Number.isFinite(audio.currentTime) && audio.currentTime > 0) {
@@ -18,9 +19,20 @@
   function restorePosition() {
     const time = Number(get(position));
     if (Number.isFinite(time) && time > 0) {
-      try { audio.currentTime = time; } catch {}
+      resumePosition = time;
+      if (audio.readyState >= 1) seekToSavedPosition();
     }
   }
+  function seekToSavedPosition() {
+    if (!resumePosition) return;
+    try {
+      audio.currentTime = Number.isFinite(audio.duration) && audio.duration > 0
+        ? resumePosition % audio.duration : resumePosition;
+      resumePosition = 0;
+    } catch {}
+  }
+  // With preload="none", assigning currentTime before metadata loads can be lost.
+  audio.addEventListener('loadedmetadata', seekToSavedPosition);
   function updateIcon() {
     document.documentElement.classList.toggle('music-playing', !audio.paused);
     toggle?.setAttribute('aria-pressed', String(!audio.paused));

@@ -426,45 +426,4 @@
         dialog.close();
     }
   });
-  const audio = $('background-audio'),
-    music = $('music');
-  let musicIntent = false,
-    request = 0;
-  function syncAudio(active) {
-    music.setAttribute('aria-pressed', String(active));
-    $('music-label').textContent = active ? '开' : '关';
-    music.setAttribute('aria-label', active ? '暂停背景音乐' : '播放背景音乐');
-  }
-  music.addEventListener('click', async () => {
-    const token = ++request;
-    musicIntent = !musicIntent;
-    if (!musicIntent) {
-      audio.pause();
-      syncAudio(false);
-      feedback('背景音乐已关闭。');
-      return;
-    }
-    audio.volume = 0.35;
-    try {
-      await audio.play();
-      if (!musicIntent || token !== request) {
-        audio.pause();
-        return;
-      }
-      syncAudio(true);
-      feedback('背景音乐已开启，可随时关闭。');
-    } catch {
-      if (token === request) {
-        musicIntent = false;
-        syncAudio(false);
-        feedback('音乐暂时未能播放，请再次点击重试。');
-      }
-    }
-  });
-  window.addEventListener('pagehide', () => {
-    request++;
-    musicIntent = false;
-    audio.pause();
-    syncAudio(false);
-  });
 })();
