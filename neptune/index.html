@@ -27,7 +27,8 @@
     <link rel="stylesheet" href="../shared/navigation-controls.css" />
     <script defer src="../shared/idle-controls.js"></script>
     <script defer src="../shared/music.js?v=20261006"></script>
-  </head>
+    <link rel="stylesheet" href="../shared/journey.css?v=20261013-next" />
+</head>
   <body id="top">
     <a class="skip" href="#main">跳到正文</a>
     <a class="floating back" href="#top" aria-label="回到页面顶部"
@@ -527,7 +528,7 @@
           >NASA · 海王星探索历程 ↗</a
         >
       </section>
-      <footer>
+      <footer class="journey-footer">
         <div>
           <p class="eyebrow">THE EDGE IS ANOTHER BEGINNING</p>
           <h2>远处并不空无一物。</h2>
@@ -536,7 +537,8 @@
           </p>
           <p>NEPTUNE / 独立本地预览 · EMPTY610 SOLAR LABORATORY</p>
         </div>
-        <a href="SOURCES.md">素材与数据来源 ↗</a>
+        <nav class="journey-links" aria-label="继续探索"><a class="journey-next" data-next-station rel="next" href="../pluto/index.html"><span>下一站 · 冥王星</span><span class="journey-arrow" aria-hidden="true">↗</span></a>
+          <a href="SOURCES.md">素材与数据来源 ↗</a><small>NEPTUNE / SOLAR LABORATORY<br />EMPTY610 · 继续探索太阳系</small></nav>
       </footer>
     </main>
     <dialog id="photo-dialog" aria-labelledby="photo-title">

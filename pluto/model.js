@@ -9,8 +9,9 @@
     pluto: {
       word: 'PLUTO',
       kicker: 'AN ICY WORLD, STILL CHANGING',
-      title: '一颗小小的世界，\n装着不小的惊喜。',
-      copy: '转动冥王星，寻找那片明亮的“心”。它不是一块静止的装饰：不同的冰、起伏的地形与遥远的阳光，仍在塑造这里的表面。',
+      title: [...$('profile-title').childNodes]
+        .map((node) => node.nodeName === 'BR' ? '\n' : node.textContent).join('').trim(),
+      copy: $('profile-copy').textContent.trim(),
       facts: [
         ['直径', '2,377', 'km'],
         ['自转一周', '6.4', '地球日'],
@@ -46,9 +47,19 @@
     phase = 0,
     inView = true,
     last = 0,
+    frameId = null,
     ready = false,
+    failed = false,
+    viewportWidth = 0,
+    viewportHeight = 0,
     dirty = true;
   let renderer, scene, camera, controls, pluto, charon, orbit, ambient, sun, grid;
+  let animate;
+  function syncAnimation() {
+    last = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = ready && inView && !document.hidden && animate ? requestAnimationFrame(animate) : null;
+  }
   function spinFeedback() {
     const b = $('model-spin');
     b.textContent = spinning
@@ -61,7 +72,14 @@
     b.setAttribute('aria-pressed', String(spinning));
   }
   function fallback() {
+    if (failed) return;
+    failed = true;
     ready = false;
+    if (controls) controls.enabled = false;
+    mount.hidden = true;
+    for (const id of ['pluto-label', 'charon-label', 'bary-label']) $(id).hidden = true;
+    syncAnimation();
+    stage.dataset.ready = 'false';
     $('model-loading').hidden = true;
     $('model-fallback').hidden = false;
     status.textContent = '图文浏览模式';
@@ -106,12 +124,14 @@
       .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
     spinFeedback();
   }
+  function fittedDistance() {
+    const halfFov = Math.atan(Math.tan((camera.fov * Math.PI) / 360) * Math.min(1, camera.aspect));
+    const extent = view === 'system' ? 15.8 : 1.08;
+    return (extent / Math.sin(halfFov)) * 1.1;
+  }
   function fit() {
     if (!camera) return;
-    const aspect = stage.clientWidth / stage.clientHeight,
-      halfFov = Math.atan(Math.tan((camera.fov * Math.PI) / 360) * Math.min(1, aspect));
-    const extent = view === 'system' ? 15.8 : 1.08,
-      dist = (extent / Math.sin(halfFov)) * 1.1;
+    const dist = fittedDistance();
     camera.position.set(0, dist * (view === 'system' ? 0.65 : 0.12), dist);
     controls.target.set(0, 0, 0);
     controls.minDistance = view === 'system' ? 3 : 1.65;
@@ -154,11 +174,28 @@
     render();
   }
   function resize() {
-    if (!renderer) return;
-    renderer.setSize(stage.clientWidth, stage.clientHeight);
-    camera.aspect = stage.clientWidth / stage.clientHeight;
+    if (!renderer || failed) return;
+    const width = stage.clientWidth, height = stage.clientHeight;
+    if (!width || !height || (width === viewportWidth && height === viewportHeight)) return;
+    const initial = !viewportWidth;
+    const previousDistance = fittedDistance();
+    viewportWidth = width;
+    viewportHeight = height;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    fit();
+    if (initial) fit();
+    else {
+      // Preserve the user's viewing direction and zoom relative to the fitted view.
+      const distance = fittedDistance();
+      camera.position
+        .sub(controls.target)
+        .multiplyScalar(distance / previousDistance)
+        .add(controls.target);
+      controls.maxDistance = distance * 2.8;
+      controls.update();
+      dirty = true;
+    }
     if (ready) render();
   }
   function placeLabel(id, object, yOffset) {
@@ -210,10 +247,6 @@
       controls.enablePan = false;
       controls.rotateSpeed = 0.65;
       controls.zoomSpeed = 0.65;
-      controls.addEventListener('start', () => {
-        spinning = false;
-        spinFeedback();
-      });
       controls.addEventListener('change', () => {
         dirty = true;
       });
@@ -239,6 +272,15 @@
         return new T.Mesh(g, new T.MeshStandardMaterial({ map: tex, roughness: 1 }));
       }
       [pluto, charon] = await Promise.all([mesh('pluto'), mesh('charon')]);
+      // A context loss can enter fallback while texture requests are still pending.
+      if (failed) {
+        for (const body of [pluto, charon]) {
+          body.geometry.dispose();
+          body.material.map.dispose();
+          body.material.dispose();
+        }
+        return;
+      }
       orbit.add(pluto, charon);
       grid = new T.Group();
       scene.add(grid);
@@ -276,15 +318,16 @@
       if ('IntersectionObserver' in window)
         new IntersectionObserver((entries) => {
           inView = entries[0].isIntersecting;
-          last = 0;
           if (inView) dirty = true;
+          syncAnimation();
         }).observe(stage);
       let accumulator = 0;
-      function frame(now) {
-        requestAnimationFrame(frame);
+      animate = function frame(now) {
+        frameId = null;
+        if (!ready || !inView || document.hidden) return;
+        frameId = requestAnimationFrame(frame);
         const dt = last ? Math.min((now - last) / 1000, 0.08) : 0;
         last = now;
-        if (!ready || !inView || document.hidden) return;
         accumulator += dt;
         if (accumulator < 1 / 30) return;
         const step = accumulator;
@@ -296,8 +339,8 @@
         }
         controls.update();
         if (dirty) render();
-      }
-      requestAnimationFrame(frame);
+      };
+      syncAnimation();
     } catch (error) {
       console.warn('3D view unavailable:', error.message);
       fallback();
@@ -311,12 +354,14 @@
     spinFeedback();
   });
   $('model-reset').addEventListener('click', () => {
+    if (!ready) return;
     phase = 0;
     positions();
     fit();
     render();
   });
   $('model-light').addEventListener('click', () => {
+    if (!ready) return;
     night = !night;
     ambient.intensity = night ? 0.09 : 1.15;
     sun.intensity = night ? 2.1 : 2.6;
@@ -330,9 +375,7 @@
       spinFeedback();
     }
   });
-  document.addEventListener('visibilitychange', () => {
-    last = 0;
-  });
+  document.addEventListener('visibilitychange', syncAnimation);
   window.PlutoObservatory = {
     setView,
     get state() {

@@ -67,6 +67,7 @@
     ['mars', /\/(?:mars|mars_preview)\//i],
     ['jupiter', /\/(?:jupiter|jupiter_preview)\//i],
     ['saturn', /\/(?:saturn|saturn_preview)\//i],
+    ['uranus', /\/(?:uranus|uranus_preview)\//i],
     ['neptune', /\/(?:neptune|neptune_preview)\//i],
     ['europa', /\/(?:europa|europa_preview)\//i],
     ['pluto', /\/(?:pluto|pluto_preview)\//i],

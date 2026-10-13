@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#efefe7" />
+  <meta name="description" content="天王星观察档案：转动青色冰巨星，探索倾斜的环系、漫长的四季与遥远的冰月。" />
+  <title>天王星 · Uranus Observatory</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="vendor/three.min.js"></script>
+  <script defer src="vendor/OrbitControls.js"></script>
+  <script defer src="assets/model-data.js"></script>
+  <script defer src="model.js"></script>
+  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="../shared/interface.css" />
+  <link rel="stylesheet" href="../shared/music-controls.css" />
+  <link rel="stylesheet" href="../shared/navigation-controls.css" />
+  <script defer src="../shared/interface.js?v=20261013-uranus" data-terminal="../terminal/index.html"></script>
+  <script defer src="../shared/idle-controls.js"></script>
+  <script defer src="../shared/music.js?v=20261006"></script>
+  <link rel="stylesheet" href="../shared/journey.css?v=20261013-next" />
+</head>
+<body id="top">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="masthead wrap"><a class="brand" href="../terminal/index.html">EMPTY610 <span>/ SOLAR LABORATORY</span></a><span class="edition">FIELD NOTES — 07</span></header>
+  <main id="main" class="wrap">
+    <section class="hero" id="observatory" aria-labelledby="title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="signal"></span> SEVENTH FROM THE SUN</p>
+        <h1 id="title">天王星<span>URANUS</span></h1>
+        <p class="hero-poem">把四季，<br />横放在轨道上。</p>
+        <p class="hero-intro">一颗侧身旋转的青色星球。<br />越过土星，走进一个季节以数十年计的世界。</p>
+        <a class="read-link" href="#seasons">探索漫长的四季 <span aria-hidden="true">↘</span></a>
+        <div class="hero-coordinate"><span>19.2 AU</span><i></i><span>OUTER SOLAR SYSTEM</span></div>
+      </div>
+      <div class="observatory">
+        <div class="stage" id="model-stage">
+          <div class="stage-grid" aria-hidden="true"><span>+</span><span>+</span><span>+</span><span>+</span></div>
+          <span class="stage-index" aria-hidden="true">VII</span>
+          <div id="model-mount"></div>
+          <div class="model-loading" id="model-loading" role="status"><i></i>正在展开青色世界</div>
+          <div class="model-fallback" id="model-fallback" hidden><img src="assets/globe.png" alt="天王星的青色圆盘，NASA 模型可视化" /><p>三维视图不可用，仍可阅读全部图文与季节演示。</p></div>
+          <span class="stage-label">URANUS / ICE GIANT</span>
+          <span class="stage-caption">拖动旋转 · 滚轮 / 双指缩放</span>
+        </div>
+        <div class="view-selector" aria-label="选择观察视图"><button type="button" data-view="planet" aria-pressed="true">行星近景</button><button type="button" data-view="rings" aria-pressed="false">环系俯视</button><button type="button" data-view="axis" aria-pressed="false">自转轴</button></div>
+        <div class="view-note" id="view-note" aria-live="polite"><strong id="view-title">青色云层之下，没有海岸。</strong><p id="view-copy">我们看到的是大气，不是海洋。转动这颗冰巨星，再切换环系视图，看看它不同寻常的姿态。</p></div>
+        <div class="model-controls"><span id="model-status" role="status">NASA VTAD / 正在准备</span><div><button type="button" id="spin" aria-pressed="true">暂停自转</button><button type="button" id="lighting" aria-pressed="false">昼夜照明</button><button type="button" id="reset">重置 ↺</button></div></div>
+        <details class="model-description"><summary>模型与显示说明</summary><p>NASA VTAD 几何与原始贴图，照明经过展示处理。环系为示意，半径近似真实比例，宽度与亮度放大；省略外侧尘埃环。自转与镜头速度为展示设置，未表示实时位置。</p></details>
+      </div>
+    </section>
+    <nav class="section-nav" aria-label="本页章节"><a href="#observatory">三维观察</a><a href="#portrait">行星档案</a><a href="#seasons">四季实验室</a><a href="#gallery">影像札记</a><a href="#moons">冰月家族</a><a href="#exploration">探索历程</a></nav>
+    <dl class="stat-strip reveal"><div><dt>轴倾角</dt><dd>97.77<span>°</span></dd><small>相对轨道法线</small></div><div><dt>一个天王星年</dt><dd>84<span>地球年</span></dd><small>漫长的公转旅程，约值</small></div><div><dt>赤道直径</dt><dd>51,118<span>km</span></dd><small>约为地球的四倍</small></div><div><dt>阳光单程</dt><dd>2<em>h</em>40<em>m</em></dd><small>从太阳出发，约值</small></div></dl>
+    <section class="chapter" id="portrait" aria-labelledby="portrait-title">
+      <div class="chapter-heading reveal"><p class="eyebrow">01 / A WORLD TURNED SIDEWAYS</p><h2 id="portrait-title">看似平静。<br />每一处都与我们不同。</h2><p>先读懂颜色，再读懂它的姿态。</p></div>
+      <div class="portrait-grid">
+        <article class="essay reveal"><span class="article-no">A — ATMOSPHERE</span><h3>青色，是大气写下的颜色。</h3><p>这片青蓝并不是海洋。天王星的大气以氢和氦为主，少量甲烷吸收红光，让散射回来的光偏向蓝绿。我们看到的是云与霾，不是一层坚硬的地表。</p><p>“冰巨星”描述的是内部富含水、氨、甲烷等物质的组成。深处高温高压，不能把它想象成一颗可以落脚的巨大冰球。</p><a class="source" href="https://science.nasa.gov/uranus/facts/" target="_blank" rel="noopener">NASA · 行星概况 ↗</a></article>
+        <article class="essay reveal"><span class="article-no">B — OBLIQUITY</span><h3>几乎躺着，绕太阳前行。</h3><p>它的自转轴倾斜约 98°，赤道和环面几乎竖在公转轨道上。一次远古巨撞击是可能的解释，但这段历史仍有待研究。</p><p>如果把一年压缩成一圈，理解它的关键不是“星球滚向哪里”，而是自转轴在绕行时大致指向同一方向。太阳因此轮流照向两极，创造出格外漫长的季节。</p><a class="source" href="#seasons">在实验室里试一试 ↓</a></article>
+      </div>
+    </section>
+    <section class="season-section chapter" id="seasons" aria-labelledby="season-heading">
+      <div class="season-head reveal"><div><p class="eyebrow">02 / THE LONG SEASONS</p><h2 id="season-heading">把八十四年，<br />交给一束光。</h2></div><p>拖动时间，让太阳照向不同的半球。<br />每四分之一圈，约是 21 个地球年。</p></div>
+      <div class="season-layout">
+        <div class="season-art"><svg id="season-svg" viewBox="0 0 620 420" role="img" aria-labelledby="season-svg-title"><title id="season-svg-title">天王星四季轨道示意，自转轴在公转时保持方向</title><defs><radialGradient id="sun-glow"><stop stop-color="#e8d39c" stop-opacity=".22"/><stop offset="1" stop-color="#e8d39c" stop-opacity="0"/></radialGradient><radialGradient id="mini-planet" cx="30%" cy="28%"><stop stop-color="#d4eee7"/><stop offset=".5" stop-color="#a6d3cf"/><stop offset="1" stop-color="#4d8f97"/></radialGradient></defs><ellipse cx="310" cy="215" rx="215" ry="133" class="orbit-line"/><path d="M310 54V376M65 215H555" class="orbit-guide"/><circle cx="310" cy="215" r="95" fill="url(#sun-glow)"/><circle cx="310" cy="215" r="20" class="season-sun"/><text x="310" y="259" class="sun-text">SUN / 太阳</text><text x="310" y="35">北半球秋分</text><text x="575" y="213">冬至</text><text x="310" y="397">北半球春分</text><text x="46" y="213">夏至</text><line id="sun-ray" x1="310" y1="215" x2="95" y2="215"/><g id="season-planet" transform="translate(95 215)"><ellipse rx="19" ry="40" transform="rotate(-8)" class="mini-ring"/><circle r="23" fill="url(#mini-planet)"/><path d="M-43 0H43" class="spin-axis"/><path d="m43 0-7-4v8z" class="axis-tip"/><text x="52" y="4" class="north-label">N</text></g></svg><p class="fineprint">圆轨道与光照关系示意；大小、距离不按比例。箭头 N 表示自转轴的北极方向；轴的出平面分量省略，非实时星历。</p></div>
+        <div class="season-copy"><span class="eyebrow" id="season-phase">NORTHERN SUMMER</span><div class="season-reading"><strong id="season-year">0.0</strong><span>/ 84 地球年</span></div><h3 id="season-title" aria-live="polite">北半球夏至</h3><p id="season-copy">北极朝向太阳，北方的高纬地区迎来漫长白昼；南方则经历极夜。向前拖动，看看二十一年后的变化。</p><label class="time-label" for="season-time">推进时间 <span>0 — 84 年</span></label><input id="season-time" type="range" min="0" max="84" step="0.1" value="0" aria-label="推进天王星季节时间，单位地球年"/><div class="season-marks"><button data-year="0">夏至</button><button data-year="21">秋分</button><button data-year="42">冬至</button><button data-year="63">春分</button></div><div class="season-actions"><button id="season-play" aria-pressed="false">播放一个天王星年 <span>▷</span></button><button id="season-reset" aria-label="重置季节时间">重置 ↺</button></div></div>
+      </div>
+      <a class="source" href="https://science.nasa.gov/missions/webb/nasas-webb-rings-in-holidays-with-ringed-planet-uranus/" target="_blank" rel="noopener">NASA / Webb · 季节与极区变化 ↗</a>
+    </section>
+    <section class="chapter" id="gallery" aria-labelledby="gallery-title"><div class="chapter-heading horizontal reveal"><div><p class="eyebrow">03 / MORE THAN ONE WAY TO SEE</p><h2 id="gallery-title">换一种光，<br />看见另一个世界。</h2></div><p>可见光、增强色与近红外，<br />各自讲述这颗行星的一部分。</p></div><div class="gallery-grid">
+      <button class="image-card reveal wide" data-photo="voyager"><span class="image-wrap"><img src="assets/voyager-colors.jpg" alt="旅行者二号的天王星真彩色与假彩色并列图" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>同一颗星球，两种读法。</strong><span>真彩色与假彩色 <i>↗</i></span></span></button>
+      <button class="image-card reveal" data-photo="webb"><span class="image-wrap"><img src="assets/webb-rings.png" alt="韦布近红外影像中的天王星极区和纤细行星环" loading="lazy"/></span><span class="image-caption"><small>WEBB · NIRCAM / 2023</small><strong>暗淡的环，终于亮起。</strong><span>近红外映射色 <i>↗</i></span></span></button>
+      <button class="image-card reveal" data-photo="crescent"><span class="image-wrap"><img src="assets/crescent.jpg" alt="旅行者二号离开时拍摄的天王星青色弯月" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>转身之后的一弯青色。</strong><span>离别视角 <i>↗</i></span></span></button>
+    </div></section>
+    <section class="chapter moon-section" id="moons" aria-labelledby="moons-title"><div class="chapter-heading reveal"><p class="eyebrow">04 / A LITERARY FAMILY</p><h2 id="moons-title">围绕它的，<br />是一整片戏剧与诗。</h2><p>这些卫星的名字，来自莎士比亚与亚历山大·蒲柏的作品。<br />五颗主要卫星，从内向外，围成另一层遥远的风景。</p><a class="source" href="https://science.nasa.gov/uranus/moons/" target="_blank" rel="noopener">NASA · 天王星卫星家族 ↗</a></div><ol class="moon-list"><li class="reveal"><span>01</span><div><strong>米兰达 <small>MIRANDA / 天卫五</small></strong><p>最小的一位，也是旅行者二号近距离记录过的冰月。</p></div></li><li class="reveal"><span>02</span><div><strong>艾瑞尔 <small>ARIEL / 天卫一</small></strong><p>名字来自精灵；明亮的冰质世界绕行在更远处。</p></div></li><li class="reveal"><span>03</span><div><strong>乌姆柏里尔 <small>UMBRIEL / 天卫二</small></strong><p>名称来自蒲柏的诗，较暗的表面留在飞掠档案里。</p></div></li><li class="reveal"><span>04</span><div><strong>泰坦妮娅 <small>TITANIA / 天卫三</small></strong><p>以仙后之名，成为天王星最大的卫星。</p></div></li><li class="reveal"><span>05</span><div><strong>奥伯龙 <small>OBERON / 天卫四</small></strong><p>五颗主要卫星中最外侧的一位，与泰坦妮娅同年被发现。</p></div></li></ol></section>
+    <section class="chapter" id="exploration" aria-labelledby="exploration-title"><div class="chapter-heading reveal"><p class="eyebrow">05 / A BRIEF HISTORY OF LOOKING</p><h2 id="exploration-title">一次相逢。<br />此后，久久凝望。</h2></div><div class="timeline"><article class="reveal"><time>1781</time><div><h3>望远镜里，多出一颗行星。</h3><p>威廉·赫歇尔的观测最终改变了已知太阳系的边界。天王星成为第一颗借助望远镜发现的行星。</p></div></article><article class="reveal"><time>1977</time><div><h3>星光闪烁，泄露了环的秘密。</h3><p>天王星掩过背景恒星时，星光在行星到来前后数次变暗。纤细环系的线索，藏在这段明暗变化里。</p></div></article><article class="reveal"><time>1986</time><div><h3>旅行者二号，短暂的近距离相遇。</h3><p>1 月 24 日，探测器飞掠天王星，记录行星、环和卫星，随后继续前往海王星。它带来近景，却没有留下来等待一个完整的季节。</p></div></article><article class="reveal"><time>2023</time><div><h3>韦布让暗弱之处显现。</h3><p>近红外观测呈现纤细环系、明亮极区与云层结构。一次飞掠之后，望远镜接续着这场长久的观察。</p></div></article></div><a class="source" href="https://science.nasa.gov/uranus/exploration/" target="_blank" rel="noopener">NASA · 探索档案 ↗</a></section>
+    <footer class="journey-footer"><div><p class="eyebrow">THE QUIET WORLD IS STILL TURNING</p><h2>在缓慢里，继续看见。</h2><p>我们的观察只占它一年的一小段。<br />青色的世界仍在转动，下一页故事还在光里。</p></div><div class="footer-links journey-links"><a class="journey-next" data-next-station rel="next" href="../neptune/index.html"><span>下一站 · 海王星</span><span class="journey-arrow" aria-hidden="true">↗</span></a><a href="SOURCES.md">素材与数据来源 ↗</a><small>URANUS / FIELD NOTES 07<br />EMPTY610 · SOLAR LABORATORY</small></div></footer>
+  </main>
+  <dialog id="photo-dialog" aria-labelledby="photo-title"><button id="close-photo" class="dialog-close" aria-label="关闭影像介绍">×</button><img id="photo-image" alt=""/><div class="dialog-copy"><p class="eyebrow" id="photo-tag"></p><h2 id="photo-title"></h2><div id="photo-description"></div><a id="photo-source" class="source" target="_blank" rel="noopener">查看官方影像 ↗</a></div></dialog>
+  <noscript><style>#model-loading{display:none}#model-fallback[hidden]{display:grid!important}.view-selector,.model-controls,.season-actions{display:none}</style><p class="noscript">三维观察需要 JavaScript；下方图文仍可阅读。季节图停留在北半球夏至示意。</p></noscript>
+  <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio><button id="music-toggle" class="music-toggle" type="button" data-idle-hide aria-label="播放或暂停音乐" aria-pressed="false" title="音乐"><span aria-hidden="true">♪</span></button>
+</body>
+</html>

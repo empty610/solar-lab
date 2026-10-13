@@ -18,6 +18,7 @@
   function fail(message) {
     failed = true;
     ready = false;
+    if (controls) controls.enabled = false;
     mount.classList.remove('ready');
     loading.hidden = true;
     error.hidden = false;
@@ -150,14 +151,18 @@
     const texture = new THREE.TextureLoader().load(
       'assets/mercury-surface.jpg',
       (map) => {
+        if (failed) {
+          map.dispose();
+          return;
+        }
         map.colorSpace = THREE.SRGBColorSpace;
         map.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
         material.map = map;
         material.needsUpdate = true;
         renderer.render(scene, camera);
         ready = true;
-        failed = false;
         requestAnimationFrame(() => {
+          if (failed) return;
           mount.classList.add('ready');
           loading.hidden = true;
           status.textContent = '地表已就绪';

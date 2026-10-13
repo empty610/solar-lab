@@ -384,26 +384,33 @@ h1 > span {
 }
 .planet-catalog {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 .catalog-item {
   min-width: 0;
-  border: 1px solid #d2d9c5;
-  border-radius: 13px;
-  background: #f9f9f1c9;
+  border: 1px solid #dadbcf;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fffef9, #f7f6ee);
   overflow: hidden;
   transition:
-    border-color 0.2s,
-    background 0.2s,
-    box-shadow 0.2s;
+    border-color 0.22s,
+    background 0.22s,
+    box-shadow 0.22s,
+    transform 0.22s;
 }
 .catalog-item:hover {
-  border-color: #9fac8c;
-  box-shadow: 0 8px 20px -13px #63744d4d;
+  border-color: #adb39c;
+  box-shadow: 0 12px 25px -18px #555b3d66;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .catalog-item:hover {
+    transform: translateY(-3px);
+  }
 }
 .catalog-item:has(.planet-card[aria-pressed='true']) {
   border-color: var(--accent);
-  background: var(--accent-soft);
+  background: linear-gradient(145deg, #fffdf7, var(--accent-soft));
+  box-shadow: inset 0 3px 0 var(--accent), 0 9px 22px -18px #6f604e66;
 }
 .planet-card,
 .planet-card.unavailable,
@@ -411,65 +418,101 @@ h1 > span {
 .planet-card:hover {
   display: block;
   width: 100%;
-  padding: 14px 18px 6px;
+  padding: 18px 20px 12px;
   background: transparent;
   border: 0;
   box-shadow: none;
   transform: none;
 }
 .planet-card:focus-visible {
-  outline-offset: -4px;
-  border-radius: 12px;
+  outline-offset: -5px;
+  border-radius: 15px;
 }
 .card-top {
   font-size: 10px;
-  color: #889475;
+  color: #707761;
+  min-height: 22px;
+}
+.card-top > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.08em;
+}
+.card-top > span:first-child::before {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
 }
 .card-marker {
-  width: 17px;
-  height: 17px;
-  font-size: 10px;
-  border-color: #b5c1a3;
+  width: 21px;
+  height: 21px;
+  font-size: 11px;
+  border-color: transparent;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.planet-card[aria-pressed='true'] .card-marker {
+  opacity: 1;
 }
 .card-face {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  min-height: 91px;
+  gap: 12px;
+  min-height: 119px;
 }
 .card-text {
   min-width: 0;
 }
 .planet-card h3 {
-  font-size: 22px;
-  letter-spacing: 0.04em;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   line-height: 1.5;
 }
 .card-english {
   font-size: 9px;
   line-height: 1.8;
-  color: #7d8b6b;
-  margin-top: 3px;
+  color: #6e7562;
+  letter-spacing: 0.12em;
+  margin-top: 5px;
 }
 .card-image {
-  width: 96px;
-  height: 88px;
+  position: relative;
+  isolation: isolate;
+  width: 108px;
+  height: 108px;
   margin: 0;
   flex-shrink: 0;
 }
+.card-image::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid #cecdbb66;
+  border-radius: 50%;
+  background: radial-gradient(circle, #dfdfcf55, transparent 70%);
+  z-index: -1;
+}
+.planet-card[aria-pressed='true'] .card-image::before {
+  border-color: var(--accent);
+  opacity: 0.45;
+}
 .card-image img {
-  width: 96px;
-  height: 96px;
+  width: 102px;
+  height: 102px;
   max-width: none;
   transition: transform 0.25s;
 }
 .planet-card:hover img {
-  transform: scale(1.06);
+  transform: scale(1.035);
 }
 .planet-card[data-select='saturn'] img {
-  width: 122px;
-  height: 118px;
+  width: 132px;
+  height: 126px;
 }
 .card-image .schematic-planet {
   width: 51px;
@@ -477,52 +520,84 @@ h1 > span {
   opacity: 0.65;
 }
 .card-footer {
-  margin: 0 18px;
-  padding: 10px 0 12px;
-  border-top: 1px solid #c7d1b566;
+  margin: 0 20px;
+  padding: 12px 0 15px;
+  border-top: 1px solid #d6d8ca99;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 46px;
+  min-height: 62px;
 }
 .card-status {
-  font-size: 11px;
-  color: #7b896a;
-  border: 0;
-  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #667257;
+  border: 1px solid #dbe0cf;
+  border-radius: 5px;
+  padding: 3px 7px;
+  background: #edf0e580;
   margin: 0;
 }
 .card-entry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 4px 9px;
+  border-radius: 6px;
   font-size: 12px;
-  color: #52653e;
-  text-decoration: underline;
-  text-decoration-color: #a5b68e;
-  text-underline-offset: 5px;
-  line-height: 2;
+  color: #59694b;
+  background: #e8ecd977;
+  text-decoration: none;
+  line-height: 1.5;
   white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.card-entry::after {
+  content: '↗';
+  font: 16px/1 var(--sans);
+}
+.card-entry:focus-visible {
+  outline-offset: 3px;
 }
 .card-entry:hover {
-  color: #2e4320;
-  text-decoration-color: currentColor;
+  color: #fffdf6;
+  background: color-mix(in srgb, var(--accent) 78%, #302a20);
+}
+.catalog-item:has(.planet-card[aria-pressed='true']) .card-entry {
+  color: #fffdf6;
+  background: color-mix(in srgb, var(--accent) 78%, #302a20);
 }
 .catalog-item.unavailable {
-  background: #edf0e55e;
+  background: #f0f1e966;
   border-style: dashed;
 }
 .planet-card.unavailable .card-marker {
-  font-size: 10px;
-  color: #7f8c71;
+  width: auto;
+  height: auto;
+  padding: 4px 7px;
+  border-radius: 4px;
+  background: #e6eadd;
+  font-size: 9px;
+  color: #606b55;
+  opacity: 1;
 }
 .catalog-item.unavailable .card-status {
   font-size: 11px;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
 }
 .satellite-note {
   padding: 20px 26px;
   margin-top: 20px;
   background: #e9eede8a;
   border: 1px solid #d3ddc4;
-  border-radius: 13px;
+  border-radius: 16px;
 }
 .moon-thumbnail,
 .moon-thumbnail img {
@@ -531,6 +606,7 @@ h1 > span {
 }
 .moon-thumbnail {
   background: #dfe5d18c;
+  border: 1px solid #c9cdbb88;
 }
 .satellite-copy .eyebrow {
   font-size: 9px;
@@ -562,14 +638,20 @@ h1 > span {
   background: #dbe4cf;
 }
 .moon-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
   font-size: 13px;
   color: #536b40;
-  text-decoration: underline;
-  text-decoration-color: #a5b68e;
-  text-underline-offset: 6px;
+  text-decoration: none;
   border: 0;
   margin: 0 0 0 12px;
   white-space: nowrap;
+}
+.moon-entry::after {
+  content: '↗';
+  font: 18px/1 var(--sans);
 }
 footer {
   font-size: 9px;
@@ -717,6 +799,7 @@ footer a {
     font-size: 7px;
   }
   .planet-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
   .planet-card,
@@ -729,7 +812,8 @@ footer a {
     font-size: 20px;
   }
   .card-image {
-    width: 80px;
+    width: 96px;
+    height: 96px;
   }
   .card-image img {
     width: 84px;
@@ -865,6 +949,7 @@ footer a {
   }
   .card-image {
     width: 100px;
+    height: 100px;
   }
   .card-image img {
     width: 100px;
@@ -878,7 +963,7 @@ footer a {
     margin-inline: 20px;
   }
   .card-status {
-    font-size: 12px;
+    font-size: 10px;
   }
   .card-entry {
     font-size: 13px;
@@ -1237,22 +1322,22 @@ footer a {
     font-size: 9px;
   }
   .card-marker {
-    width: 15px;
-    height: 15px;
-    font-size: 9px;
+    width: 19px;
+    height: 19px;
+    font-size: 10px;
   }
   .card-face {
     display: flex;
     flex-direction: column-reverse;
-    gap: 3px;
-    min-height: 141px;
+    gap: 10px;
+    min-height: 155px;
     align-items: flex-start;
     padding-bottom: 9px;
   }
   .card-image {
     align-self: center;
     width: 92px;
-    height: 83px;
+    height: 92px;
   }
   .card-image img {
     width: 90px;
@@ -1276,21 +1361,24 @@ footer a {
   }
   .card-footer {
     margin: 0 13px;
-    padding: 10px 0 13px;
-    min-height: 77px;
+    padding: 10px 0 12px;
+    min-height: 98px;
     align-items: flex-start;
-    gap: 4px;
+    gap: 8px;
     flex-direction: column;
   }
   .card-status,
   .catalog-item.unavailable .card-status {
-    font-size: 10px;
+    font-size: 9px;
     letter-spacing: 0;
   }
   .card-entry {
-    font-size: 12px;
-    min-height: 30px;
-    line-height: 2.4;
+    width: 100%;
+    justify-content: space-between;
+    padding: 5px 8px;
+    font-size: 11px;
+    min-height: 44px;
+    line-height: 1.5;
   }
   .planet-card.unavailable .card-marker {
     font-size: 9px;

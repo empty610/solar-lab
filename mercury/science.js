@@ -69,6 +69,7 @@
   let day = 0,
     playing = false,
     speed = 6,
+    frameId = null,
     lastFrame = 0,
     renderAfter = 0;
   const point = (x, y) => [310 + 210 * x, 248 - 210 * y];
@@ -161,9 +162,14 @@
     drawPhase(s);
     document.dispatchEvent(new CustomEvent('mercury:timechange', { detail: s }));
   }
+  function syncAnimation() {
+    lastFrame = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = playing && !document.hidden ? requestAnimationFrame(tick) : null;
+  }
   function setPlaying(value) {
     playing = value;
-    lastFrame = 0;
+    syncAnimation();
     $('play').textContent = playing ? '暂停演示' : day >= END ? '重新播放' : '播放演示';
     $('play').setAttribute('aria-pressed', String(playing));
     $('sun-toggle').setAttribute('aria-pressed', String(playing));
@@ -203,10 +209,10 @@
   $('speed').addEventListener('change', (e) => {
     speed = Number(e.target.value);
   });
-  document.addEventListener('visibilitychange', () => {
-    lastFrame = 0;
-  });
+  document.addEventListener('visibilitychange', syncAnimation);
   function tick(now) {
+    frameId = null;
+    if (!playing || document.hidden) return;
     if (playing && !document.hidden) {
       if (lastFrame) day = Math.min(END, day + Math.min((now - lastFrame) / 1000, 0.1) * speed);
       lastFrame = now;
@@ -216,8 +222,8 @@
       }
       if (day >= END) setPlaying(false);
     }
-    requestAnimationFrame(tick);
+    if (playing && !document.hidden) frameId = requestAnimationFrame(tick);
   }
   render();
-  requestAnimationFrame(tick);
+  syncAnimation();
 })();

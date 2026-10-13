@@ -1,7 +1,6 @@
 (() => {
   const audio = document.getElementById('bg-music');
   if (!audio) return;
-  const terminal = document.body.dataset.page === 'terminal';
   const toggle = document.getElementById('music-toggle');
   const preference = 'site.music.mainEnabled';
   const position = 'site.music.time';
@@ -36,6 +35,8 @@
   function updateIcon() {
     document.documentElement.classList.toggle('music-playing', !audio.paused);
     toggle?.setAttribute('aria-pressed', String(!audio.paused));
+    toggle?.setAttribute('aria-label', audio.paused ? '播放音乐' : '暂停音乐');
+    toggle?.setAttribute('title', audio.paused ? '播放音乐' : '暂停音乐');
   }
   async function play() {
     audio.volume = 0.4;
@@ -45,7 +46,7 @@
       resumePending = false;
     } catch {
       // Browsers can require a new gesture after a full page navigation.
-      resumePending = !terminal && mainEnabled;
+      resumePending = mainEnabled;
     }
   }
   toggle?.addEventListener('click', () => {
@@ -67,6 +68,7 @@
   }, { passive: true }));
   audio.addEventListener('play', updateIcon);
   audio.addEventListener('pause', updateIcon);
+  updateIcon();
   setInterval(() => { if (!audio.paused) savePosition(); }, 2000);
   window.addEventListener('pagehide', () => {
     savePosition();
@@ -74,14 +76,14 @@
   });
   window.addEventListener('pageshow', () => {
     mainEnabled = get(preference) === '1';
-    if (!terminal && mainEnabled) {
+    if (mainEnabled) {
       restorePosition();
       play();
     }
   });
   window.SiteMusic = {
     startTerminal() {
-      if (!terminal) return;
+      if (!mainEnabled) return;
       restorePosition();
       play();
     }

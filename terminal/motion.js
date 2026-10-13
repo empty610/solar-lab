@@ -22,103 +22,113 @@
     element: chart.querySelector('[data-select="' + id + '"]'),
     values,
   }));
+  // Labels share these coordinates instead of measuring moving DOM elements.
+  const positions = Object.fromEntries(points.map(({ id }) => [id, { x: 0, y: 0 }]));
+  const panel = chart.closest('[role="tabpanel"]');
   let elapsed = 0,
     speed = 1,
     playing = !reduced.matches,
-    hovered = false,
-    focused = false,
     inView = true,
-    last = 0,
-    accumulator = 0;
-  function paint() {
-    const scale = innerWidth <= 560 ? 0.86 : 1;
-    group.setAttribute('transform', 'translate(450 315) scale(' + scale + ')');
+    last = null,
+    frameId = null,
+    width = 0,
+    height = 0,
+    scale = 1;
+  for (const { element } of points) {
+    element.style.left = '0';
+    element.style.top = '0';
+  }
+  function paint(placeLabels = false) {
+    if (!width || !height) return;
     for (const point of points) {
       const [rx, ry, phase, period] = point.values,
-        a = phase - (elapsed / period) * Math.PI * 2;
-      point.element.style.left = ((450 + rx * scale * Math.cos(a)) / 920) * 100 + '%';
-      point.element.style.top = ((315 + ry * scale * Math.sin(a)) / 630) * 100 + '%';
+        a = phase - (elapsed / period) * Math.PI * 2,
+        position = positions[point.id];
+      position.x = ((450 + rx * scale * Math.cos(a)) / 920) * width;
+      position.y = ((315 + ry * scale * Math.sin(a)) / 630) * height;
+      point.element.style.transform =
+        `translate3d(${position.x}px, ${position.y}px, 0) translate(-50%, -50%)`;
     }
     chart.dataset.elapsed = elapsed.toFixed(3);
-    window.SolarAtlasLabels?.layout();
+    window.SolarAtlasLabels?.layout(placeLabels);
+  }
+  function resize() {
+    width = chart.clientWidth;
+    height = chart.clientHeight;
+    scale = innerWidth <= 560 ? 0.86 : 1;
+    group.setAttribute('transform', 'translate(450 315) scale(' + scale + ')');
+    paint();
+  }
+  function canAnimate() {
+    return playing && inView && !document.hidden && !panel?.hidden;
+  }
+  function syncAnimation() {
+    last = null;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = canAnimate() ? requestAnimationFrame(frame) : null;
   }
   function feedback() {
     play.setAttribute('aria-pressed', String(playing));
     play.textContent = playing ? '暂停运转' : '开始运转';
     status.textContent = !playing
       ? '已暂停 · 可以选择天体'
-      : hovered || focused
-        ? '暂时停驻 · 移开后继续'
-        : '持续运转 · 悬停可停驻';
+      : '持续运转 · 可以选择天体';
   }
   play.addEventListener('click', () => {
     playing = !playing;
     feedback();
+    syncAnimation();
   });
   speedControl.addEventListener('change', () => {
     speed = Number(speedControl.value);
   });
   document.getElementById('atlas-reset').addEventListener('click', () => {
     elapsed = 0;
-    paint();
+    last = null;
+    paint(true);
     feedback();
-  });
-  chart.addEventListener('pointerenter', (event) => {
-    if (event.pointerType === 'mouse') {
-      hovered = true;
-      feedback();
-    }
-  });
-  chart.addEventListener('pointerleave', () => {
-    hovered = false;
-    feedback();
-  });
-  chart.addEventListener('focusin', () => {
-    focused = true;
-    feedback();
-  });
-  chart.addEventListener('focusout', () => {
-    queueMicrotask(() => {
-      focused = chart.contains(document.activeElement);
-      feedback();
-    });
   });
   reduced.addEventListener('change', () => {
     if (reduced.matches) {
       playing = false;
       feedback();
+      syncAnimation();
     }
   });
   if ('IntersectionObserver' in window)
     new IntersectionObserver(
       (entries) => {
         inView = entries[0].isIntersecting;
-        last = 0;
+        syncAnimation();
       },
       { threshold: 0 },
     ).observe(chart);
-  document.addEventListener('visibilitychange', () => {
-    last = 0;
-  });
-  addEventListener('resize', paint);
+  document.addEventListener('visibilitychange', syncAnimation);
+  if (panel)
+    new MutationObserver(syncAnimation).observe(panel, {
+      attributes: true,
+      attributeFilter: ['hidden'],
+    });
+  new ResizeObserver(resize).observe(chart);
+  addEventListener('resize', resize);
   function frame(now) {
-    requestAnimationFrame(frame);
-    const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
+    frameId = null;
+    if (!canAnimate()) return;
+    const dt = last === null ? 0 : Math.min((now - last) / 1000, 0.1);
     last = now;
-    if (!playing || hovered || focused || !inView || document.hidden || chart.closest('[hidden]'))
-      return;
-    accumulator += dt;
-    if (accumulator < 1 / 30) return;
-    elapsed += accumulator * speed;
-    accumulator = 0;
+    elapsed += dt * speed;
     paint();
+    frameId = requestAnimationFrame(frame);
   }
-  paint();
-  feedback();
-  requestAnimationFrame(frame);
   window.SolarAtlasMotion = {
+    getPosition(id) {
+      return positions[id];
+    },
     get state() {
-      return { elapsed, speed, playing, hovered, focused, inView };
+      return { elapsed, speed, playing, inView };
     },
   };
+  resize();
+  feedback();
+  syncAnimation();
 })();

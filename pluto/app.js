@@ -61,7 +61,13 @@
   let phase = 0,
     playing = false,
     last = 0,
+    frameId = null,
     inView = false;
+  function syncAnimation() {
+    last = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = playing && inView && !document.hidden ? requestAnimationFrame(frame) : null;
+  }
   const slider = $('binary-phase'),
     play = $('binary-play');
   function paint() {
@@ -97,40 +103,45 @@
     phase = Number(slider.value);
     paint();
     feedback();
+    syncAnimation();
   });
   play.addEventListener('click', () => {
     playing = !playing;
     feedback();
+    syncAnimation();
   });
   $('binary-reset').addEventListener('click', () => {
     playing = false;
     phase = 0;
     paint();
     feedback();
+    syncAnimation();
   });
   reduced.addEventListener('change', () => {
     if (reduced.matches) {
       playing = false;
       feedback();
+      syncAnimation();
     }
   });
   if ('IntersectionObserver' in window)
     new IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;
-      last = 0;
+      syncAnimation();
     }).observe($('binary-svg'));
   else inView = true;
   function frame(now) {
-    requestAnimationFrame(frame);
+    frameId = null;
+    if (!playing || !inView || document.hidden) return;
+    frameId = requestAnimationFrame(frame);
     const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
     last = now;
-    if (playing && inView && !document.hidden) {
-      phase = (phase + dt * 9) % 360;
-      paint();
-    }
+    phase = (phase + dt * 9) % 360;
+    paint();
   }
+  document.addEventListener('visibilitychange', syncAnimation);
   paint();
-  requestAnimationFrame(frame);
+  syncAnimation();
   const links = [...document.querySelectorAll('.reading-nav a')],
     sections = links.map((a) => document.querySelector(a.hash));
   let pending = false;

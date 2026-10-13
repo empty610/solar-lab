@@ -48,7 +48,8 @@
     <link rel="stylesheet" href="../shared/navigation-controls.css" />
     <script defer src="../shared/idle-controls.js"></script>
     <script defer src="../shared/music.js?v=20261006"></script>
-  </head>
+    <link rel="stylesheet" href="../shared/journey.css?v=20261013-next" />
+</head>
   <body id="top">
     <a class="skip" href="#observatory">跳到三维观察台</a>
     <div class="wrap">
@@ -80,7 +81,7 @@
         <section id="observatory" class="panel observatory" aria-labelledby="model-title">
           <div class="panel-head">
             <h2 id="model-title"><span class="section-no">00</span> 冥王星观察台</h2>
-            <span class="model-status" id="model-status" role="status">正在准备模型</span>
+            <span class="model-status" id="model-status" role="status">正在准备</span>
           </div>
           <div class="view-toolbar">
             <div class="view-tabs" aria-label="选择三维观察对象">
@@ -93,9 +94,9 @@
           <div class="model-layout">
             <aside class="model-profile">
               <p class="eyebrow" id="profile-kicker">AN ICY WORLD, STILL CHANGING</p>
-              <h3 id="profile-title">一颗小小的世界，<br />装着不小的惊喜。</h3>
+              <h3 id="profile-title">小小的世界，<br />不小的惊喜。</h3>
               <p id="profile-copy">
-                转动冥王星，寻找那片明亮的“心”。它不是一块静止的装饰：不同的冰、起伏的地形与遥远的阳光，仍在塑造这里的表面。
+                转动冥王星，寻找那片明亮的“心”。那可不是一块静止的装饰：不同气体凝华成的冰、起伏的地形与遥远的阳光，仍在时刻塑造着这里的表面。
               </p>
               <dl class="profile-facts" id="profile-facts">
                 <div>
@@ -115,7 +116,7 @@
                 <summary>模型与颜色说明</summary>
                 <p>
                   使用 NASA VTAD
-                  的原始几何和影像贴图。拼接清晰度不均，未完整拍摄的区域可能包含填补；增强色和展示光照不等同于肉眼所见。
+                  的原始图片与色彩，因条件受限而导致部分地区可能不够清晰；增强色和展示光照不等同于肉眼所见。
                 </p>
                 <p>
                   双星全景保留两颗天体的相对大小与中心距离。轨道简化为圆，朝向与起始相位为示意；没有包含另外四颗小卫星。
@@ -156,11 +157,11 @@
             <p>一年，足以跨越几代人</p>
           </div>
           <div>
-            <span>阳光的单程旅途</span><strong>5.5 <small>小时</small></strong>
+            <span>连光都要走上许久</span><strong>5.5 <small>小时</small></strong>
             <p>平均距离下的近似时间</p>
           </div>
           <div>
-            <span>第一次近距离相遇</span><strong>2015 <small>年</small></strong>
+            <span>人类首次近距离探访</span><strong>2015 <small>年</small></strong>
             <p>新视野号 · 7 月 14 日</p>
           </div>
         </div>
@@ -187,7 +188,7 @@
               </button>
               <div class="photo-copy">
                 <span class="micro">A / SPUTNIK PLANITIA</span>
-                <h3>那颗“心”，还在缓慢流动。</h3>
+                <h3>冥王“心”，还在缓慢流动。</h3>
                 <p>
                   汤博区勾勒出熟悉的心形轮廓。它的西半部是斯普特尼克平原，覆盖着富含氮的冰；冰原上的多边形纹理，是研究缓慢对流与表面更新的重要线索。
                 </p>
@@ -213,9 +214,9 @@
               </button>
               <div class="photo-copy">
                 <span class="micro">B / A BLUE EDGE</span>
-                <h3>薄薄的大气，描出一圈蓝。</h3>
+                <h3>蓝色的薄雾，是它大气的边缘。</h3>
                 <p>
-                  飞掠之后回望，冥王星显露出一圈蓝色薄雾。微小颗粒散射阳光，让极稀薄的大气变得可见；这圈蓝色并不意味着它拥有地球一样的空气。
+                  这张图片来自于新视野号飞掠之后的回望。冥王星显露出一圈蓝色薄雾。大气中微小的颗粒散射阳光，让原本极稀薄的大气变得可见；不过这圈蓝色可并不意味着它拥有地球一样的空气。
                 </p>
                 <a
                   class="source"
@@ -245,7 +246,7 @@
                 <span class="micro">C / WATER ICE AS ROCK</span>
                 <h3>这里的山，由水冰撑起。</h3>
                 <p>
-                  在极低温度下，水冰能像岩石一样坚硬。低角度阳光勾出崎岖山峰与平坦冰原，地平线上还能看到层层薄雾。熟悉的水，在这里扮演着陌生的角色。
+                  在极低的温度下，水冰能和岩石一样坚硬。低角度的阳光勾出崎岖山峰与平坦冰原，地平线上还能看到层层薄雾。我们熟悉的水，正在这里扮演着一个有些陌生的角色。
                 </p>
                 <a
                   class="source"
@@ -295,14 +296,18 @@
             </div>
             <div class="binary-copy">
               <p class="eyebrow">TWO WORLDS. ONE RHYTHM.</p>
-              <h3>不是一个不动，<br />另一个绕行。</h3>
+              <h3>足够小的质量，<br />能让我们看见双星的舞步。</h3>
               <p>
-                冥卫一的直径约为冥王星的一半。它们共同围绕两者之间的质心运动，而这个中心位于冥王星表面之外。
+                冥卫一（卡戎）的直径约为冥王星的一半。质量约是冥王星的八分之一，并不如火星与火卫一那样悬殊。于是我们学富五车的读者就能指出，根据万有引力定律，它们将围绕两者之间的质心运动。作者要补充的是，虽然这个中心位于冥王星表面之外，但通常情况下，我们还是认为卡戎绕着冥王星运行。
               </p>
               <p>
-                它们还彼此潮汐锁定：公转与各自的自转大约都是 6.4
-                个地球日，所以总以同一面相对。图中的小点，帮助你追踪这两张“面对彼此的脸”。
+                从地球看到的轨道倾角会随冥王星绕太阳运行而变化。只有在特定时期，我们才会看到它们轮流从彼此前方经过；彼此总以同一面相对，则是潮汐锁定的结果。
               </p>
+              <p>
+                有意思的是，它们还彼此潮汐锁定，这带来了一些你可能会感兴趣的部分。它们的公转与各自的自转大约都是 6.4
+                个地球日，所以总以同一面相对。图中的小点，应该帮助你追踪这两张“面对彼此的脸”。
+              </p>
+              <a class="source" href="https://www.jpl.nasa.gov/news/pluto-and-charon-rare-alignment/" target="_blank" rel="noopener noreferrer">NASA / JPL · 冥王星与冥卫一的交食</a>
               <dl class="pair-facts">
                 <div>
                   <dt>冥卫一直径</dt>
@@ -336,7 +341,7 @@
                 aria-label="冥王星与冥卫一的轨道相位"
               />
             </div>
-            <button id="binary-play" type="button" aria-pressed="false">播放双星舞步</button
+            <button id="binary-play" type="button" aria-pressed="false">开始运动</button
             ><button id="binary-reset" type="button">回到起点</button>
           </div>
           <p class="panel-note">
@@ -411,13 +416,10 @@
             <span>♇</span><strong>PLUTO</strong><small>DWARF PLANET<br />KUIPER BELT</small>
           </div>
         </section>
-        <footer>
-          <div>
-            <p class="eyebrow">EMPTY610 / SOLAR LABORATORY</p>
-            <p>世界的大小，从来不是故事的长度。</p>
-          </div>
-          <a href="../terminal/index.html">返回太阳系总览</a>
-          <details>
+        <footer class="journey-footer">
+        <div class="journey-copy"><p class="eyebrow">EMPTY610 / SOLAR LABORATORY</p><h2>世界的大小，从来不是故事的长度。</h2><p>在遥远的冰原，为这一程停留。<br />回到星图，选择下一次出发的方向。</p></div>
+        <nav class="journey-links" aria-label="继续探索"><a class="journey-next" data-next-station rel="next" href="../terminal/index.html"><span>下一站 · 太阳系总览</span><span class="journey-arrow" aria-hidden="true">↗</span></a><small>PLUTO / SOLAR LABORATORY<br />EMPTY610 · 继续探索太阳系</small></nav>
+        <details>
             <summary>资料、影像与模型来源</summary>
             <p>
               科学资料与影像：NASA / Johns Hopkins APL / Southwest Research
@@ -429,7 +431,7 @@
               <a href="SOURCES.md">SOURCES.md</a>。本项目不代表上述机构背书。
             </p>
           </details>
-        </footer>
+      </footer>
       </main>
     </div>
     <a class="top-link" href="#top" aria-label="回到页面顶部">TOP</a>

@@ -1423,7 +1423,8 @@
     <link rel="stylesheet" href="../shared/navigation-controls.css" />
     <script defer src="../shared/idle-controls.js"></script>
     <script defer src="../shared/music.js?v=20261006"></script>
-  </head>
+    <link rel="stylesheet" href="../shared/journey.css?v=20261013-next" />
+</head>
   <body>
     <main class="app">
       <header class="header">
@@ -1898,6 +1899,10 @@
           ><button class="active" data-speed="1">1×</button><button data-speed="2">2×</button>
         </div>
       </section>
+    <footer class="journey-footer">
+        <div class="journey-copy"><p class="eyebrow">BEYOND THE CLOUDS</p><h2>越过云海，继续向外。</h2><p>把晨昏之间的明亮留在身后。<br />下一站，沿着红色地表寻找更久远的故事。</p></div>
+        <nav class="journey-links" aria-label="继续探索"><a class="journey-next" data-next-station rel="next" href="../mars/index.html"><span>下一站 · 火星</span><span class="journey-arrow" aria-hidden="true">↗</span></a><small>VENUS / SOLAR LABORATORY<br />EMPTY610 · 继续探索太阳系</small></nav>
+      </footer>
     </main>
     <dialog class="image-dialog" id="image-dialog" aria-labelledby="image-dialog-caption">
       <button
@@ -2000,6 +2005,7 @@
       let day = 92,
         playing = false,
         speed = 1,
+        frameId = null,
         last = 0;
       const skyPhase = (day) =>
         ((Math.abs(day - CYCLE) < 1e-9 ? 0 : ((day % CYCLE) + CYCLE) % CYCLE) / CYCLE) * TAU;
@@ -2046,9 +2052,7 @@
             (b.onclick = () => {
               day = +b.dataset.day;
               $('day').value = day;
-              playing = false;
-              $('play').textContent = '▶';
-              $('play').setAttribute('aria-label', '播放');
+              setPlaying(false);
               render();
             }),
         );
@@ -2105,29 +2109,42 @@
           .querySelectorAll('.event')
           .forEach((b, i) => b.classList.toggle('active', Math.abs(day - stops[i][1]) < 8));
       }
+      function syncAnimation() {
+        last = 0;
+        if (frameId !== null) cancelAnimationFrame(frameId);
+        frameId = playing && !document.hidden ? requestAnimationFrame(frame) : null;
+      }
+      function setPlaying(value) {
+        playing = value;
+        $('play').textContent = playing ? 'Ⅱ' : '▶';
+        $('play').setAttribute('aria-label', playing ? '暂停' : '播放');
+        $('play').setAttribute('aria-pressed', String(playing));
+        syncAnimation();
+      }
+      document.addEventListener('visibilitychange', syncAnimation);
       function frame(t) {
+        frameId = null;
+        if (!playing || document.hidden) return;
         if (playing) {
           if (last) {
-            day += ((t - last) / 40) * 0.55 * speed;
+            day += (Math.min(t - last, 100) / 40) * 0.55 * speed;
             if (day >= CYCLE) day %= CYCLE;
             $('day').value = day;
             render();
           }
           last = t;
         } else last = 0;
-        requestAnimationFrame(frame);
+        frameId = requestAnimationFrame(frame);
       }
-      $('play').onclick = () => {
-        playing = !playing;
-        $('play').textContent = playing ? 'Ⅱ' : '▶';
-        $('play').setAttribute('aria-label', playing ? '暂停' : '播放');
-      };
+      $('play').onclick = () => setPlaying(!playing);
       $('reset').onclick = () => {
+        setPlaying(false);
         day = 0;
         $('day').value = 0;
         render();
       };
       $('day').oninput = (e) => {
+        setPlaying(false);
         day = +e.target.value;
         render();
       };
@@ -2205,7 +2222,7 @@
       });
       makeStatic();
       render();
-      requestAnimationFrame(frame);
+      setPlaying(false);
     </script>
     <script>
       const stage = document.getElementById('venus-stage');

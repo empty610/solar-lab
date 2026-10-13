@@ -12,7 +12,7 @@
   bottom: calc(50% + var(--size) / 2 + 5px);
 }
 .body-point {
-  will-change: left, top;
+  will-change: transform;
 }
 .motion-controls {
   display: flex;
@@ -130,6 +130,7 @@
   bottom: auto;
   left: 0;
   transform: none;
+  will-change: transform;
   border-radius: 4px;
   background: #faf8f2ed;
 }

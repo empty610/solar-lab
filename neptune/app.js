@@ -8,12 +8,19 @@
     orbitPlaying = !reduced.matches,
     speed = 3,
     orbitVisible = true,
+    frameId = null,
     last = 0;
   const orbit = $('orbit'),
     slider = $('orbit-time'),
     sun = $('sun-toggle'),
     play = $('orbit-play');
+  function syncAnimation() {
+    last = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = orbitPlaying && orbitVisible && !document.hidden ? requestAnimationFrame(orbitFrame) : null;
+  }
   function syncOrbit() {
+    syncAnimation();
     play.textContent = orbitPlaying ? '暂停演示' : '继续演示';
     play.setAttribute('aria-pressed', String(orbitPlaying));
     sun.setAttribute('aria-pressed', String(orbitPlaying));
@@ -62,6 +69,7 @@
   if ('IntersectionObserver' in window)
     new IntersectionObserver((entries) => {
       orbitVisible = entries[0].isIntersecting;
+      syncAnimation();
     }).observe(orbit);
   reduced.addEventListener('change', () => {
     if (reduced.matches) {
@@ -69,18 +77,20 @@
       syncOrbit();
     }
   });
+  document.addEventListener('visibilitychange', syncAnimation);
   function orbitFrame(now) {
-    const dt = Math.min((now - last) / 1000, 0.08);
+    frameId = null;
+    if (!orbitPlaying || !orbitVisible || document.hidden) return;
+    const dt = last ? Math.min((now - last) / 1000, 0.08) : 0;
     last = now;
     if (orbitPlaying && orbitVisible && !document.hidden) {
       years = (years + dt * speed) % D.neptuneYear;
       drawOrbit();
     }
-    requestAnimationFrame(orbitFrame);
+    frameId = requestAnimationFrame(orbitFrame);
   }
   syncOrbit();
   drawOrbit();
-  requestAnimationFrame(orbitFrame);
   window.NeptuneOrbit = {
     get state() {
       return { years, playing: orbitPlaying, speed };

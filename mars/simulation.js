@@ -55,6 +55,7 @@
   let day = OPPOSITION,
     playing = false,
     speed = 1,
+    frameId = null,
     last = 0;
   function buildStatic() {
     $('day').max = CYCLE;
@@ -152,15 +153,23 @@
     day = clamp(value, 0, CYCLE);
     render();
   }
+  function syncAnimation() {
+    last = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = playing && !document.hidden ? requestAnimationFrame(frame) : null;
+  }
   function setPlaying(value) {
     playing = value;
-    last = 0;
+    syncAnimation();
     $('play').textContent = value ? 'Ⅱ' : '▶';
     $('play').setAttribute('aria-label', value ? '暂停日心轨道与视运动' : '播放日心轨道与视运动');
     $('play').setAttribute('aria-pressed', String(value));
     window.dispatchEvent(new CustomEvent('mars-orbit-playchange', { detail: { playing } }));
   }
+  document.addEventListener('visibilitychange', syncAnimation);
   function frame(t) {
+    frameId = null;
+    if (!playing || document.hidden) return;
     if (playing && !document.hidden) {
       if (last) {
         day = (day + Math.min(t - last, 100) * 0.018 * speed) % CYCLE;
@@ -168,7 +177,7 @@
       }
       last = t;
     } else last = 0;
-    requestAnimationFrame(frame);
+    if (playing && !document.hidden) frameId = requestAnimationFrame(frame);
   }
   $('play').onclick = () => setPlaying(!playing);
   $('reset').onclick = () => setDay(0, true);
@@ -233,5 +242,5 @@
   };
   buildStatic();
   render();
-  requestAnimationFrame(frame);
+  syncAnimation();
 })();

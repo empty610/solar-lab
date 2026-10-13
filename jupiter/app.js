@@ -6,6 +6,7 @@
   let day = 0,
     playing = false,
     speed = 0.5,
+    frameId = null,
     last = 0;
   const subscribers = new Set();
   const svgNS = 'http://www.w3.org/2000/svg';
@@ -71,9 +72,14 @@
     }
     subscribers.forEach((fn) => fn(day));
   }
+  function syncAnimation() {
+    last = 0;
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = playing && !document.hidden ? requestAnimationFrame(tick) : null;
+  }
   function setPlaying(value) {
     playing = value;
-    last = 0;
+    syncAnimation();
     $('play-orbits').textContent = playing ? '暂停轨道' : day >= end ? '重新播放' : '播放轨道';
     $('play-orbits').setAttribute('aria-pressed', String(playing));
   }
@@ -111,19 +117,19 @@
   $('orbit-speed').addEventListener('change', (e) => {
     speed = Number(e.target.value);
   });
-  document.addEventListener('visibilitychange', () => {
-    last = 0;
-  });
+  document.addEventListener('visibilitychange', syncAnimation);
   function tick(now) {
+    frameId = null;
+    if (!playing || document.hidden) return;
     if (playing && !document.hidden) {
       if (last) day = Math.min(end, day + Math.min((now - last) / 1000, 0.08) * speed);
       last = now;
       renderTime();
       if (day >= end) setPlaying(false);
     }
-    requestAnimationFrame(tick);
+    if (playing && !document.hidden) frameId = requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+  syncAnimation();
   renderTime();
   function facts(items) {
     $('body-facts').replaceChildren();
