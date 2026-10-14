@@ -1499,6 +1499,7 @@
               aria-label="展开或收起金星介绍"
             >
               <span>Venus profile</span>
+              <small id="intro-toggle-hint">点此展开介绍</small>
             </button>
             <div class="intro-divider" aria-hidden="true"></div>
             <button
@@ -1566,7 +1567,7 @@
             class="appearance-card"
             type="button"
             data-image-full="venus-ishtar-overhead.jpg"
-            data-image-caption="麦哲伦号拍摄的伊什塔尔高地西部拉克什米平原俯视雷达图，包含 Sacajawea Patera。来源：NASA/JPL，PIA00485。"
+            data-image-caption="麦哲伦号拍摄的伊什塔尔高地西部拉克什米平原俯视雷达图，包含萨卡加维亚帕特拉山，它是金星上的一座甚大型盾状火山。来源：NASA/JPL，PIA00485。"
           >
             <figure>
               <img
@@ -1604,7 +1605,7 @@
             class="appearance-card"
             type="button"
             data-image-full="venus-venera13-color.jpg"
-            data-image-caption="苏联金星十三号着陆器传回的首批金星彩色全景之一。来源：NASA APOD / NSSDC，苏联金星探测计划。"
+            data-image-caption="苏联金星十三号着陆器传回的首批金星彩色全景之一，是人类第一次从照片中看见曾经被称为“地狱表面”的00金星。来源：NASA APOD / NSSDC，苏联金星探测计划。"
           >
             <figure>
               <img
@@ -1623,7 +1624,7 @@
             class="appearance-card"
             type="button"
             data-image-full="venus-venera14-remapped-color.png"
-            data-image-caption="苏联金星十四号地表图像的重映射彩色版本，展示金星表面的黄橙色调。原始数据：苏联金星探测计划。"
+            data-image-caption="苏联金星十四号地表图像的重映射彩色版本，展示金星表面的黄橙色天空，在此之前仍有人怀疑苏联是否成功登陆金星。原始数据：苏联金星探测计划。"
           >
             <figure>
               <img
@@ -1646,7 +1647,7 @@
             <span class="idx">01</span>
             <h2 id="venus-surface-title">金星地表典型的地貌特征</h2>
           </div>
-          <p>testing</p>
+          <p>关于金星</p>
         </div>
         <div class="terrain-grid">
           <article
@@ -1941,7 +1942,7 @@
             Lavochkin：金星系列等探测器。
           </p>
           <p>
-            这个演示仅适合解释规律，不能替代指定日期和地点的精密星历。empty610不对使用本网站演示数据观测失败的结果负任何责任。
+            这个演示仅适合解释规律，不能替代指定日期和地点的精密星历。empty610不对使用本网站演示数据观测失败的结果负任何责任。同时，如果你发现了任何事实或浏览问题，能得到你的反馈我将不胜荣幸。
           </p>
         </div>
         <div class="speed">
@@ -2214,6 +2215,8 @@
       function setIntro(open) {
         intro.classList.toggle('is-open', open);
         introToggle.setAttribute('aria-expanded', String(open));
+        introToggle.setAttribute('aria-label', open ? '收起金星介绍' : '展开金星介绍');
+        $('intro-toggle-hint').textContent = open ? '点此收起介绍' : '点此展开介绍';
       }
       introToggle.onclick = () => setIntro(!intro.classList.contains('is-open'));
       setIntro(false);
