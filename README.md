@@ -84,6 +84,6 @@ node tools/verify-uranus.cjs
 
 ## Terminal 更新与浏览器缓存
 
-Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 让 Terminal 和 shared 中的 JS/CSS 每次访问时重新校验，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源时同步更新入口中的版本参数，并维护预览入口。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 为 Terminal 和 shared 中的 JS/CSS 设置明确的 `no-cache` 校验指令，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源时同步更新入口中的版本参数，并维护预览入口。自定义域名的缓存规则可能覆盖资源 TTL，因此内容版本参数同时负责绕过已有缓存。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
 
 在工作区运行 `node tools/verify-uranus-entry.cjs`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；添加 `--live` 可验证已发布的线上入口。
