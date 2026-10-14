@@ -2,6 +2,14 @@
   'use strict';
   const $ = (id) => document.getElementById(id),
     { bodies, positionAt, RJ, end, eccentricity } = window.EuropaData;
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'profile-kicker',
+    'profile-heading',
+    'profile-summary',
+    'profile-description',
+    'profile-feature',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)'),
     subscribers = new Set();
   let day = 0,
@@ -216,6 +224,10 @@
       $('profile-summary').textContent = b.name + '档案 · 展开了解';
       $('profile-description').textContent = b.description;
       $('profile-feature').textContent = b.feature;
+      if (id === 'europa') {
+        for (const [elementId, nodes] of authoredProfile)
+          $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+      }
       $('model-caption').innerHTML =
         '拖动环绕 · 滚轮 / 双指缩放<br><small>NASA / VTAD · ' +
         (id === 'europa' ? '全球冰面' : '云层') +

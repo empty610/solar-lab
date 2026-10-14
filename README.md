@@ -56,6 +56,12 @@ Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css
 
 从原始工作区同步时，在 `E:\solar system` 运行 `node tools/export-site.mjs`，再在本仓库检查和提交变化。先运行 `node tools/export-site.mjs --dry-run` 查看新增、修改清单，该模式不会写入文件，也可以在有未提交改动时运行。正式导出会先检查全部页面及依赖，再开始复制，并跳过内容相同的文件。同步脚本保留本仓库元数据，复制当前版的页面依赖并更新目录链接；不会删除文件。正式目录可能包含比 previews 更新的修改：存在未提交改动时，脚本会在复制前停止。先检查差异、备份并将需要保留的修改同步到 previews；仅在确认需要覆盖时使用 `node tools/export-site.mjs --allow-overwrite`。修改 shared 或页面运行脚本后，应同时维护对应的 previews 源文件。
 
+## 介绍文字与资源版本
+
+主天体的标题、介绍和展开说明以各页 `index.html` 中的原文为准。木星、木卫二、土星、天王星、海王星与冥王星在初始化和切换回主天体时保留这些 HTML 内容，包括换行、强调与链接；其他天体标签继续使用页面的资料脚本。修改介绍时请同步对应 previews 文件，避免后续导出覆盖。
+
+九个档案的应用脚本和样式采用内容哈希版本地址，避免旧缓存继续显示修改前的介绍或展开行为。在本地工作区运行 `node tools/version-archive-assets.cjs` 更新版本并同步预览，随后运行 `node tools/export-site.mjs --dry-run` 检查一致性。
+
 ## 素材与来源
 
 各档案的 `SOURCES.md`、素材来源 JSON 与页面中的资料链接保留原有来源说明。第三方库许可证位于各页面的 `vendor/` 中。发布版排除了本地备份、测试和预览截图、node_modules、生成脚本、旧版水星、下载的来源网页和已经嵌入运行时数据的月球原始模型。

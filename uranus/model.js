@@ -4,6 +4,11 @@
   const mount = $('model-mount');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const buttons = [...document.querySelectorAll('[data-view],#spin,#lighting,#reset')];
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'view-title',
+    'view-copy',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   const views = {
     planet: { title:'青色云层之下，没有海岸。', copy:'我们看到的是大气，不是海洋。转动这颗冰巨星，再切换环系视图，看看它不同寻常的姿态。', extent:1.14, direction:[.2,.08,1] },
     rings: { title:'一圈细环，也随它侧身而行。', copy:'环与赤道处于同一平面。这里把镜头转向环面，让暗弱、狭窄的环系显现；亮度与宽度经过增强。', extent:2.18, direction:[1,.3,.7] },
@@ -71,7 +76,16 @@
       selected=id;clearTimeout(noteTimer);note.classList.add('is-changing');
       document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===id)));
       ringTarget=id==='rings'?.75:id==='axis'?.14:0;axisTarget=id==='axis'?1:0;
-      noteTimer=setTimeout(()=>{if(failed)return;$('view-title').textContent=views[id].title;$('view-copy').textContent=views[id].copy;note.classList.remove('is-changing');},reduced.matches?0:180);
+      noteTimer = setTimeout(() => {
+        if (failed) return;
+        $('view-title').textContent = views[id].title;
+        $('view-copy').textContent = views[id].copy;
+        if (id === 'planet') {
+          for (const [elementId, nodes] of authoredProfile)
+            $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+        }
+        note.classList.remove('is-changing');
+      }, reduced.matches ? 0 : 180);
       if(reduced.matches){ringAlpha=ringTarget;axisAlpha=axisTarget;}
       reset();
     }

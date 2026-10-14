@@ -5,6 +5,12 @@
     mount = $('model-mount'),
     stage = $('model-stage'),
     reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'body-tag',
+    'body-title',
+    'body-copy',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   let selected = 'saturn',
     ready = false,
     failed = false,
@@ -33,6 +39,10 @@
     $('body-tag').textContent = p.tag;
     $('body-title').textContent = p.title;
     $('body-copy').textContent = p.copy;
+    if (selected === 'saturn') {
+      for (const [elementId, nodes] of authoredProfile)
+        $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+    }
     $('body-facts').replaceChildren();
     p.facts.forEach(([label, value, unit]) => {
       const row = document.createElement('div'),

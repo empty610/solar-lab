@@ -5,6 +5,12 @@
     stage = $('model-stage');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)'),
     D = window.NeptuneData;
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'body-tag',
+    'body-title',
+    'body-copy',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   let selected = 'neptune',
     ready = false,
     visible = true,
@@ -34,6 +40,10 @@
     $('body-tag').textContent = p.tag;
     $('body-title').textContent = p.title;
     $('body-copy').textContent = p.copy;
+    if (id === 'neptune') {
+      for (const [elementId, nodes] of authoredProfile)
+        $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+    }
     $('body-facts').replaceChildren();
     for (const [label, value, unit] of p.facts) {
       const row = document.createElement('div'),

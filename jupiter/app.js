@@ -2,6 +2,14 @@
   'use strict';
   const $ = (id) => document.getElementById(id),
     { bodies, moons, positionAt, end } = window.Jovian;
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'profile-kicker',
+    'profile-heading',
+    'profile-summary',
+    'profile-description',
+    'profile-feature',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let day = 0,
     playing = false,
@@ -172,6 +180,10 @@
       $('profile-summary').textContent = `${b.english} profile · ${b.name}档案`;
       $('profile-description').textContent = b.description;
       $('profile-feature').textContent = b.feature;
+      if (id === 'jupiter') {
+        for (const [elementId, nodes] of authoredProfile)
+          $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+      }
       $('model-caption').innerHTML =
         '拖动旋转 · 滚轮 / 双指缩放<br><small>NASA / JPL · ' +
         (id === 'jupiter' ? '云层' : '表面') +

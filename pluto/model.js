@@ -5,6 +5,11 @@
     mount = $('model-mount'),
     status = $('model-status'),
     reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  // Keep the authored HTML, including links and paragraph formatting, on return.
+  const authoredProfile = [
+    'profile-title',
+    'profile-copy',
+  ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   const profiles = {
     pluto: {
       word: 'PLUTO',
@@ -101,6 +106,10 @@
         ),
     );
     $('profile-copy').textContent = p.copy;
+    if (view === 'pluto') {
+      for (const [elementId, nodes] of authoredProfile)
+        $(elementId).replaceChildren(...nodes.map((node) => node.cloneNode(true)));
+    }
     $('profile-facts').replaceChildren(
       ...p.facts.map(([label, value, unit]) => {
         const div = document.createElement('div'),
