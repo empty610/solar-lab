@@ -81,3 +81,9 @@ node tools/verify-uranus.cjs
 `verify-third-review.cjs` 检查七个档案的轨道演示暂停后不再调度动画、播放/暂停/重置，以及金星后台计时和水星纹理加载失败后的界面状态。结果位于工作区 `tools/.qa/third-review-results.json`。
 
 `verify-uranus.cjs` 自动启动本机测试服务，验证天王星的三维视图、四季演示、照片弹窗、手机布局、返回导航、离线打开和回退模式。全站验证同时检查九个档案页的“下一站”链接及连接动画。
+
+## Terminal 更新与浏览器缓存
+
+Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 让 Terminal 和 shared 中的 JS/CSS 每次访问时重新校验，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源时同步更新入口中的版本参数，并维护预览入口。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+
+在工作区运行 `node tools/verify-uranus-entry.cjs`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；添加 `--live` 可验证已发布的线上入口。
