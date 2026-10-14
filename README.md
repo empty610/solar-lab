@@ -52,7 +52,7 @@ git push origin main
 
 `shared/interface.css` 与 `shared/interface.js` 复用个人网站的金色双轨道、中心光点和深色遮罩，在跳转前显示约 1 秒的 `ESTABLISHING LINK` 连接动画；同时统一档案的 BACK 返回总览，以及左图右介绍的放大窗口（手机改为上下布局）。修改这些通用效果时，连同 `shared/` 一起提交。
 
-Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css` 中的 Venus 模板：右上角的黑金色胶囊、回转箭头和 BACK 文字。Terminal 返回个人主页的“项目”区，介绍页返回 Terminal。介绍页的返回顶部按钮单独位于音乐按钮上方，两个圆形控件间隔 14px。Terminal 与九个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 与 `shared/audio/ad-astra.mp3` 提供同款音乐，点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
+Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css` 中的 Venus 模板：右上角的黑金色胶囊、回转箭头和 BACK 文字。Terminal 返回个人主页的“项目”区，介绍页返回 Terminal。介绍页的返回顶部按钮单独位于音乐按钮上方，两个圆形控件间隔 14px。Terminal 与九个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 管理音乐播放：默认配乐为 `shared/audio/ad-astra.mp3`，火星使用用户提供的 `mars/assets/soil-of-life.mp3`，通过 `data-music-track` 独立保存该曲目的进度。点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
 
 从原始工作区同步时，在 `E:\solar system` 运行 `node tools/export-site.mjs`，再在本仓库检查和提交变化。先运行 `node tools/export-site.mjs --dry-run` 查看新增、修改清单，该模式不会写入文件，也可以在有未提交改动时运行。正式导出会先检查全部页面及依赖，再开始复制，并跳过内容相同的文件。同步脚本保留本仓库元数据，复制当前版的页面依赖并更新目录链接；不会删除文件。正式目录可能包含比 previews 更新的修改：存在未提交改动时，脚本会在复制前停止。先检查差异、备份并将需要保留的修改同步到 previews；仅在确认需要覆盖时使用 `node tools/export-site.mjs --allow-overwrite`。修改 shared 或页面运行脚本后，应同时维护对应的 previews 源文件。
 

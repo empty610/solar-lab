@@ -1548,3 +1548,22 @@ footer a {
     font-size: 10px;
   }
 }
+
+/* Keep the selected portrait and its title in their own mobile columns. */
+@media (max-width: 560px) {
+  .destination { grid-template-columns: clamp(84px, 28vw, 112px) minmax(0, 1fr); gap: 16px; }
+  .destination-top { grid-column: 1 / -1; grid-row: 1; min-width: 0; }
+  .planet-portrait { grid-column: 1; grid-row: 2; width: 100%; height: auto; aspect-ratio: 1; align-self: center; }
+  .planet-portrait img, .planet-portrait[data-body='saturn'] img { width: 100%; height: 100%; max-width: 100%; }
+  .planet-portrait::before { width: 90%; height: 90%; }
+  .portrait-word { top: auto; bottom: 0; max-width: 100%; font-size: 15px; transform: translateX(-50%); }
+  .destination-intro { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+  .destination-title { display: flex; align-items: flex-start; align-self: stretch; gap: 3px; margin: 0; height: auto; }
+  .destination-title h3 { line-height: 1.35; }
+  .destination-poem { margin: 10px 0 0; line-height: 1.8; align-self: stretch; }
+  .destination-description { grid-column: 1 / -1; grid-row: 3; margin: 0; }
+  .destination-facts { grid-column: 1 / -1; grid-row: 4; }
+  .enter-link, .unavailable-note { grid-column: 1 / -1; grid-row: 5; }
+  .entry-note { grid-column: 1 / -1; grid-row: 6; }
+  .back-to-map { grid-column: 1 / -1; grid-row: 7; }
+}

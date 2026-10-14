@@ -3,7 +3,9 @@
   if (!audio) return;
   const toggle = document.getElementById('music-toggle');
   const preference = 'site.music.mainEnabled';
-  const position = 'site.music.time';
+  const position = audio.dataset.musicTrack
+    ? 'site.music.time.' + audio.dataset.musicTrack
+    : 'site.music.time';
   const get = (key) => { try { return sessionStorage.getItem(key); } catch { return null; } };
   const set = (key, value) => { try { sessionStorage.setItem(key, value); } catch {} };
   let mainEnabled = get(preference) === '1';
