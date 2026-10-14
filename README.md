@@ -60,6 +60,8 @@ Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css
 
 主天体的标题、介绍和展开说明以各页 `index.html` 中的原文为准。木星、木卫二、土星、天王星、海王星与冥王星在初始化和切换回主天体时保留这些 HTML 内容，包括换行、强调与链接；其他天体标签继续使用页面的资料脚本。修改介绍时请同步对应 previews 文件，避免后续导出覆盖。
 
+金星地貌与火星“地表外观”的原文放在 `.terrain-copy` 中，卡片可展开，放大窗口始终显示完整介绍。火星五类地貌的详细说明保存在卡片的 `data-image-caption` 中，弹窗按句子分段，保留全部原文和署名。修改后可运行 `node tools/verify-recovered-copy.cjs` 对照已恢复原稿，检查卡片、展开与放大窗口。
+
 九个档案的应用脚本和样式采用内容哈希版本地址，避免旧缓存继续显示修改前的介绍或展开行为。在本地工作区运行 `node tools/version-archive-assets.cjs` 更新版本并同步预览，随后运行 `node tools/export-site.mjs --dry-run` 检查一致性。
 
 ## 素材与来源

@@ -1409,6 +1409,50 @@
           display: none;
         }
       }
+      .terrain-grid {
+        align-items: start;
+      }
+      .terrain-card.has-disclosure:not(.is-expanded) .terrain-description > p:first-child {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .terrain-card.has-disclosure:not(.is-expanded) .terrain-description > p ~ p {
+        display: none;
+      }
+      .terrain-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-height: 44px;
+        margin-top: 6px;
+        padding: 8px 0;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        color: var(--gold);
+        font: inherit;
+        font-size: 11px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .terrain-toggle::after {
+        content: '＋';
+      }
+      .terrain-toggle[aria-expanded='true']::after {
+        content: '−';
+      }
+      .terrain-toggle:focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 2px;
+      }
+      .terrain-source {
+        overflow-wrap: anywhere;
+      }
     </style>
     <script src="venus-texture.js?v=3adc982bbd96"></script>
     <script src="vendor/three.min.js"></script>
@@ -1473,31 +1517,37 @@
               /><strong>金星大气层纵向剖面</strong><small>温度、压力与多层硫酸云的高度分布</small>
             </button>
             <p id="venus-intro-content">
-              金星，中国古称太白金星，西方以女神维纳斯命名，是太阳系中距离太阳第二近的行星，平均距离太阳约1.082亿千米，也就是大概0.73个天文单位。金星平均半径约为6052km，质量约为4.87
+              金星，中国古称太白，西方以女神维纳斯命名，是太阳系中距离太阳第二近的行星，平均距离太阳约1.082亿千米，也就是大概0.73个天文单位。金星平均半径约为6052km，质量约为4.87
               × 10²⁴ kg，地表平均重力加速度约8.87
               m/s²,公转周期约224.7地球日，自转周期约243地球日，主要由岩石和金属构成，拥有地幔包裹液态金属核心的分层内部结构，是一颗相当标准的类地行星。
             </p>
             <p>
-              金星的地表温度约为462摄氏度，是太阳系中最热的行星之一。地表大气压约为90个标准大气压。大气的主要成分为CO₂和N₂，SO₂，CO，水蒸气以及少量惰性气体，天空中的厚重云层则主要由硫酸液滴构成，这套大气结构拥有非常强力的温室效应，也直接造成了金星的极端环境。
+              金星的地表岩石是暗灰或红褐色的玄武岩，并不是金色的。至于你在右侧看到的金星，则是根据麦哲伦号探测器的雷达遥测数据生成的伪色建模，是人们对真实金星地表的视觉呈现，并不是金星在太空中“用眼睛看起来”的模样，我们会在后面讲到为什么金星看起来是金色的。
             </p>
             <p>
-              如果用肉眼直接观察金星，你会发现这颗行星被厚重的云层覆盖，呈现出平滑的淡黄色或乳白色，而且非常明亮，这是因为硫酸云层反射了大量的太阳光，使得其最高视星等达到
-              -4.9等，成为夜空中除月亮外最醒目的天体。中国古人常说的启明与长庚就分别对应金星明亮与昏暗的时候，你可以在后面找到它的演示。
+              金星的地表温度约为462摄氏度，是太阳系中最热的行星之一（如果考虑平均气温，则金星将当之无愧地成为太阳系最热的行星）。地表大气压约为90个标准大气压。大气的主要成分为CO₂和N₂，SO₂，CO，水蒸气以及少量惰性气体，天空中的厚重云层则主要由硫酸液滴构成，这套大气结构拥有非常强力的温室效应，也直接造成了金星的极端环境。
             </p>
             <p>
-              如果你能从太阳上方俯瞰太阳系，你会发现金星是顺时针自转的，与大多数行星的逆时针自转相反，因此你在金星上看到的太阳是西升东落的。而且由于它的自转极其缓慢，在金星上，“一天”甚至比“一年”还要来的长,（这里指恒星日，你在金星上完整观察完整一次日出到日落大约只要117个地球日）这种情况的成因也尚未形成定论。
+              在开始时，我们提到为什么右图看起来“不那么真实”：如果你能进入金星大气层近距离观察金星，你会发现这颗行星被达50~70km的厚重云层覆盖，这种云层选择性地过滤了阳光，让照在地表的“阳光”变为了橙黄色，将暗色的岩石渲染成了黄褐色，这也导致为什么右边的贴图是伪色图。
             </p>
             <p>
-              金星的内部热量释放不同于地球，主要通过地幔对流，上涌到地表凝固来释放热量，这也造就了金星表面的各种地质地貌结构，你可以在下面找到一部分金星表面很有趣的地质特征，更有趣的是金星没有表现出清晰的板块构造系统，但仍然拥有类似地球造山带的典型地貌特征；以及在拥有活跃地幔的情况下，金星的内禀磁场几乎不存在。
+              用肉眼观察的话，它一般看起来呈现出平滑的淡黄色或乳白色，这也是为什么人们称其为金星。而且这种反射光非常明亮，这是因为硫酸云层反射了大量的太阳光，使得其最高视星等达到
+              -4.9等，成为夜空中除月亮外最醒目的天体。中国古人常说的启明与长庚就分别对应金星清晨见于东方与黄昏见于西方的时候，你可以在后面找到它的演示。
             </p>
             <p>
-              如果你愿意比较一下金星与地球，你会发现两者可能具有一个相似的起点:含水的岩石行星，可这样的七点却演化出了截然不同的结局。地球是生命的摇篮，而金星则成了生灵的炼狱。
+              如果你能从黄道面上方，太阳北极俯瞰太阳系，你会发现金星是顺时针自转的，与大多数行星的逆时针自转相反，因此你在金星上看到的太阳是西升东落的。而且由于它的自转极其缓慢，在金星上，“一天”甚至比“一年”还要来的长,（这里指一个标准的恒星日，如果你只是想在金星上观察一次完整日的出日落，那大约只要117个地球日就好了）这种情况的成因也尚未形成定论。
             </p>
             <p>
-              为什么会有这样截然不同的差异呢？为什么金星会变成这样呢？究竟在哪里出现了分歧？编者同样好奇，但这都是留待未来人类探索的问题
+              金星的内部热量释放不同于地球，主要通过地幔对流，上涌到地表凝固来释放热量，这也造就了金星表面不同于地球的各种地质地貌结构，你可以在下面找到一部分金星表面很有趣的地质特征，更有趣的是金星没有表现出清晰的板块构造系统，但仍然拥有类似地球造山带的典型地貌特征；以及在拥有近地质量与活跃地幔昭示其液态金属核心的情况下，金星的内禀磁场几乎不存在。
             </p>
             <p>
-              了解金星，能帮我们理解温室效应，大气逃逸，火山活动，行星演化的内外部规律与宜居性。因此，当我们仰望夜空中最耀眼的行星时，不应该想到夺目光芒下的死寂炼狱，也应当思考它为人类的发展带来了怎样的启示。
+              倘若你愿意比较一下金星与地球的初始条件，你会发现两者可能具有一个相似的起点:含水的岩石行星，可这样的开始却演化出了截然不同的结局。地球是生命的摇篮，而金星则成了生灵的止境。
+            </p>
+            <p>
+              为什么会有这样截然不同的差异呢？为什么金星会变成这样呢？究竟在哪里出现了分歧？生命的诞生在星球表面的演化扮演了怎样的角色？人类的活动是否会让地球也迈向金星的道路？我同样十分好奇，但对现在的人类来说，这都是留待未来去探索的问题。
+            </p>
+            <p>
+              了解金星，能帮我们理解温室效应，大气逃逸，火山活动，行星演化的内外部规律与行星宜居性的判断————人类曾以为金星亦可成为第二个家园。因此，当我们仰望夜空中最耀眼的行星时，不应该想到夺目光芒下的死寂炼狱，也应当思考它为人类的发展带来了怎样的启示，以及我们将从这启示中得到什么。
             </p>
           </section>
           <p class="planet-hint">拖动旋转 · 滚轮或双指缩放</p>
@@ -1621,7 +1671,7 @@
                 这种平原的广泛分布主要来自于一次三亿年前甚至更早的全球性火山活动“全球再铺面事件”，也是金星看起来没有像月球那样遍布陨石坑，看起来十分年轻的重要原因，因为流动的熔岩覆盖了地表并凝固，形成了新的地表。
               </p>
               <p>
-                至于火山地貌特征，则有类似夏威夷群岛上的盾状火山，穹丘，由熔岩四散喷发形成的“海葵”构造与因凝固缓慢而形成的，远超地球上任何长度的超长熔岩渠道，大的熔岩渠道甚至可以延伸6000公里以上。
+                至于火山地貌特征，则有类似夏威夷群岛上的盾状火山，穹丘，由熔岩四散喷发形成的“海葵”构造以及流动熔岩缓慢凝固而形成的，因地表环境迥异而远超地球上任何长度的超长熔岩渠道，大的熔岩渠道甚至可以延伸6000公里以上。
               </p>
               <small class="terrain-source">Magellan · NASA/JPL · PIA00265</small>
             </div>
@@ -1642,10 +1692,10 @@
               <span class="terrain-kicker">Highland plateau</span>
               <h3>大型高地与“大陆”</h3>
               <p>
-                称其为“大陆”并不准确，它实际上是人们对金星表面几处明显高于金星平均半径的大型高地的习惯性称呼。它们规模巨大且地形复杂，是金星地壳增厚与强烈地质活动变形的共同结果，主要特点是地势高于金星平均半径，该区域地壳明显增厚。
+                称其为“大陆”并不准确，它实际上是人们对金星表面几处明显高于金星平均半径的大型高地的习惯性称呼。它们规模巨大且地形复杂，是金星地壳增厚与强烈地质活动变形的共同结果，主要特点是地势高于金星平均半径与区域地壳明显增厚。
               </p>
               <p>
-                比较有代表性的高地为其北半球高纬度地区的伊什塔尔高地与阿弗洛狄忒高地，主流观点认为其成因为类似地球造山带的地壳横向挤压和山体隆升。实际由于地形复杂（包含了多种次级地貌单元），对实际情况的解释尚存在地幔对流上升，大规模火山作用等不少争议观点。
+                比较有代表性的高地为其北半球高纬度地区的伊什塔尔高地与阿弗洛狄忒高地，主流观点认为其成因为类似地球造山带的地壳横向挤压和山体隆升。实际由于地形复杂（包含了多种次级地貌单元），且金星实际无明显板块特征与缺乏板块运动，对实际情况的解释尚存在地幔对流上升，大规模火山作用等不少争议观点。
               </p>
               <small class="terrain-source">Pioneer Venus · NASA/JPL/USGS · PIA00093</small>
             </div>
@@ -1666,10 +1716,10 @@
               <span class="terrain-kicker">Coronae</span>
               <h3>冠状构造</h3>
               <p>
-                冠状构造是金星上非常独特的一类大型环状地貌，呈环形或椭圆形，直径从几十公里到2500公里不等，看起来可能像是陨石坑的中心部分多了隆起、凹陷或变得平坦。
+                冠状构造是金星上非常独特的一类大型环状地貌，呈环形或椭圆形，直径从几十公里到2500公里不等，看起来可能像是一个陨石坑的中心部分多了隆起、凹陷或变得平坦。
               </p>
               <p>
-                它们的出现通常伴随火山活动，是金星缺乏板块构造却保持内部活跃的重要证据，这一地貌在太阳系上的其它天体上比较少见，主流模型认为这一地貌的形成与地幔热柱有关。
+                它们的出现通常伴随火山活动，是金星缺乏板块构造却保持内部活跃的重要证据，这一地貌在太阳系上的其它天体上比较少见，主流模型认为这一地貌的形成与地幔热柱有关，也就是地幔中的热物质缓慢上升凝固后形成的柱状结构。
               </p>
               <small class="terrain-source">Magellan · NASA/JPL/USGS · PIA00098</small>
             </div>
@@ -2190,11 +2240,17 @@
         imageDialogImage.alt = card.querySelector('img').alt;
         const explanation = card.querySelector('.terrain-copy'),
           dialogTitle = card.dataset.imageDialogTitle;
-        if (explanation) imageDialogCaption.innerHTML = explanation.outerHTML;
+        if (explanation) {
+          const copy = explanation.cloneNode(true);
+          copy.querySelector('.terrain-toggle')?.remove();
+          copy.querySelectorAll('[id]').forEach((element) => element.removeAttribute('id'));
+          imageDialogCaption.replaceChildren(copy);
+        }
         else if (dialogTitle)
           imageDialogCaption.innerHTML = `<strong class="dialog-title">${dialogTitle}</strong><span class="dialog-subtitle">${card.dataset.imageSubtitle}</span>`;
         else imageDialogCaption.textContent = card.dataset.imageCaption;
         imageDialog.showModal();
+        imageDialogCaption.scrollTop = 0;
         revealDialogControls();
       }
       document.querySelectorAll('[data-image-full]').forEach((card) => {
@@ -2202,12 +2258,41 @@
         if (card.classList.contains('terrain-card')) {
           card.tabIndex = 0;
           card.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (e.target === card && (e.key === 'Enter' || e.key === ' ')) {
               e.preventDefault();
               openImageDialog(card);
             }
           });
         }
+      });
+      document.querySelectorAll('.terrain-grid .terrain-card').forEach((card, index) => {
+        const copy = card.querySelector('.terrain-copy'),
+          paragraphs = copy.querySelectorAll(':scope > p');
+        if (!paragraphs.length) return;
+        const description = document.createElement('div');
+        description.className = 'terrain-description';
+        description.id = `terrain-description-${index + 1}`;
+        paragraphs[0].before(description);
+        paragraphs.forEach((p) => description.append(p));
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'terrain-toggle';
+        toggle.textContent = '展开介绍';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', description.id);
+        toggle.setAttribute('aria-label', `展开${copy.querySelector('h3').textContent}介绍`);
+        toggle.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const open = card.classList.toggle('is-expanded');
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.textContent = open ? '收起介绍' : '展开介绍';
+          toggle.setAttribute(
+            'aria-label',
+            `${open ? '收起' : '展开'}${copy.querySelector('h3').textContent}介绍`,
+          );
+        });
+        description.after(toggle);
+        card.classList.add('has-disclosure');
       });
       $('image-dialog-close').onclick = closeImageDialog;
       imageDialog.onclick = (e) => {

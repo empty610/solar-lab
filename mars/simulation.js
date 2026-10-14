@@ -204,13 +204,45 @@
   const dialog = $('image-dialog'),
     dialogImage = $('image-dialog-image'),
     caption = $('image-dialog-caption');
+  function formatLandformCaption(card) {
+    const text = card.dataset.imageCaption;
+    const sourceStart = text.lastIndexOf(' 来源：');
+    const description = sourceStart < 0 ? text : text.slice(0, sourceStart);
+    const sentences = description.match(/[^。！？]+[。！？]?/g) || [description];
+    const content = document.createElement('div');
+    content.className = 'landform-dialog-copy';
+    const title = document.createElement('h3');
+    title.className = 'dialog-title';
+    title.textContent = card.querySelector('h3')?.textContent || card.querySelector('img').alt;
+    content.append(title);
+    for (let i = 0; i < sentences.length; i += 2) {
+      const paragraph = document.createElement('p');
+      paragraph.textContent = sentences
+        .slice(i, i + 2)
+        .join('')
+        .trim();
+      content.append(paragraph);
+    }
+    if (sourceStart >= 0) {
+      const source = document.createElement('p');
+      source.className = 'landform-dialog-source';
+      source.textContent = text.slice(sourceStart).trim();
+      content.append(source);
+    }
+    caption.replaceChildren(content);
+  }
   function openImage(card) {
     dialogImage.src = card.dataset.imageFull;
     dialogImage.alt = card.querySelector('img').alt;
     const copy = card.querySelector('.terrain-copy');
-    if (copy) caption.innerHTML = copy.outerHTML;
-    else caption.textContent = card.dataset.imageCaption;
+    if (copy) {
+      const fullCopy = copy.cloneNode(true);
+      fullCopy.querySelector('.terrain-toggle')?.remove();
+      fullCopy.querySelectorAll('[id]').forEach((element) => element.removeAttribute('id'));
+      caption.replaceChildren(fullCopy);
+    } else formatLandformCaption(card);
     dialog.showModal();
+    caption.scrollTop = 0;
     dialog.classList.add('is-controls-visible');
   }
   document.querySelectorAll('[data-image-full]').forEach((card) => {
@@ -227,6 +259,35 @@
         }
       });
     }
+  });
+  document.querySelectorAll('.terrain-grid .terrain-card').forEach((card, index) => {
+    const copy = card.querySelector('.terrain-copy'),
+      paragraphs = copy.querySelectorAll(':scope > p');
+    if (!paragraphs.length) return;
+    const description = document.createElement('div');
+    description.className = 'terrain-description';
+    description.id = `mars-terrain-description-${index + 1}`;
+    paragraphs[0].before(description);
+    paragraphs.forEach((p) => description.append(p));
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'terrain-toggle';
+    toggle.textContent = '展开介绍';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', description.id);
+    toggle.setAttribute('aria-label', `展开${copy.querySelector('h3').textContent}介绍`);
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const open = card.classList.toggle('is-expanded');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? '收起介绍' : '展开介绍';
+      toggle.setAttribute(
+        'aria-label',
+        `${open ? '收起' : '展开'}${copy.querySelector('h3').textContent}介绍`,
+      );
+    });
+    description.after(toggle);
+    card.classList.add('has-disclosure');
   });
   $('image-dialog-close').onclick = () => dialog.close();
   dialog.onclick = (e) => {
