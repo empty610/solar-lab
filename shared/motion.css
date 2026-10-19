@@ -1,0 +1,49 @@
+/* Finite interface motion. Scientific and orbital animation stays in each page. */
+:root {
+  --ui-enter-duration: 360ms;
+  --ui-exit-duration: 300ms;
+  --ui-ease: cubic-bezier(.2, .72, .2, 1);
+}
+.tab-view-enter { animation: tab-view-enter var(--ui-enter-duration) var(--ui-ease) both; }
+.tab-view-exit {
+  animation: tab-view-exit var(--ui-exit-duration) cubic-bezier(.4, 0, .7, .3) both;
+  pointer-events: none;
+}
+.planet-portrait img.selection-arrive { animation: selection-arrive 320ms ease-out both; }
+.planet-portrait img.portrait-arrive { animation: portrait-arrive 500ms ease both; }
+dialog.archive-dialog.ui-dialog-opening[open] { animation: interface-in 400ms ease both; }
+dialog.archive-dialog.ui-dialog-closing[open] { animation: interface-out 180ms ease both; }
+dialog.ui-dialog-opening::backdrop { animation: backdrop-in 240ms ease both; }
+dialog.ui-dialog-closing::backdrop { animation: backdrop-out 180ms ease both; }
+@keyframes tab-view-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes tab-view-exit {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-7px); }
+}
+@keyframes selection-arrive {
+  from { opacity: .2; transform: translateY(7px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes portrait-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes interface-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes interface-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(.99); }
+}
+@keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .tab-view-enter, .tab-view-exit,
+  .planet-portrait img:is(.selection-arrive,.portrait-arrive),
+  dialog.archive-dialog.ui-dialog-opening[open], dialog.archive-dialog.ui-dialog-closing[open],
+  dialog.ui-dialog-opening::backdrop, dialog.ui-dialog-closing::backdrop { animation: none; }
+}

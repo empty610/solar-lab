@@ -56,33 +56,6 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
-.tab-view-enter {
-  animation: tab-view-enter 0.36s cubic-bezier(0.2, 0.72, 0.2, 1) both;
-}
-.tab-view-exit {
-  animation: tab-view-exit 0.3s cubic-bezier(0.4, 0, 0.7, 0.3) both;
-  pointer-events: none;
-}
-@keyframes tab-view-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes tab-view-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-7px);
-  }
-}
 .intro {
   padding: 28px 0 30px;
   align-items: center;

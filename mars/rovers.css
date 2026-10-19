@@ -31,35 +31,8 @@
 [hidden] {
   display: none !important;
 }
-.tab-view-enter {
-  animation: tab-view-enter 0.36s cubic-bezier(0.2, 0.72, 0.2, 1) both;
-}
-.tab-view-exit {
-  animation: tab-view-exit 0.3s cubic-bezier(0.4, 0, 0.7, 0.3) both;
-  pointer-events: none;
-}
 .rover-content-enter {
   animation: tab-view-enter 0.32s cubic-bezier(0.2, 0.72, 0.2, 1) both;
-}
-@keyframes tab-view-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes tab-view-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-7px);
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .planet-view-tabs button {
@@ -714,9 +687,6 @@
 .world-map-dialog::backdrop {
   background: #19140ec2;
   backdrop-filter: blur(5px);
-}
-.world-map-dialog[open] {
-  animation: tab-view-enter 0.24s ease both;
 }
 .world-map-dialog header {
   display: flex;

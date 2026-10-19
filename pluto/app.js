@@ -26,6 +26,7 @@
     },
   };
   const dialog = $('photo-dialog');
+  const photoViewer = SolarUI.dialog(dialog);
   document.querySelectorAll('[data-photo]').forEach((button) =>
     button.addEventListener('click', () => {
       const p = photos[button.dataset.photo];
@@ -43,24 +44,9 @@
         return paragraph;
       }));
       $('photo-source').href = p.url;
-      dialog.showModal();
-      document.body.style.overflow = 'hidden';
+      photoViewer.open(button);
     }),
   );
-  $('photo-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', (event) => {
-    const r = dialog.getBoundingClientRect();
-    if (
-      event.clientX < r.left ||
-      event.clientX > r.right ||
-      event.clientY < r.top ||
-      event.clientY > r.bottom
-    )
-      dialog.close();
-  });
-  dialog.addEventListener('close', () => {
-    document.body.style.overflow = '';
-  });
   document.querySelector('[data-focus=charon]').addEventListener('click', () => {
     window.PlutoObservatory?.setView('charon');
     $('observatory').scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth' });

@@ -9,14 +9,22 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let ready = false,
     failed = false,
-    visible = true,
     selected = 'europa',
     renderer,
     controls,
     transition = null;
+  let modelLoop, textureSet;
+  let cleanup = () => {};
   function fail(error) {
+    if (failed) return;
     failed = true;
     ready = false;
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    cleanup();
+    mount.classList.remove('ready');
+    $('model-labels').hidden = true;
+    if (controls) controls.enabled = false;
     $('model-loading').hidden = true;
     $('model-fallback').hidden = false;
     status.textContent = '三维视图不可用';
@@ -26,7 +34,7 @@
     console.warn('Europa model:', error);
   }
   try {
-    if (!window.THREE || !window.OrbitControls || !window.EUROPA_TEXTURES)
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.EUROPA_TEXTURES)
       throw new Error('Local libraries or textures missing');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(37, 1, 0.001, 500);
@@ -40,6 +48,8 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.12;
     mount.appendChild(renderer.domElement);
+    cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
+    textureSet = ModelRuntime.textures(THREE, renderer);
     renderer.domElement.setAttribute(
       'aria-label',
       '木卫二与木星三维模型，可拖动或用方向键转动，加减键缩放，0 键复位',
@@ -122,6 +132,11 @@
           ? 1
           : bodies[id].radius / RJ;
     }
+    function fittedDistance() {
+      const half = Math.min(THREE.MathUtils.degToRad(18.5),
+        Math.atan(Math.tan(THREE.MathUtils.degToRad(18.5)) * camera.aspect));
+      return radiusFor(selected) / Math.sin(half) * (selected === 'system' ? 1.11 : 1.17);
+    }
     function targetFor(id) {
       return id === 'system' ? new THREE.Vector3() : meshes[id].position.clone();
     }
@@ -144,6 +159,8 @@
       if (ready && !failed) window.EuropaUI?.camera(selected, 'ready');
     }
     function focus(id, immediate = false) {
+      if (failed) return;
+      modelLoop?.invalidate();
       if (id !== 'system' && !meshes[id]) return;
       const fromId = selected;
       if (!transition) savedRotate = controls.autoRotate;
@@ -195,6 +212,7 @@
       }
     }
     function updatePositions(day) {
+      modelLoop?.invalidate();
       for (const id of moons) {
         const p = positionAt(id, day);
         meshes[id].position.set(p.x, p.y, p.z);
@@ -214,22 +232,21 @@
     function resize() {
       const w = mount.clientWidth,
         h = mount.clientHeight;
+      if (failed) return;
       if (!w || !h || (w === oldW && h === oldH)) return;
+      const initial = !oldW, previousDistance = fittedDistance();
       oldW = w;
       oldH = h;
       renderer.setSize(w, h, false);
+      modelLoop?.invalidate();
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      // A full-system view widens the canvas. Preserve its active flight,
-      // adjusting the destination framing for the new aspect ratio.
-      if (transition) {
-        const halfAngle = Math.min(
-          THREE.MathUtils.degToRad(18.5),
-          Math.atan(Math.tan(THREE.MathUtils.degToRad(18.5)) * camera.aspect),
-        );
-        transition.toDistance =
-          (radiusFor(selected) / Math.sin(halfAngle)) * (selected === 'system' ? 1.11 : 1.17);
-      } else focus(selected, true);
+      if (initial) focus(selected, true);
+      else if (transition) transition.toDistance = fittedDistance();
+      else {
+        camera.position.sub(controls.target).multiplyScalar(fittedDistance() / previousDistance).add(controls.target);
+        controls.update();
+      }
     }
     new ResizeObserver(resize).observe(mount);
     resize();
@@ -250,6 +267,7 @@
     }
     $('rotate-model').addEventListener('click', () => {
       controls.autoRotate = !controls.autoRotate;
+      savedRotate = controls.autoRotate;
       rotateLabel();
       window.EuropaApp.feedback?.(
         controls.autoRotate
@@ -259,6 +277,7 @@
     });
     rotateLabel();
     reduced.addEventListener('change', () => {
+      modelLoop?.invalidate();
       if (reduced.matches) {
         controls.autoRotate = false;
         savedRotate = false;
@@ -326,40 +345,21 @@
       e.preventDefault();
       fail('WebGL context lost');
     });
-    new IntersectionObserver(
-      (entries) => {
-        visible = entries[0].isIntersecting;
-      },
-      { rootMargin: '100px' },
-    ).observe(stage);
+
     let completed = 0;
-    const loader = new THREE.TextureLoader();
-    Promise.all(
-      Object.keys(bodies).map(
-        (id) =>
-          new Promise((resolve, reject) =>
-            loader.load(
-              window.EUROPA_TEXTURES[id],
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                if (id === 'jupiter') texture.flipY = false;
-                texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-                meshes[id].material.map = texture;
-                meshes[id].material.needsUpdate = true;
-                completed++;
-                status.textContent = `已准备 ${completed} / 2 个天体`;
-                resolve();
-              },
-              undefined,
-              reject,
-            ),
-          ),
-      ),
-    )
+    Promise.all(Object.keys(bodies).map(async id => {
+      const texture = await textureSet.load(window.EUROPA_TEXTURES[id], { flipY: id !== 'jupiter' });
+      if (failed || !texture) return;
+      meshes[id].material.map = texture;
+      meshes[id].material.needsUpdate = true;
+      completed++;
+      status.textContent = `已准备 ${completed} / 2 个天体`;
+    }))
       .then(() => {
         if (failed) return;
         renderer.render(scene, camera);
         ready = true;
+        modelLoop.start();
         mount.classList.add('ready');
         $('model-loading').hidden = true;
         status.textContent = '三维模型已就绪';
@@ -367,18 +367,7 @@
         window.EuropaUI?.camera(selected, 'ready');
       })
       .catch(fail);
-    let last = 0,
-      lastRender = 0;
-    function draw(now) {
-      requestAnimationFrame(draw);
-      if (!ready || failed || !visible || document.hidden) {
-        last = 0;
-        return;
-      }
-      if (now - lastRender < 25) return;
-      lastRender = now;
-      const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
-      last = now;
+    function draw(dt) {
       if (transition) {
         const f = transition;
         f.elapsed += dt;
@@ -402,7 +391,8 @@
         camera.position.copy(controls.target).addScaledVector(direction, distance);
         camera.lookAt(controls.target);
         if (t === 1) finishFlight();
-      } else controls.update();
+      }
+      const moved = controls.update();
       renderer.render(scene, camera);
       if (selected === 'system') {
         const left = mount.offsetLeft,
@@ -432,8 +422,12 @@
           label.style.top = y + 'px';
         }
       }
+      return controls.autoRotate || !!transition || moved;
     }
-    requestAnimationFrame(draw);
+    modelLoop = ModelRuntime.loop({ element: stage, draw, fps: 60 });
+    modelLoop.bind(controls);
+    stage.closest('section').addEventListener('click', modelLoop.invalidate);
+    stage.addEventListener('keydown', modelLoop.invalidate);
   } catch (error) {
     fail(error);
   }

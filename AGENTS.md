@@ -1,0 +1,12 @@
+# Solar Lab maintenance
+
+- This repository is the only maintained source. Edit the planet directories, `terminal/`, and `shared/` here. The sibling `previews/` and `ready2push/` folders are historical snapshots, not build inputs.
+- Keep the native HTML/CSS/JavaScript multi-page architecture. Content is substantially complete; focus maintenance on inherited code quality, model loading, and restrained CSS motion. Do not introduce a framework as part of routine maintenance.
+- Preserve authored text, markup, credits, existing URLs and the distinct planet designs. Main-body introductions belong to HTML and must survive initialization and view switching.
+- Eight model pages use `shared/model-runtime.js` for demand-driven frames and owned textures; Uranus retains its existing scheduler. Invalidate after visual state changes, preserve user camera direction on resize, and never let late asynchronous results revive a failed model. See `docs/model-runtime.md` and run the `model-runtime` browser checks for changes here.
+- Use `SolarUI.tabs` and `SolarUI.dialog` from `shared/ui.js` for shared interface lifecycles. Keep finite visual timing in `shared/motion.css`, commit after actual animation completion, and preserve focus/scroll ownership. Scientific and model animation stays in its existing modules. Load ui.js before its callers; see `docs/shared-ui.md` and run the `ui` browser checks.
+- `npm run dev` previews source. `npm run build` validates source and produces `dist/`. Resource versions are generated in output only. Never copy generated files back into source or hand-edit `dist/`.
+- Build and static checks use Node.js 20+ with no external runtime dependencies. `npm ci` installs the locked browser-check dependency. Use `npm run check` for pipeline validation and `npm run check:browser` for published-output regression checks.
+- Browser checks read `dist/` by default, use the checked-in fixtures in `tests/fixtures/`, and write ignored output to `.qa/`. Never make them depend on sibling repositories, historical Git commits, a particular user's home directory, or the live website by default.
+- Preserve existing uncommitted work. The source may intentionally differ from the last deployed site. Inspect Git status before staging changes.
+- Current deployment transition: Pages must run `node scripts/build.mjs` and publish `dist`. Dashboard build settings are external to Git; do not claim they changed without verifying them.

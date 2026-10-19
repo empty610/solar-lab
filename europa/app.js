@@ -380,8 +380,8 @@
   const dialog = $('photo-dialog'),
     photoIds = ['bands', 'chaos', 'europa'],
     image = $('dialog-image');
-  let photoIndex = 0,
-    photoOpener;
+  let photoIndex = 0;
+  const photoViewer = SolarUI.dialog(dialog);
   function imageReady() {
     if (image.complete && image.naturalWidth) {
       $('photo-state').hidden = true;
@@ -412,12 +412,12 @@
     $('photo-count').textContent = photoIndex + 1 + ' / ' + photoIds.length;
     dialog.scrollTop = 0;
     imageReady();
+    if (dialog.open) photoViewer.open();
   }
   document.querySelectorAll('[data-photo]').forEach((button) =>
     button.addEventListener('click', () => {
-      photoOpener = button;
       showPhoto(photoIds.indexOf(button.dataset.photo));
-      dialog.showModal();
+      photoViewer.open(button);
     }),
   );
   $('photo-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
@@ -428,20 +428,6 @@
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault();
       showPhoto(photoIndex + (event.key === 'ArrowRight' ? 1 : -1));
-    }
-  });
-  document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => photoOpener?.focus({ preventScroll: true }));
-  dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) {
-      const r = dialog.getBoundingClientRect();
-      if (
-        event.clientX < r.left ||
-        event.clientX > r.right ||
-        event.clientY < r.top ||
-        event.clientY > r.bottom
-      )
-        dialog.close();
     }
   });
 })();

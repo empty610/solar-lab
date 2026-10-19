@@ -10,14 +10,17 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let renderer,
     controls,
-    ready = false,
-    visible = true,
     failed = false,
     auto = !reduced.matches,
     uniform = false;
+  let modelLoop, textureSet;
+  let cleanup = () => {};
   function fail(message) {
+    if (failed) return;
     failed = true;
-    ready = false;
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    cleanup();
     if (controls) controls.enabled = false;
     mount.classList.remove('ready');
     loading.hidden = true;
@@ -31,7 +34,7 @@
   }
   document.getElementById('retry-model').addEventListener('click', () => location.reload());
   try {
-    if (!window.THREE || !window.OrbitControls) throw new Error('Local 3D library was not loaded');
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls) throw new Error('Local 3D library was not loaded');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(36, 1, 0.1, 60);
     renderer = new THREE.WebGLRenderer({
@@ -44,6 +47,8 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.35;
     mount.appendChild(renderer.domElement);
+    cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
+    textureSet = ModelRuntime.textures(THREE, renderer);
     renderer.domElement.setAttribute('aria-label', '水星三维视图：拖拽旋转，滚轮或双指缩放');
     const ambient = new THREE.AmbientLight(0xfff9ec, 0.5),
       key = new THREE.DirectionalLight(0xfff5dc, 2.6);
@@ -71,31 +76,38 @@
     controls.zoomSpeed = 0.65;
     controls.target.set(0, 0, 0);
     let previousWidth = 0,
-      previousHeight = 0,
-      touched = false,
-      last = 0;
-    function resetCamera() {
-      const aspect = Math.max(0.1, mount.clientWidth / Math.max(1, mount.clientHeight));
+      previousHeight = 0;
+    function fittedDistance() {
+      const aspect = camera.aspect;
       const halfAngle = Math.min(
         THREE.MathUtils.degToRad(18),
         Math.atan(Math.tan(THREE.MathUtils.degToRad(18)) * aspect),
       );
-      const distance = (1.3 / Math.sin(halfAngle)) * 1.17;
+      return (1.3 / Math.sin(halfAngle)) * 1.17;
+    }
+    function resetCamera() {
+      const distance = fittedDistance();
+      controls.enableDamping = false;
+      controls.update();
       camera.position.set(0, 0.04, distance);
       controls.target.set(0, 0, 0);
       controls.update();
+      controls.enableDamping = true;
     }
     function resize() {
       const w = mount.clientWidth,
         h = mount.clientHeight;
+      if (failed) return;
       if (!w || !h || (w === previousWidth && h === previousHeight)) return;
-      const priorAspect = previousWidth / Math.max(1, previousHeight);
+      const initial = !previousWidth, previousDistance = fittedDistance();
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
-      if (!touched || Math.abs(priorAspect - w / h) > 0.15) {
-        resetCamera();
-        touched = false;
+      modelLoop?.invalidate();
+      if (initial) resetCamera();
+      else {
+        camera.position.sub(controls.target).multiplyScalar(fittedDistance() / previousDistance).add(controls.target);
+        controls.update();
       }
       previousWidth = w;
       previousHeight = h;
@@ -106,18 +118,11 @@
     let interacting = false;
     controls.addEventListener('start', () => {
       interacting = true;
-      touched = true;
     });
     controls.addEventListener('end', () => {
       interacting = false;
     });
-    new IntersectionObserver(
-      (entries) => {
-        visible = entries[0].isIntersecting;
-        last = 0;
-      },
-      { rootMargin: '80px' },
-    ).observe(stage);
+
     const updateRotate = () => {
       rotate.setAttribute('aria-pressed', String(auto));
       rotate.textContent = auto ? '暂停自转' : '继续自转';
@@ -128,6 +133,7 @@
       updateRotate();
     });
     reduced.addEventListener('change', () => {
+      modelLoop?.invalidate();
       if (reduced.matches) {
         auto = false;
         updateRotate();
@@ -142,52 +148,32 @@
     });
     document.getElementById('reset-model').addEventListener('click', () => {
       resetCamera();
-      touched = false;
     });
     renderer.domElement.addEventListener('webglcontextlost', (event) => {
       event.preventDefault();
       fail('WebGL context lost');
     });
-    const texture = new THREE.TextureLoader().load(
-      'assets/mercury-surface.jpg',
-      (map) => {
-        if (failed) {
-          map.dispose();
-          return;
-        }
-        map.colorSpace = THREE.SRGBColorSpace;
-        map.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-        material.map = map;
-        material.needsUpdate = true;
-        renderer.render(scene, camera);
-        ready = true;
-        requestAnimationFrame(() => {
-          if (failed) return;
-          mount.classList.add('ready');
-          loading.hidden = true;
-          status.textContent = '地表已就绪';
-          status.classList.add('ready');
-        });
-      },
-      undefined,
-      () => fail('Mercury surface texture could not be loaded'),
-    );
-    function draw(now) {
-      requestAnimationFrame(draw);
-      if (!ready || failed || !visible || document.hidden) {
-        last = 0;
-        return;
-      }
-      const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
-      last = now;
-      if (auto && !interacting) globe.rotation.y += dt * 0.055;
-      controls.update();
+    textureSet.load('assets/mercury-surface.jpg').then(map => {
+      if (failed || !map) return;
+      material.map = map;
+      material.needsUpdate = true;
       renderer.render(scene, camera);
+      mount.classList.add('ready');
+      loading.hidden = true;
+      status.textContent = '地表已就绪';
+      status.classList.add('ready');
+      modelLoop.start();
+    }).catch(fail);
+    function draw(dt) {
+      if (auto && !interacting) globe.rotation.y += dt * 0.055;
+      const moved = controls.update();
+      renderer.render(scene, camera);
+      return auto || interacting || moved;
     }
-    requestAnimationFrame(draw);
-    window.addEventListener('pagehide', () => {
-      last = 0;
-    });
+    modelLoop = ModelRuntime.loop({ element: stage, draw, fps: 60 });
+    modelLoop.bind(controls);
+    stage.closest('section').addEventListener('click', modelLoop.invalidate);
+    stage.addEventListener('keydown', modelLoop.invalidate);
   } catch (err) {
     fail(err);
   }

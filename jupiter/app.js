@@ -295,6 +295,7 @@
     },
   };
   const dialog = $('photo-dialog');
+  const photoViewer = SolarUI.dialog(dialog);
   document.querySelectorAll('[data-photo]').forEach((button) =>
     button.addEventListener('click', () => {
       const p = photos[button.dataset.photo];
@@ -304,16 +305,7 @@
       $('dialog-kicker').textContent = p.kicker;
       $('dialog-description').textContent = p.description;
       $('dialog-source').href = p.source;
-      dialog.showModal();
-      dialog.scrollTop = 0;
+      photoViewer.open(button);
     }),
   );
-  document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) {
-      const r = dialog.getBoundingClientRect();
-      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)
-        dialog.close();
-    }
-  });
 })();

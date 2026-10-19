@@ -291,62 +291,23 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const tabs = [...document.querySelectorAll('.atlas-tabs [role="tab"]')];
   let activeView = 'explorer';
-  let tabTransition = 0;
-  function activateView(id, animate = true, onShown) {
-    if (!tabs.some((tab) => tab.getAttribute('aria-controls') === id)) return;
-    const next = $(id);
-    const previous = $(activeView);
-    if (activeView === id && !previous.classList.contains('tab-view-exit')) {
-      if (!next.hidden) onShown?.();
-      return;
-    }
-    const token = ++tabTransition;
-    activeView = id;
-    for (const tab of tabs) {
-      const active = tab.getAttribute('aria-controls') === id;
-      tab.setAttribute('aria-selected', String(active));
-      tab.tabIndex = active ? 0 : -1;
-    }
-    const delay = animate && !reduced.matches && previous !== next ? 300 : 0;
-    if (delay) {
-      previous.classList.remove('tab-view-enter');
-      previous.classList.add('tab-view-exit');
-    }
-    try {
-      sessionStorage.setItem('solar-atlas-view', id);
-    } catch {
-      /* Tabs also work with browser storage disabled. */
-    }
-    syncViewport();
-    setTimeout(() => {
-      if (token !== tabTransition) return;
-      for (const tab of tabs) {
-        const panel = $(tab.getAttribute('aria-controls'));
-        const active = panel === next;
-        panel.hidden = !active;
-        panel.classList.remove('tab-view-enter', 'tab-view-exit');
-        if (active && delay) requestAnimationFrame(() => panel.classList.add('tab-view-enter'));
-      }
+  const panelTabs = SolarUI.tabs({
+    buttons: tabs,
+    panels: tabs.map(tab => $(tab.getAttribute('aria-controls'))),
+    onSelect(id) {
+      activeView = id;
+      try { sessionStorage.setItem('solar-atlas-view', id); } catch {}
+      syncViewport();
+    },
+    onShown() {
       syncViewport();
       window.SolarAtlasLabels?.layout();
-      onShown?.();
-    }, delay);
-  }
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => activateView(tab.getAttribute('aria-controls')));
-    tab.addEventListener('keydown', (event) => {
-      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-      event.preventDefault();
-      const next =
-        event.key === 'Home'
-          ? 0
-          : event.key === 'End'
-            ? tabs.length - 1
-            : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-      activateView(tabs[next].getAttribute('aria-controls'));
-      tabs[next].focus({ preventScroll: true });
-    });
+    },
   });
+  function activateView(id, animate = true, onShown) {
+    panelTabs.select(id, { animate, shown: onShown });
+  }
+  let portraitMotion;
   function select(id, announce = false) {
     const body = bodies.find((body) => body.id === id);
     if (!body) return;
@@ -406,17 +367,9 @@
       $('dock-enter').href = body.link;
       $('dock-enter').setAttribute('aria-label', '进入' + body.name + '介绍页');
     }
-    if (changed && announce && !reduced.matches) {
-      $('portrait-image')
-        .getAnimations()
-        .forEach((animation) => animation.cancel());
-      $('portrait-image').animate(
-        [
-          { opacity: 0.2, transform: 'translateY(7px) scale(.97)' },
-          { opacity: 1, transform: 'translateY(0) scale(1)' },
-        ],
-        { duration: 320, easing: 'ease-out' },
-      );
+    if (changed && announce) {
+      portraitMotion?.cancel();
+      portraitMotion = SolarUI.motion($('portrait-image'), 'selection-arrive');
     }
     if (announce)
       $('selection-status').textContent =
@@ -507,6 +460,7 @@
     ['#explorer', '#catalog'].includes(location.hash) ? location.hash.slice(1) : initialView,
     false,
   );
+  portraitMotion = SolarUI.motion($('portrait-image'), 'portrait-arrive');
   function followPanelLink() {
     if (['#explorer', '#catalog'].includes(location.hash)) activateView(location.hash.slice(1));
   }

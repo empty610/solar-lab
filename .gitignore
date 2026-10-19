@@ -1,4 +1,8 @@
 node_modules/
+dist/
+.dist-stage/
+.dist-previous/
+.build-lock/
 _backups/
 .qa/
 .asset-cache/

@@ -13,7 +13,6 @@
   ].map((id) => [id, [...$(id).childNodes].map((node) => node.cloneNode(true))]);
   let selected = 'neptune',
     ready = false,
-    visible = true,
     failed = false,
     day = 0,
     spinning = !reduced.matches;
@@ -21,9 +20,17 @@
     resetFlight = null,
     renderer,
     controls;
+  let modelLoop, textureSet;
+  let cleanup = () => {};
   function fail(error) {
+    if (failed) return;
     failed = true;
     ready = false;
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    cleanup();
+    clearTimeout(changeTimer);
+    mount.classList.remove('switching');
     mount.classList.remove('is-ready');
     $('model-loading').hidden = true;
     $('model-fallback').hidden = false;
@@ -68,7 +75,7 @@
           : 'NASA VTAD / 可视化模型';
   }
   try {
-    if (!window.THREE || !window.OrbitControls || !window.NEPTUNE_MODELS)
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.NEPTUNE_MODELS)
       throw Error('Local model files are missing');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(36, 1, 0.01, 500);
@@ -82,6 +89,8 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
     mount.append(renderer.domElement);
+    cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
+    textureSet = ModelRuntime.textures(THREE, renderer);
     renderer.domElement.setAttribute(
       'aria-label',
       '海王星与海卫一三维模型，拖动旋转，滚轮或双指缩放',
@@ -178,6 +187,8 @@
       return (extent() / Math.sin(half)) * 1.12;
     }
     function reset(immediate = false) {
+      if (failed) return;
+      modelLoop?.invalidate();
       const distance = fitDistance();
       controls.minDistance = selected === 'system' ? 6 : selected === 'rings' ? 3 : 1.35;
       controls.maxDistance = Math.max(distance * 2.5, 8);
@@ -230,12 +241,13 @@
       mount.classList.add('switching');
       changeTimer = setTimeout(
         () => {
+          if (failed) return;
           selected = id;
           profile(id);
           updateBodies();
           spinLabel();
           reset(true);
-          renderer.render(scene, camera);
+          modelLoop?.invalidate();
           mount.classList.remove('switching');
         },
         reduced.matches ? 0 : 180,
@@ -272,26 +284,30 @@
     function resize() {
       const w = mount.clientWidth,
         h = mount.clientHeight;
+      if (failed) return;
       if (!w || !h || (w === oldWidth && h === oldHeight)) return;
+      const initial = !oldWidth, previousDistance = fitDistance();
       oldWidth = w;
       oldHeight = h;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
-      reset(true);
+      modelLoop?.invalidate();
+      if (initial) reset(true);
+      else if (resetFlight) resetFlight.to = fitDistance();
+      else {
+        const fitted = fitDistance();
+        camera.position.sub(controls.target).multiplyScalar(fitted / previousDistance).add(controls.target);
+        controls.maxDistance = Math.max(fitted * 2.5, 8);
+        controls.update();
+      }
     }
     new ResizeObserver(resize).observe(mount);
     resize();
     updateBodies();
     spinLabel();
-    if ('IntersectionObserver' in window)
-      new IntersectionObserver(
-        (entries) => {
-          visible = entries[0].isIntersecting;
-        },
-        { rootMargin: '100px' },
-      ).observe(stage);
     reduced.addEventListener('change', () => {
+      modelLoop?.invalidate();
       if (reduced.matches) {
         spinning = false;
         reset(true);
@@ -302,52 +318,25 @@
       e.preventDefault();
       fail('WebGL context lost; reload to restore.');
     });
-    const loader = new THREE.TextureLoader();
-    Promise.all(
-      ['neptune', 'triton'].map(
-        (id) =>
-          new Promise((resolve, reject) =>
-            loader.load(
-              window.NEPTUNE_MODELS[id].texture,
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                texture.flipY = false;
-                texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-                meshes[id].material.map = texture;
-                meshes[id].material.needsUpdate = true;
-                resolve();
-              },
-              undefined,
-              reject,
-            ),
-          ),
-      ),
-    )
+    Promise.all(['neptune', 'triton'].map(async id => {
+      const texture = await textureSet.load(window.NEPTUNE_MODELS[id].texture, { flipY: false });
+      if (failed || !texture) return;
+      meshes[id].material.map = texture;
+      meshes[id].material.needsUpdate = true;
+    }))
       .then(() => {
         if (failed) return;
         renderer.compile(scene, camera);
         renderer.render(scene, camera);
         ready = true;
+        modelLoop.start();
         $('model-loading').hidden = true;
         $('model-status').textContent = '模型就绪 · 本地资源';
         $('model-status').classList.add('ready');
         mount.classList.add('is-ready');
       })
       .catch(fail);
-    let last = 0,
-      accumulator = 0;
-    function tick(now) {
-      requestAnimationFrame(tick);
-      const dt = Math.min((now - last) / 1000, 0.06);
-      last = now;
-      if (!ready || failed || !visible || document.hidden) {
-        accumulator = 0;
-        return;
-      }
-      accumulator += dt;
-      if (accumulator < 1 / 40) return;
-      const step = accumulator;
-      accumulator = 0;
+    function tick(step) {
       if (spinning) day += step * 0.025;
       updateBodies();
       if (resetFlight) {
@@ -366,7 +355,7 @@
           controls.enableDamping = true;
         }
       }
-      controls.update();
+      const moved = controls.update();
       renderer.render(scene, camera);
       const label = $('moon-label');
       label.hidden = selected !== 'system';
@@ -378,8 +367,12 @@
         if (!label.hidden)
           label.style.transform = `translate(${Math.min(oldWidth - 142, Math.max(8, x + 9))}px,${Math.max(10, y - 28)}px)`;
       }
+      return spinning || !!resetFlight || moved;
     }
-    requestAnimationFrame(tick);
+    modelLoop = ModelRuntime.loop({ element: stage, draw: tick, fps: 40 });
+    modelLoop.bind(controls);
+    stage.closest('section').addEventListener('click', modelLoop.invalidate);
+    stage.addEventListener('keydown', modelLoop.invalidate);
     // Read-only diagnostics for the local smoke test.
     window.NeptuneView = {
       get ready() {

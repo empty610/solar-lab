@@ -28,7 +28,7 @@
 | `assets/europa-global.jpg`                         | [Europa’s Stunning Surface / PIA19048](https://science.nasa.gov/resource/europas-stunning-surface/)。伽利略号 1990 年代后期的重新拼接影像，接近自然色。NASA/JPL-Caltech/SETI Institute。                          |
 | `assets/bands.jpg`                                 | [Crisscrossing Bands / PIA23872](https://science.nasa.gov/photojournal/crisscrossing-bands/)。1998-09-26 影像，高分辨率灰度与较低分辨率色彩数据合成，增强色处理，图幅约 285 km。NASA/JPL-Caltech/SETI Institute。 |
 | `assets/chaos.jpg`                                 | [Chaos Near Agenor Linea / PIA23873](https://science.nasa.gov/photojournal/chaos-near-agenor-linea/)。1998-09-26 影像，增强色处理，图幅约 280 km。NASA/JPL-Caltech/SETI Institute。                               |
-| `assets/ad-astra.mp3`                              | 来自用户已有本地项目的音频，沿用原项目，默认关闭；未新增授权声明。                                                                                                                                                |
+| `../shared/audio/ad-astra.mp3`                              | 来自用户已有本地项目的音频，沿用原项目，默认关闭；未新增授权声明。                                                                                                                                                |
 | `vendor/`                                          | Three.js 与 OrbitControls，沿用已有本地项目版本，许可证见 `vendor/LICENSE`。                                                                                                                                      |
 
 影像卡片使用 CSS 裁切；放大窗口展示本地保存的 NASA 显示分辨率图像，并非最高分辨率原始科学数据。图像本身未增加虚构地形。页面图标、大小比较、剖面和形变示意由 SVG 绘制。

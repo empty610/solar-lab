@@ -36,7 +36,6 @@
   isolation: isolate;
   opacity: 0;
   transform: scale(0.9) translateZ(0);
-  will-change: opacity, transform;
   transition:
     opacity 0.5s ease,
     transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -52,7 +51,6 @@
   border: 1px solid rgba(229, 199, 111, 0.58);
   border-radius: 50%;
   transform: translateZ(0);
-  will-change: transform, opacity;
 }
 .dc-transition-orbit-b {
   width: 72%;
@@ -73,7 +71,6 @@
   box-shadow:
     0 0 0 7px rgba(229, 199, 111, 0.11),
     0 0 18px rgba(229, 199, 111, 0.7);
-  will-change: transform, opacity;
 }
 .dc-page-transition.is-active .dc-transition-signal {
   animation: dc-signal 0.72s 0.1s ease-in-out both;
@@ -137,15 +134,7 @@
     animation: none;
   }
 }
-/* Photo dialog entrance. */
-@keyframes interface-in {
-  from {
-    transform: scale(1.02);
-  }
-  to {
-    transform: none;
-  }
-}
+/* Shared photo reader layout; finite motion lives in motion.css. */
 dialog.archive-dialog {
   width: min(1320px, calc(100vw - 40px));
   max-width: none;
@@ -163,7 +152,7 @@ dialog.archive-dialog[open] {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
   grid-template-rows: minmax(0, 1fr);
-  animation: interface-in 0.4s ease;
+  animation: none;
 }
 dialog.archive-dialog::backdrop {
   background: #050c10c9;
@@ -330,4 +319,8 @@ dialog.archive-dialog > header button {
   dialog.archive-dialog[open] {
     animation: none;
   }
+}
+
+.dc-page-transition.is-mounted :is(.dc-transition-core,.dc-transition-orbit,.dc-transition-signal) {
+  will-change: transform, opacity;
 }

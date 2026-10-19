@@ -27,7 +27,7 @@
 
 ## 本地沿用内容
 
-设计风格参考现有 Mercury preview v2、Jupiter preview v1 等本地项目；Three.js / OrbitControls 从 Jupiter 项目的 vendor 目录复制，许可随附。音乐 `ad-astra.mp3` 从同一项目复制，仅供本地预览，公开发布前需确认音乐授权。
+设计风格参考现有 Mercury preview v2、Jupiter preview v1 等本地项目；Three.js / OrbitControls 从 Jupiter 项目的 vendor 目录复制，许可随附。音乐 `../shared/audio/ad-astra.mp3` 从同一项目复制，仅供本地预览，公开发布前需确认音乐授权。
 
 ## 2026-10-19 介绍补写资料
 

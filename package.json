@@ -1,0 +1,16 @@
+{
+  "name": "solar-laboratory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Solar Lab 静态源码、本地预览和单向发布工具",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "node scripts/preview.mjs",
+    "preview": "node scripts/preview.mjs --dist",
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs && node --test tests/build.test.mjs tests/model-runtime.test.mjs",
+    "check:browser": "node scripts/build.mjs && node scripts/browser-checks.mjs",
+    "check:all": "npm run check && npm run check:browser -- --all"
+  },
+  "devDependencies": { "playwright": "1.62.1" }
+}

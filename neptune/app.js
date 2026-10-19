@@ -98,6 +98,7 @@
   };
   // Native dialog supplies focus trapping, Escape and focus restoration.
   const dialog = $('photo-dialog');
+  const photoViewer = SolarUI.dialog(dialog);
   document.querySelectorAll('[data-photo]').forEach((button) =>
     button.addEventListener('click', () => {
       const photo = D.photos[button.dataset.photo];
@@ -112,21 +113,9 @@
         $('photo-description').append(p);
       }
       $('photo-source').href = photo.url;
-      dialog.showModal();
-      dialog.scrollTop = 0;
-      document.documentElement.style.overflow = 'hidden';
+      photoViewer.open(button);
     }),
   );
-  $('close-photo').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', () => {
-    document.documentElement.style.overflow = '';
-  });
-  dialog.addEventListener('click', (e) => {
-    if (e.target !== dialog) return;
-    const r = dialog.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)
-      dialog.close();
-  });
   // Fade in only when JS and IntersectionObserver are available; otherwise show all content.
   if ('IntersectionObserver' in window && !reduced.matches) {
     document.documentElement.classList.add('motion');

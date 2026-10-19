@@ -1,6 +1,6 @@
 # Solar Laboratory · 太阳系探索
 
-一个纯静态的太阳系探索网站，包含动态星图导航与九个天体档案。页面、Three.js、图片、纹理和音频均随仓库提供，无需安装依赖或构建。
+一个纯静态的太阳系探索网站，包含动态星图导航与九个天体档案。页面、Three.js、图片、纹理和音频均随仓库提供。这里是唯一维护的源码；本地预览直接读取源码，发布由 Node.js 20+ 单向生成到 dist，线上仍为纯静态文件。
 
 ## 目录
 
@@ -30,11 +30,11 @@
 | ------------ | ------------------ |
 | 生产分支     | `main`             |
 | 框架预设     | `None`             |
-| 构建命令     | `exit 0`           |
-| 构建输出目录 | `.`                |
+| 构建命令     | `node scripts/build.mjs` |
+| 构建输出目录 | `dist`             |
 | 根目录       | 留空（仓库根目录） |
 
-网站已经是可直接发布的静态文件。请将整个仓库作为发布目录，使 terminal 能访问各天体档案；无需设置 Node.js 版本或运行 npm install。
+请在 Cloudflare 项目设置中将构建命令改为 `node scripts/build.mjs`、输出目录改为 `dist`，使用 Node.js 20+。仅发布生成的 dist，不发布工具、测试、依赖和原稿检查资料。构建本身不需要安装浏览器依赖。平台设置独立于 Git，本次本地整理不代表远端设置已经修改。
 
 [Cloudflare 静态 HTML 部署说明](https://developers.cloudflare.com/pages/framework-guides/deploy-anything/)
 
@@ -54,15 +54,19 @@ git push origin main
 
 Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css` 中的 Venus 模板：右上角的黑金色胶囊、回转箭头和 BACK 文字。Terminal 返回个人主页的“项目”区，介绍页返回 Terminal。介绍页的返回顶部按钮单独位于音乐按钮上方，两个圆形控件间隔 14px。Terminal 与九个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 管理音乐播放：默认配乐为 `shared/audio/ad-astra.mp3`，火星使用用户提供的 `mars/assets/soil-of-life.mp3`，通过 `data-music-track` 独立保存该曲目的进度。点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
 
-从原始工作区同步时，在 `E:\solar system` 运行 `node tools/export-site.mjs`，再在本仓库检查和提交变化。先运行 `node tools/export-site.mjs --dry-run` 查看新增、修改清单，该模式不会写入文件，也可以在有未提交改动时运行。正式导出会先检查全部页面及依赖，再开始复制，并跳过内容相同的文件。同步脚本保留本仓库元数据，复制当前版的页面依赖并更新目录链接；不会删除文件。正式目录可能包含比 previews 更新的修改：存在未提交改动时，脚本会在复制前停止。先检查差异、备份并将需要保留的修改同步到 previews；仅在确认需要覆盖时使用 `node tools/export-site.mjs --allow-overwrite`。修改 shared 或页面运行脚本后，应同时维护对应的 previews 源文件。
+本仓库为唯一源码，工作区的 previews 与 ready2push 仅作历史参考。预览和发布都从本仓库读取，不再双向复制。工具位于 `scripts/`，浏览器检查位于 `tests/browser/`，完整流程见 [工程说明](docs/engineering.md)。
+
+模型的按需绘制、贴图加载与失败清理由 `shared/model-runtime.js` 提供公共生命周期工具，各页保留自己的场景和交互。改动范围、测量与维护约定见 [模型运行说明](docs/model-runtime.md)。
+
+`shared/ui.js` 管理公共标签页和影像弹窗的状态、焦点与滚动锁，`shared/motion.css` 管理对应的有限 CSS 动画；金星、火星的主样式分别在自己的 `style.css`。维护方式与回归入口见 [共享界面说明](docs/shared-ui.md)。
 
 ## 介绍文字与资源版本
 
-主天体的标题、介绍和展开说明以各页 `index.html` 中的原文为准。木星、木卫二、土星、天王星、海王星与冥王星在初始化和切换回主天体时保留这些 HTML 内容，包括换行、强调与链接；其他天体标签继续使用页面的资料脚本。修改介绍时请同步对应 previews 文件，避免后续导出覆盖。
+主天体的标题、介绍和展开说明以各页 `index.html` 中的原文为准。木星、木卫二、土星、天王星、海王星与冥王星在初始化和切换回主天体时保留这些 HTML 内容，包括换行、强调与链接；其他天体标签继续使用页面的资料脚本。直接在本仓库修改介绍，预览会读取同一份文件。
 
-金星地貌与火星“地表外观”的原文放在 `.terrain-copy` 中，卡片可展开，放大窗口始终显示完整介绍。火星五类地貌的详细说明保存在卡片的 `data-image-caption` 中，弹窗按句子分段，保留全部原文和署名。修改后可运行 `node tools/verify-recovered-copy.cjs` 对照已恢复原稿，检查卡片、展开与放大窗口。
+金星地貌与火星“地表外观”的原文放在 `.terrain-copy` 中，卡片可展开，放大窗口始终显示完整介绍。火星五类地貌的详细说明保存在卡片的 `data-image-caption` 中，弹窗按句子分段，保留全部原文和署名。修改后可运行 `npm run check:browser -- recovered-copy` 对照已恢复原稿，检查卡片、展开与放大窗口。
 
-九个档案的应用脚本和样式采用内容哈希版本地址，避免旧缓存继续显示修改前的介绍或展开行为。在本地工作区运行 `node tools/version-archive-assets.cjs` 更新版本并同步预览，随后运行 `node tools/export-site.mjs --dry-run` 检查一致性。
+应用脚本和样式的内容哈希由 `npm run build` 写入 dist 中的 HTML，源码不会回写。开发服务器使用 no-store，直接刷新即可读取修改后的文件。
 
 ## 素材与来源
 
@@ -70,28 +74,30 @@ Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css
 
 星图和展示动画为导航与教学示意，参数与科学影像的解释以页面中的说明为准。
 
-## 本地验证
+## 开发与验证
 
-从工作区根目录运行以下命令，使用已安装的 Playwright 和 Microsoft Edge：
+在本仓库运行：
 
-```powershell
-node tools/verify-site.cjs
-node tools/verify-terminal-controls.cjs
-node tools/verify-archive-music.cjs
-node tools/verify-review.cjs
-node tools/verify-second-review.cjs --with-dry-run
-node tools/verify-third-review.cjs
-node tools/verify-uranus.cjs
+```shell
+npm run dev
+npm run check
+npm run build
+npm run preview
 ```
 
-如果 Playwright 不在默认 Node.js 模块路径中，将 `PLAYWRIGHT_MODULE` 环境变量设为其绝对目录。验证脚本只启动本机服务；请勿添加 `--live`，除非需要验证线上网站。`verify-review.cjs` 覆盖快速标签切换、键盘焦点、星图暂停恢复、音乐续播、模型加载和不可见动画暂停，结果与截图保存在工作区的 `tools/.qa/`。
+源码预览默认地址为 http://127.0.0.1:8810/terminal/index.html；preview 命令读取生成的 dist。构建和静态校验只需要 Node.js 20+。
 
-`verify-third-review.cjs` 检查七个档案的轨道演示暂停后不再调度动画、播放/暂停/重置，以及金星后台计时和水星纹理加载失败后的界面状态。结果位于工作区 `tools/.qa/third-review-results.json`。
+浏览器回归检查：
 
-`verify-uranus.cjs` 自动启动本机测试服务，验证天王星的三维视图、四季演示、照片弹窗、手机布局、返回导航、离线打开和回退模式。全站验证同时检查九个档案页的“下一站”链接及连接动画。
+```shell
+npm ci
+npm run check:browser
+```
+
+Windows 默认使用 Edge，其他平台首次检查前运行 `npx playwright install chromium`。检查默认读取 dist，结果写入忽略的 .qa。单独检查例如 `npm run check:browser -- uranus`，全部扩展检查使用 `npm run check:all`。原稿和旧缓存检查资料保存在 tests/fixtures，不依赖仓库外的备份与 Git 历史。
 
 ## Terminal 更新与浏览器缓存
 
-Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 为 Terminal 和 shared 中的 JS/CSS 设置明确的 `no-cache` 校验指令，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源时同步更新入口中的版本参数，并维护预览入口。自定义域名的缓存规则可能覆盖资源 TTL，因此内容版本参数同时负责绕过已有缓存。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 为 Terminal 和 shared 中的 JS/CSS 设置明确的 `no-cache` 校验指令，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源后运行构建即可生成新的版本参数。自定义域名的缓存规则可能覆盖资源 TTL，因此内容版本参数同时负责绕过已有缓存。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
 
-在工作区运行 `node tools/verify-uranus-entry.cjs`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；添加 `--live` 可验证已发布的线上入口。
+运行 `npm run check:browser -- uranus-entry`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；默认检查只访问本机；线上检查需显式运行对应 tests/browser 脚本并加 --live。

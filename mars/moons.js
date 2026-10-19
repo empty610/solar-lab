@@ -11,6 +11,10 @@ window.setupMarsMoons = function ({
   stage,
   mount,
   surfaceMaterialOptions,
+  textures,
+  invalidate,
+  fail,
+  unavailable,
 }) {
   const T = THREE,
     unit = 1.34 / 3390,
@@ -152,23 +156,13 @@ window.setupMarsMoons = function ({
         emissiveIntensity: 0.2,
       },
     );
-    new T.TextureLoader().load(
-      data.texture,
-      (map) => {
-        map.colorSpace = T.SRGBColorSpace;
-        map.flipY = false;
-        map.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-        mat.map = map;
-        mat.emissiveMap = map;
-        mat.needsUpdate = true;
-        b.textureLoaded = true;
-      },
-      undefined,
-      () => {
-        b.textureLoaded = false;
-        info.querySelector('p').textContent = '卫星贴图未能载入，请刷新页面。';
-      },
-    );
+    textures.load(data.texture, { flipY: false }).then(map => {
+      if (unavailable() || !map) return;
+      mat.map = mat.emissiveMap = map;
+      mat.needsUpdate = true;
+      b.textureLoaded = true;
+      invalidate();
+    }).catch(fail);
     b.mesh = new T.Mesh(g, mat);
     b.bound = g.boundingSphere.radius;
     const plane = new T.Group();
@@ -203,6 +197,7 @@ window.setupMarsMoons = function ({
     b.label = label;
   }
   bodies.mars.bound = 1.38;
+  let framingDistance = 0;
   let selected = 'system',
     flight = null,
     savedRotate = controls.autoRotate;
@@ -241,11 +236,14 @@ window.setupMarsMoons = function ({
         : `<strong>${bodies[id].name} <small>${bodies[id].en}</small></strong><p>${bodies[id].text}<br>镜头近距观察 · 天体尺寸保持真实比例</p>`;
   }
   function focus(id, instant = false) {
+    if (unavailable()) return;
+    invalidate();
     if (!bodies[id] && id !== 'system') return;
     if (!flight) savedRotate = controls.autoRotate;
     controls.autoRotate = false;
     controls.enabled = false;
     controls.enableDamping = false;
+    controls.update();
     rotationButton.disabled = true;
     const fromId = selected,
       target = center(id),
@@ -266,12 +264,13 @@ window.setupMarsMoons = function ({
     camera.updateProjectionMatrix();
     const fromDistance = fromPos.distanceTo(fromTarget),
       toDistance = distance(id);
+    framingDistance = toDistance;
     // Close-up bodies use radically different viewing distances. Pull away from
     // the current body before transferring the target so no direct path crosses
     // Mars or either moon on the way to the next close-up.
     const retreat = fromId !== 'system' && id !== 'system' && fromId !== id;
     flight = {
-      start: performance.now(),
+      elapsed: 0,
       duration: instant || reduced.matches ? 0 : 1550,
       target,
       fromTarget,
@@ -282,13 +281,14 @@ window.setupMarsMoons = function ({
       retreat,
       escapeDistance: Math.max(fromDistance * 1.35, toDistance * 1.15, bodies.mars.bound * 3.6),
     };
-    if (!flight.duration) beforeFrame(flight.start);
+    if (!flight.duration) beforeFrame();
   }
   toolbar.querySelectorAll('button').forEach((b) => (b.onclick = () => focus(b.dataset.body)));
-  function beforeFrame(time) {
+  function beforeFrame(step = 0) {
     if (!flight) return;
-    const f = flight,
-      t = f.duration ? Math.min(1, (time - f.start) / f.duration) : 1,
+    const f = flight;
+    f.elapsed += step * 1000;
+    const t = f.duration ? Math.min(1, f.elapsed / f.duration) : 1,
       ease = (x) => x * x * (3 - 2 * x),
       clamp = (x) => Math.max(0, Math.min(1, x));
     const travel = f.retreat ? ease(clamp((t - 0.18) / 0.54)) : ease(Math.min(1, t / 0.72));
@@ -306,7 +306,7 @@ window.setupMarsMoons = function ({
       limits(selected);
       controls.enabled = true;
       controls.enableDamping = true;
-      controls.autoRotate = savedRotate;
+      controls.autoRotate = savedRotate && !reduced.matches;
       rotationButton.disabled = false;
     }
   }
@@ -427,7 +427,15 @@ window.setupMarsMoons = function ({
   new ResizeObserver(() => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (mount.clientWidth && mount.clientHeight) focus(selected, true);
+      if (unavailable() || !mount.clientWidth || !mount.clientHeight) return;
+      const next = distance(selected);
+      if (flight) flight.toDistance = next;
+      else if (framingDistance) {
+        camera.position.sub(controls.target).multiplyScalar(next / framingDistance).add(controls.target);
+        controls.update();
+      }
+      framingDistance = next;
+      invalidate();
     }, 80);
   }).observe(mount);
   window.MarsMoons = {
@@ -444,5 +452,5 @@ window.setupMarsMoons = function ({
     unit,
   };
   focus('system', true);
-  return { beforeFrame, afterFrame };
+  return { beforeFrame, afterFrame, get transitioning() { return !!flight; } };
 };

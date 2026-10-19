@@ -3,7 +3,23 @@
   const mount = document.getElementById('mars-3d');
   stage.classList.add('model-visual-pending');
 
+  let modelLoop, textureSet, revealFrame = 0, failed = false;
+  let cleanup = () => {};
+  function fail(error) {
+    if (failed) return;
+    failed = true;
+    cancelAnimationFrame(revealFrame);
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    cleanup();
+    stage.classList.remove('model-visual-pending', 'model-view-active', 'model-visual-ready');
+    stage.classList.add('is-error');
+    stage.querySelectorAll('.moon-toolbar button,.moon-label,#rotation-toggle').forEach(button => button.disabled = true);
+    stage.querySelectorAll('.moon-label').forEach(label => label.hidden = true);
+    console.warn('Mars model unavailable:', error);
+  }
   try {
+    if (!window.ModelRuntime) throw new Error('Model runtime missing');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
     camera.position.set(0, 0.08, 4.8);
@@ -18,17 +34,18 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.12;
     mount.appendChild(renderer.domElement);
+    textureSet = ModelRuntime.textures(THREE, renderer);
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let modelLoaded = false;
-    let revealFrame = 0;
     let revealRequested = false;
     const setModelView = (active) => {
       cancelAnimationFrame(revealFrame);
       revealRequested = active && modelLoaded;
       stage.classList.toggle('model-view-leaving', !active && modelLoaded);
       stage.classList.remove('model-view-active');
-      if (!active || !modelLoaded) return;
+      if (!active || !modelLoaded || failed) return;
+      modelLoop?.invalidate();
       stage.classList.remove('model-view-leaving');
       if (reducedMotion.matches) {
         stage.classList.add('model-view-active');
@@ -41,7 +58,7 @@
       enter: () => setModelView(true),
       exit: () => setModelView(false),
       get loaded() {
-        return modelLoaded;
+        return modelLoaded && !failed;
       },
     };
 
@@ -66,24 +83,16 @@
 
     const textureSource = window.MARS_TEXTURE_DATA;
     if (!textureSource) throw new Error('Embedded Mars texture is unavailable');
-    const texture = new THREE.TextureLoader().load(
-      textureSource,
-      (map) => {
-        map.colorSpace = THREE.SRGBColorSpace;
-        map.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
-        material.map = map;
-        material.emissiveMap = map;
-        material.needsUpdate = true;
-        stage.classList.remove('is-error');
-        modelLoaded = true;
-        stage.classList.remove('model-visual-pending');
-        stage.classList.add('model-visual-ready');
-        if (!stage.hidden) setModelView(true);
-      },
-      undefined,
-      () => stage.classList.add('is-error'),
-    );
-    texture.colorSpace = THREE.SRGBColorSpace;
+    textureSet.load(textureSource).then(map => {
+      if (failed || !map) return;
+      material.map = material.emissiveMap = map;
+      material.needsUpdate = true;
+      modelLoaded = true;
+      stage.classList.remove('model-visual-pending');
+      stage.classList.add('model-visual-ready');
+      if (!stage.hidden) setModelView(true);
+      modelLoop.start();
+    }).catch(fail);
 
     const atmosphere = new THREE.Mesh(
       new THREE.SphereGeometry(1.355, 40, 40),
@@ -139,6 +148,8 @@
     scene.add(rimLight);
 
     const controls = new OrbitControls(camera, renderer.domElement);
+    cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
+    renderer.domElement.addEventListener('webglcontextlost', event => { event.preventDefault(); fail('WebGL context lost'); });
     controls.enableDamping = true;
     controls.dampingFactor = 0.075;
     controls.enablePan = false;
@@ -154,6 +165,7 @@
     rotationButton.onclick = () => {
       controls.autoRotate = !controls.autoRotate;
       syncRotationButton();
+      modelLoop?.invalidate();
     };
     syncRotationButton();
     controls.rotateSpeed = 1.2;
@@ -169,9 +181,15 @@
       stage,
       mount,
       surfaceMaterialOptions,
+      textures: textureSet,
+      invalidate: () => modelLoop?.invalidate(),
+      fail,
+      unavailable: () => failed,
     });
 
     const resize = () => {
+      if (failed) return;
+      modelLoop?.invalidate();
       const width = Math.max(mount.clientWidth, 1);
       const height = Math.max(mount.clientHeight, 1);
       renderer.setSize(width, height, false);
@@ -188,51 +206,30 @@
     resizeObserver.observe(mount);
     resize();
 
-    let isInView = true;
-    let isRunning = false;
-    let animationFrame = 0;
-    let lastRenderTime = 0;
-    const frameInterval = 1000 / 40;
-    const animate = (time) => {
-      if (!isRunning) return;
-      animationFrame = requestAnimationFrame(animate);
-      if (time - lastRenderTime < frameInterval) return;
-      lastRenderTime = time;
-      moons.beforeFrame(time);
-      controls.update();
+    modelLoop = ModelRuntime.loop({ element: stage, fps: 40, draw: (step) => {
+      moons.beforeFrame(step);
+      const moved = controls.update();
       renderer.render(scene, camera);
       moons.afterFrame();
       if (revealRequested && !stage.hidden) {
         revealRequested = false;
         revealFrame = requestAnimationFrame(() => {
-          revealFrame = requestAnimationFrame(() => stage.classList.add('model-view-active'));
+          if (!failed && !stage.hidden) revealFrame = requestAnimationFrame(() => {
+            if (!failed && !stage.hidden) stage.classList.add('model-view-active');
+          });
         });
       }
-    };
-
-    const syncAnimation = () => {
-      const shouldRun = isInView && !document.hidden;
-      if (shouldRun && !isRunning) {
-        isRunning = true;
-        animationFrame = requestAnimationFrame(animate);
-      } else if (!shouldRun && isRunning) {
-        isRunning = false;
-        cancelAnimationFrame(animationFrame);
+      return controls.autoRotate || moons.transitioning || moved;
+    }});
+    modelLoop.bind(controls);
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) {
+        controls.autoRotate = false;
+        syncRotationButton();
+        modelLoop.invalidate();
       }
-    };
-
-    const visibilityObserver = new IntersectionObserver(
-      ([entry]) => {
-        isInView = entry.isIntersecting;
-        syncAnimation();
-      },
-      { rootMargin: '120px 0px' },
-    );
-    visibilityObserver.observe(stage);
-    document.addEventListener('visibilitychange', syncAnimation);
-    syncAnimation();
+    });
   } catch (error) {
-    console.error('Mars 3D model failed to initialize:', error);
-    stage.classList.add('is-error');
+    fail(error);
   }
 })();

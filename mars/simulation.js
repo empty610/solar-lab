@@ -241,7 +241,7 @@
       fullCopy.querySelectorAll('[id]').forEach((element) => element.removeAttribute('id'));
       caption.replaceChildren(fullCopy);
     } else formatLandformCaption(card);
-    dialog.showModal();
+    SolarUI.dialog(dialog).open(card);
     caption.scrollTop = 0;
     dialog.classList.add('is-controls-visible');
   }
@@ -289,10 +289,6 @@
     description.after(toggle);
     card.classList.add('has-disclosure');
   });
-  $('image-dialog-close').onclick = () => dialog.close();
-  dialog.onclick = (e) => {
-    if (e.target === dialog) dialog.close();
-  };
   window.MarsOrbitControl = {
     CYCLE,
     getDay: () => day,

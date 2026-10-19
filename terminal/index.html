@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="style.css?v=1198a914c24d" />
     <link rel="stylesheet" href="refinement.css?v=20261014-mobile-destination" />
     <link rel="stylesheet" href="motion.css?v=0e6b81d47cd3" />
+    <link rel="stylesheet" href="../shared/motion.css" />
+    <script defer src="../shared/ui.js"></script>
     <script defer src="app.js?v=d3d3908c5d9d"></script>
     <script defer src="motion.js?v=399fa92688c4"></script>
     <script defer src="labels.js?v=896b3893106f"></script>
@@ -33,8 +35,8 @@
       title="Back"
     >
       <svg class="back-u-turn" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M9 5 5 9l4 4M5 9h8a5 5 0 0 1 5 5v1" /></svg
-      ><span>BACK</span>
+        <path d="M9 5 5 9l4 4M5 9h8a5 5 0 0 1 5 5v1" /></svg>
+        <span>BACK</span>
     </a>
     <a class="skip" href="#explorer">跳到天体选择</a>
     <div class="site-shell">
@@ -43,9 +45,8 @@
           ><svg viewBox="0 0 40 40" aria-hidden="true">
             <circle cx="20" cy="20" r="5" />
             <ellipse cx="20" cy="20" rx="18" ry="9" transform="rotate(-35 20 20)" />
-            <path d="M20 1v5M20 34v5M1 20h5M34 20h5" /></svg
-          ><span>EMPTY610<span class="brand-sub">SOLAR LABORATORY</span></span></a
-        >
+            <path d="M20 1v5M20 34v5M1 20h5M34 20h5" /></svg>
+            <span>EMPTY610<span class="brand-sub">SOLAR LABORATORY</span></span></a>
         <div class="atlas-tabs" role="tablist" aria-label="太阳系探索视图">
           <button
             type="button"
@@ -79,7 +80,7 @@
           </div>
           <div class="intro-note">
             <span class="archive-count">09<small>OPEN ARCHIVES</small></span>
-            <p>七颗行星 · 一颗冰月 · 冥王星<br /><span>一份持续展开的观察笔记</span></p>
+            <p>七颗行星 · 一颗冰月 · 冥王星<br /><span>一份持续展开的观察</span></p>
           </div>
         </section>
 
@@ -201,8 +202,7 @@
                 <a class="enter-link" id="enter-link" href="../saturn/index.html"
                   ><span id="enter-text">进入土星档案</span
                   ><svg viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M4 2h9v16H4zM13 5h3v13M7 6h3M7 9h3" /></svg
-                ></a>
+                    <path d="M4 2h9v16H4zM13 5h3v13M7 6h3M7 9h3" /></svg></a>
                 <p class="unavailable-note" id="unavailable-note" hidden>
                   介绍页尚未收录，可先探索其他已开放的档案。
                 </p>
@@ -227,7 +227,7 @@
               <h2 id="catalog-title">沿轨道，认识我们的邻居</h2>
             </div>
             <p class="catalog-hint">
-              选中查看简介，或直接进入档案。<span>按日心距离，由近及远排列</span>
+              选中查看简介，或直接进入它们的档案。<span>按日心距离，由近及远排列</span>
             </p>
           </div>
           <div class="planet-catalog" id="planet-catalog"></div>
@@ -251,7 +251,7 @@
               <img src="assets/europa.png" alt="木卫二冰封的表面" width="640" height="640" />
             </div>
             <div class="satellite-copy">
-              <p class="eyebrow">BEYOND THE PLANETS <span>/</span> 卫星特别篇</p>
+              <p class="eyebrow">BEYOND THE PLANETS <span>/</span>行星之下</p>
               <h3>木卫二 <span>EUROPA</span></h3>
               <p>越过冰面，寻找海洋的答案。</p>
             </div>

@@ -55,6 +55,7 @@
     },
   };
   const dialog = document.getElementById('image-dialog');
+  const photoViewer = SolarUI.dialog(dialog);
   const terrainKeys = Object.keys(terrains);
   let currentTerrain = 0;
   const pager = document.createElement('div');
@@ -88,8 +89,7 @@
     });
     document.getElementById('dialog-source').href = item.url;
     counter.textContent = `影像 ${String(currentTerrain + 1).padStart(2, '0')} / 04`;
-    if (!dialog.open) dialog.showModal();
-    dialog.scrollTop = 0;
+    photoViewer.open();
     document.dispatchEvent(new CustomEvent('mercury:terrainread', { detail: key }));
   }
   function stepTerrain(step) {
@@ -109,20 +109,6 @@
       stepTerrain(event.key === 'ArrowLeft' ? -1 : 1);
     }
   });
-  document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) {
-      const r = dialog.getBoundingClientRect();
-      if (
-        event.clientX < r.left ||
-        event.clientX > r.right ||
-        event.clientY < r.top ||
-        event.clientY > r.bottom
-      )
-        dialog.close();
-    }
-  });
-
   // Only mouse, touch/pen and keyboard input reset the two-second timer.
   const idleControls = [...document.querySelectorAll('.idle-control')];
   let idleTimer;

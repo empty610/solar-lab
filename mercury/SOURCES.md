@@ -45,7 +45,7 @@ Three.js 与 OrbitControls 从用户现有 Venus 项目使用的本地库复制�
 
 ## 音频
 
-`assets/ad-astra.mp3` 从用户原有网站 `shared/audio/ad astra.mp3` 复制用于本地预览；未增加授权声明或重新发布。
+`../shared/audio/ad-astra.mp3` 从用户原有网站 `shared/audio/ad astra.mp3` 复制用于本地预览；未增加授权声明或重新发布。
 
 ## 2026-10-19 介绍补写资料
 

@@ -137,67 +137,21 @@
     }
     motion = requestAnimationFrame(frame);
   }
-  let tabTransition = 0;
-  function showTab(index, focus) {
-    const current = views.findIndex((view) => !$(view.id).hidden);
-    if (current === index) {
-      const element = $(views[index].id);
-      if (!element.classList.contains('tab-view-exit')) return;
-      ++tabTransition;
-      element.classList.remove('tab-view-exit');
-      element.classList.add('tab-view-enter');
-      $('mars-model-title').textContent = views[index].title;
-      tabButtons.forEach((button, i) => {
-        const active = i === index;
-        button.setAttribute('aria-selected', String(active));
-        button.tabIndex = active ? 0 : -1;
-      });
-      if (index === 1 && window.MarsModelView) window.MarsModelView.enter();
-      if (focus) tabButtons[index].focus();
-      return;
-    }
-    const token = ++tabTransition,
-      previous = current < 0 ? null : $(views[current].id),
-      delay = reducedMotion.matches ? 0 : 300;
-    $('mars-model-title').textContent = views[index].title;
-    tabButtons.forEach((b, i) => {
-      const active = i === index;
-      b.setAttribute('aria-selected', String(active));
-      b.tabIndex = active ? 0 : -1;
-    });
-    if (focus) tabButtons[index].focus();
-    if (current === 1 && window.MarsModelView) window.MarsModelView.exit();
-    if (previous) {
-      previous.classList.remove('tab-view-enter');
-      previous.classList.add('tab-view-exit');
-    }
-    setTimeout(() => {
-      if (token !== tabTransition) return;
-      views.forEach((view, i) => {
-        const element = $(view.id),
-          active = i === index;
-        element.hidden = !active;
-        element.classList.remove('tab-view-enter', 'tab-view-exit');
-        if (active) requestAnimationFrame(() => element.classList.add('tab-view-enter'));
-      });
-      if (index === 1 && window.MarsModelView) window.MarsModelView.enter();
-      if (index === 2) requestAnimationFrame(centerSelected);
-    }, delay);
-  }
-  tabButtons.forEach((button, index) => {
-    button.onclick = () => showTab(index, false);
-    button.onkeydown = (e) => {
-      let next;
-      if (e.key === 'ArrowRight') next = (index + 1) % tabButtons.length;
-      else if (e.key === 'ArrowLeft') next = (index + tabButtons.length - 1) % tabButtons.length;
-      else if (e.key === 'Home') next = 0;
-      else if (e.key === 'End') next = tabButtons.length - 1;
-      if (next !== undefined) {
-        e.preventDefault();
-        showTab(next, true);
-      }
-    };
+  const panelTabs = SolarUI.tabs({
+    buttons: tabButtons,
+    panels: views.map(view => $(view.id)),
+    onSelect(id, previous) {
+      $('mars-model-title').textContent = views.find(view => view.id === id).title;
+      if (previous === 'mars-stage' && previous !== id) window.MarsModelView?.exit();
+    },
+    onShown(id) {
+      if (id === 'mars-stage') window.MarsModelView?.enter();
+      if (id === 'rover-panel') requestAnimationFrame(centerSelected);
+    },
   });
+  function showTab(index, focus, shown) {
+    panelTabs.select(views[index].id, { focus, shown });
+  }
   function centerSelected() {
     const frame = document.querySelector('.world-map-scroll'),
       map = $('rover-world-map');
@@ -503,7 +457,7 @@
     note.textContent =
       $('rover-route-note').textContent + ' 来源：' + $('rover-credit').textContent;
     caption.append(title, note);
-    dialog.showModal();
+    SolarUI.dialog(dialog).open();
     dialog.classList.add('is-controls-visible');
   };
   selectRover(data[0].id);
@@ -515,7 +469,7 @@
       img.alt = $('rover-surface-image').alt;
       $('image-dialog-caption').textContent =
         selected.name + ' · ' + selected.photo.note + ' 来源：' + selected.photo.credit;
-      dialog.showModal();
+      SolarUI.dialog(dialog).open();
       dialog.classList.add('is-controls-visible');
     };
   $('rover-concept-expand').onclick = () => {
@@ -525,7 +479,7 @@
     img.alt = $('rover-concept-image').alt;
     $('image-dialog-caption').textContent =
       selected.name + ' · ' + selected.concept.note + ' 来源：' + selected.concept.credit;
-    dialog.showModal();
+    SolarUI.dialog(dialog).open();
     dialog.classList.add('is-controls-visible');
   };
   const worldDialog = document.createElement('dialog');
@@ -533,33 +487,27 @@
   worldDialog.id = 'world-map-dialog';
   worldDialog.setAttribute('aria-label', '火星全球着陆区地图');
   document.body.append(worldDialog);
-  let worldOpener = null;
+  const worldViewer = SolarUI.dialog(worldDialog);
   function openWorld() {
-    worldOpener = document.activeElement;
     worldDialog.innerHTML =
-      '<header><div><strong>火星全球地图 · 着陆区</strong><p>点击圆点或名称，前往对应巡视器介绍</p></div><button type="button" class="rover-button" aria-label="关闭全球地图">关闭 ×</button></header><div class="world-dialog-scroll"></div>';
+      '<header><div><strong>火星全球地图 · 着陆区</strong><p>点击圆点或名称，前往对应巡视器介绍</p></div><button type="button" class="rover-button" data-dialog-close aria-label="关闭全球地图">关闭 ×</button></header><div class="world-dialog-scroll"></div>';
     const map = $('rover-world-map').cloneNode(true);
     map.removeAttribute('id');
     map.querySelectorAll('[id]').forEach((e) => e.removeAttribute('id'));
     map.querySelectorAll('.rover-pin').forEach(
       (b) =>
         (b.onclick = () => {
-          worldDialog.close();
+          worldViewer.close({ animate: false });
           navigateRover(b.dataset.id);
         }),
     );
     worldDialog.querySelector('.world-dialog-scroll').append(map);
-    worldDialog.querySelector('header button').onclick = () => worldDialog.close();
-    worldDialog.showModal();
+    worldViewer.open();
     const frame = worldDialog.querySelector('.world-dialog-scroll');
     frame.scrollLeft = ((selected.lon + 180) / 360) * map.clientWidth - frame.clientWidth / 2;
   }
-  worldDialog.addEventListener('click', (e) => {
-    if (e.target === worldDialog) worldDialog.close();
-  });
   worldDialog.addEventListener('close', () => {
-    worldDialog.replaceChildren();
-    if (worldOpener && worldOpener.isConnected) worldOpener.focus({ preventScroll: true });
+    if (!worldDialog.open) worldDialog.replaceChildren();
   });
   const worldButton = document.createElement('button');
   worldButton.type = 'button';
@@ -587,19 +535,15 @@
     if (!data.some((r) => r.id === id)) return;
     const token = ++navigation;
     selectRover(id);
-    showTab(2, false);
     if (updateHash) history.pushState(null, '', '#rovers/' + id);
-    setTimeout(
-      () => {
-        if (token !== navigation) return;
-        summary.focus({ preventScroll: true });
-        summary.scrollIntoView({
-          behavior: reducedMotion.matches ? 'instant' : 'smooth',
-          block: 'center',
-        });
-      },
-      reducedMotion.matches ? 0 : 340,
-    );
+    showTab(2, false, () => {
+      if (token !== navigation) return;
+      summary.focus({ preventScroll: true });
+      summary.scrollIntoView({
+        behavior: reducedMotion.matches ? 'instant' : 'smooth',
+        block: 'center',
+      });
+    });
   }
   function readRoverHash() {
     const id = location.hash.slice('#rovers/'.length);

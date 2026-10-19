@@ -51,7 +51,7 @@
 ## 本地库与音乐
 
 - `vendor/`：复用用户原有行星项目的 Three.js 与 OrbitControls，MIT 许可证保存在 `vendor/LICENSE`。
-- `assets/ad-astra.mp3`：从用户现有网站音频复制，仅供此本地项目使用。没有新增音乐授权声明或发布行为。
+- `../shared/audio/ad-astra.mp3`：从用户现有网站音频复制，仅供此本地项目使用。没有新增音乐授权声明或发布行为。
 
 ## 2026-10-19 介绍补写资料
 

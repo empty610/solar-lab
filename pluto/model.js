@@ -50,9 +50,6 @@
     spinning = !reduced.matches,
     night = false,
     phase = 0,
-    inView = true,
-    last = 0,
-    frameId = null,
     ready = false,
     failed = false,
     viewportWidth = 0,
@@ -60,10 +57,9 @@
     dirty = true;
   let renderer, scene, camera, controls, pluto, charon, orbit, ambient, sun, grid;
   let animate;
+  let modelLoop, textureSet;
   function syncAnimation() {
-    last = 0;
-    if (frameId !== null) cancelAnimationFrame(frameId);
-    frameId = ready && inView && !document.hidden && animate ? requestAnimationFrame(animate) : null;
+    modelLoop?.invalidate();
   }
   function spinFeedback() {
     const b = $('model-spin');
@@ -79,6 +75,9 @@
   function fallback() {
     if (failed) return;
     failed = true;
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    if (scene) ModelRuntime.disposeScene(scene, renderer, controls);
     ready = false;
     if (controls) controls.enabled = false;
     mount.hidden = true;
@@ -140,12 +139,16 @@
   }
   function fit() {
     if (!camera) return;
+    // Clear the small damping remainder before applying an explicit reset.
+    controls.enableDamping = false;
+    controls.update();
     const dist = fittedDistance();
     camera.position.set(0, dist * (view === 'system' ? 0.65 : 0.12), dist);
     controls.target.set(0, 0, 0);
     controls.minDistance = view === 'system' ? 3 : 1.65;
     controls.maxDistance = dist * 2.8;
     controls.update();
+    controls.enableDamping = true;
     dirty = true;
   }
   function positions() {
@@ -231,7 +234,7 @@
   }
   async function init() {
     try {
-      if (!window.THREE || !window.OrbitControls || !window.PLUTO_MODELS)
+      if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.PLUTO_MODELS)
         throw new Error('Missing local model assets');
       const T = THREE;
       scene = new T.Scene();
@@ -256,6 +259,9 @@
       controls.enablePan = false;
       controls.rotateSpeed = 0.65;
       controls.zoomSpeed = 0.65;
+      modelLoop = ModelRuntime.loop({ element: stage, fps: 30, draw: (step) => animate(step) });
+      modelLoop.bind(controls);
+      textureSet = ModelRuntime.textures(T, renderer);
       controls.addEventListener('change', () => {
         dirty = true;
       });
@@ -267,30 +273,21 @@
       orbit = new T.Group();
       scene.add(orbit);
       async function mesh(id) {
-        const m = PLUTO_MODELS[id],
-          g = new T.BufferGeometry();
+        const m = PLUTO_MODELS[id];
+        const tex = await textureSet.load(m.texture, { flipY: false });
+        if (failed || !tex) return null;
+        const g = new T.BufferGeometry();
         g.setAttribute('position', new T.Float32BufferAttribute(m.positions, 3));
         g.setAttribute('normal', new T.Float32BufferAttribute(m.normals, 3));
         g.setAttribute('uv', new T.Float32BufferAttribute(m.uv, 2));
         g.setIndex(m.indices);
         g.applyQuaternion(new T.Quaternion(...m.rotation));
-        const tex = await new T.TextureLoader().loadAsync(m.texture);
-        tex.colorSpace = T.SRGBColorSpace;
-        tex.flipY = false;
-        tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
-        return new T.Mesh(g, new T.MeshStandardMaterial({ map: tex, roughness: 1 }));
+        const body = new T.Mesh(g, new T.MeshStandardMaterial({ map: tex, roughness: 1 }));
+        orbit.add(body);
+        return body;
       }
       [pluto, charon] = await Promise.all([mesh('pluto'), mesh('charon')]);
-      // A context loss can enter fallback while texture requests are still pending.
-      if (failed) {
-        for (const body of [pluto, charon]) {
-          body.geometry.dispose();
-          body.material.map.dispose();
-          body.material.dispose();
-        }
-        return;
-      }
-      orbit.add(pluto, charon);
+      if (failed) return;
       grid = new T.Group();
       scene.add(grid);
       for (const radius of [1.797, 14.728]) {
@@ -324,32 +321,17 @@
       positions();
       resize();
       new ResizeObserver(resize).observe(stage);
-      if ('IntersectionObserver' in window)
-        new IntersectionObserver((entries) => {
-          inView = entries[0].isIntersecting;
-          if (inView) dirty = true;
-          syncAnimation();
-        }).observe(stage);
-      let accumulator = 0;
-      animate = function frame(now) {
-        frameId = null;
-        if (!ready || !inView || document.hidden) return;
-        frameId = requestAnimationFrame(frame);
-        const dt = last ? Math.min((now - last) / 1000, 0.08) : 0;
-        last = now;
-        accumulator += dt;
-        if (accumulator < 1 / 30) return;
-        const step = accumulator;
-        accumulator = 0;
+      animate = function frame(step) {
         if (spinning) {
           phase += step * 0.11;
           positions();
           dirty = true;
         }
-        controls.update();
+        const moved = controls.update();
         if (dirty) render();
+        return spinning || moved;
       };
-      syncAnimation();
+      modelLoop.start();
     } catch (error) {
       console.warn('3D view unavailable:', error.message);
       fallback();
@@ -361,6 +343,7 @@
   $('model-spin').addEventListener('click', () => {
     spinning = !spinning;
     spinFeedback();
+    syncAnimation();
   });
   $('model-reset').addEventListener('click', () => {
     if (!ready) return;
@@ -384,7 +367,7 @@
       spinFeedback();
     }
   });
-  document.addEventListener('visibilitychange', syncAnimation);
+
   window.PlutoObservatory = {
     setView,
     get state() {

@@ -14,7 +14,6 @@
   let selected = 'saturn',
     ready = false,
     failed = false,
-    visible = true,
     day = 0,
     spinning = !reduced.matches,
     changeTimer,
@@ -23,9 +22,17 @@
     controls;
   const moonIds = ['titan', 'enceladus'],
     ui = [...document.querySelectorAll('[data-view],#lighting,#spin,#reset')];
+  let modelLoop, textureSet;
+  let cleanup = () => {};
   function fail(error) {
-    ready = false;
+    if (failed) return;
     failed = true;
+    ready = false;
+    modelLoop?.dispose();
+    textureSet?.dispose();
+    cleanup();
+    clearTimeout(changeTimer);
+    mount.classList.remove('switching');
     mount.classList.remove('is-ready');
     $('model-loading').hidden = true;
     $('model-fallback').hidden = false;
@@ -67,7 +74,7 @@
           : 'NASA VTAD / 原始模型与环贴图';
   }
   try {
-    if (!window.THREE || !window.OrbitControls || !window.SATURN_MODELS)
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.SATURN_MODELS)
       throw Error('Missing local model dependencies');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(36, 1, 0.01, 500);
@@ -83,6 +90,8 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mount.append(renderer.domElement);
+    cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
+    textureSet = ModelRuntime.textures(THREE, renderer);
     renderer.domElement.setAttribute('aria-label', '土星与两颗卫星的三维模型，可拖动旋转与缩放');
     const ambient = new THREE.AmbientLight(0xf3eee2, 1.1),
       key = new THREE.DirectionalLight(0xfff4dd, 2.7);
@@ -171,6 +180,8 @@
       return new THREE.Vector3(0, selected === 'rings' ? 2.8 : 0.6, 1).normalize();
     }
     function reset(immediate = false) {
+      if (failed) return;
+      modelLoop?.invalidate();
       controls.enableDamping = false;
       controls.update();
       flight = null;
@@ -234,12 +245,13 @@
       mount.classList.add('switching');
       changeTimer = setTimeout(
         () => {
+          if (failed) return;
           selected = id;
           profile();
           updateBodies();
           spinUI();
           reset(true);
-          renderer.render(scene, camera);
+          modelLoop?.invalidate();
           mount.classList.remove('switching');
         },
         reduced.matches ? 0 : 200,
@@ -268,19 +280,26 @@
     new ResizeObserver(() => {
       const nw = mount.clientWidth,
         nh = mount.clientHeight;
+      if (failed) return;
       if (!nw || !nh || (w === nw && h === nh)) return;
+      const initial = !w, previousDistance = distance();
       w = nw;
       h = nh;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
-      reset(true);
+      modelLoop?.invalidate();
+      if (initial) reset(true);
+      else if (flight) flight.to = distance();
+      else {
+        const fitted = distance();
+        camera.position.sub(controls.target).multiplyScalar(fitted / previousDistance).add(controls.target);
+        controls.maxDistance = Math.max(fitted * 2.3, 10);
+        controls.update();
+      }
     }).observe(mount);
-    if ('IntersectionObserver' in window)
-      new IntersectionObserver((entries) => (visible = entries[0].isIntersecting), {
-        rootMargin: '100px',
-      }).observe(stage);
     reduced.addEventListener('change', () => {
+      modelLoop?.invalidate();
       if (reduced.matches) {
         spinning = false;
         spinUI();
@@ -291,28 +310,13 @@
       e.preventDefault();
       fail('WebGL context lost; reload to restore');
     });
-    const loader = new THREE.TextureLoader(),
-      textures = {};
+    const textures = {};
     for (const [id, m] of Object.entries(window.SATURN_MODELS))
-      textures[id] = m.textures.map(
-        (url) =>
-          new Promise((resolve, reject) =>
-            loader.load(
-              url,
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                texture.flipY = false;
-                texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
-                resolve(texture);
-              },
-              undefined,
-              reject,
-            ),
-          ),
-      );
+      textures[id] = m.textures.map(url => textureSet.load(url, { flipY: false }));
     Promise.all(
       materialRecords.map(async (rec) => {
         const texture = await textures[rec.id][rec.index];
+        if (failed || !texture) return;
         rec.mat.map = texture;
         rec.mat.needsUpdate = true;
       }),
@@ -326,26 +330,14 @@
         renderer.compile(scene, camera);
         renderer.render(scene, camera);
         ready = true;
+        modelLoop.start();
         $('model-loading').hidden = true;
         $('model-status').textContent = '模型就绪 · 本地资源';
         $('model-status').classList.add('ready');
         mount.classList.add('is-ready');
       })
       .catch(fail);
-    let last = 0,
-      acc = 0;
-    function frame(now) {
-      requestAnimationFrame(frame);
-      const dt = Math.min((now - last) / 1000, 0.06);
-      last = now;
-      if (!ready || failed || !visible || document.hidden) {
-        acc = 0;
-        return;
-      }
-      acc += dt;
-      if (acc < 1 / 35) return;
-      const step = acc;
-      acc = 0;
+    function frame(step) {
       if (spinning) day += step * 0.025;
       updateBodies();
       if (flight) {
@@ -364,7 +356,7 @@
           controls.enableDamping = true;
         }
       }
-      controls.update();
+      const moved = controls.update();
       renderer.render(scene, camera);
       for (const id of moonIds) {
         const label = $(id + '-label');
@@ -382,8 +374,12 @@
             Math.max(8, y - 28) +
             'px)';
       }
+      return spinning || !!flight || moved;
     }
-    requestAnimationFrame(frame);
+    modelLoop = ModelRuntime.loop({ element: stage, draw: frame, fps: 35 });
+    modelLoop.bind(controls);
+    stage.closest('section').addEventListener('click', modelLoop.invalidate);
+    stage.addEventListener('keydown', modelLoop.invalidate);
     window.SaturnView = {
       get ready() {
         return ready;
