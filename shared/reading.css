@@ -1,0 +1,57 @@
+/* Longer field notes share the surrounding page's palette and typeface. */
+.reading-section {
+  margin-block: 42px;
+  padding: clamp(20px, 3.4vw, 42px);
+  border: 1px solid var(--line, #d7d0c3);
+  border-radius: 16px;
+  background: var(--panel, var(--card, #faf8f3));
+  color: var(--ink, #393329);
+}
+.reading-section > h2 {
+  margin: 0 0 30px;
+  font-size: clamp(21px, 2.4vw, 30px);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.reading-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 34px 44px;
+}
+.reading-grid > article {
+  min-width: 0;
+  border-top: 1px solid var(--line, #d7d0c3);
+  padding-top: 22px;
+}
+.reading-grid h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.65;
+}
+.reading-grid p {
+  margin: 0;
+  color: inherit;
+  font-size: 14px;
+  line-height: 2.05;
+  overflow-wrap: anywhere;
+}
+.reading-grid p + p { margin-top: 16px; }
+.reading-section .reading-sources {
+  margin: 28px 0 0;
+  color: var(--muted, #786d5e);
+  font-size: 11px;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+.reading-sources a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+@media (max-width: 720px) {
+  .reading-section { margin-block: 26px; }
+  .reading-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  .reading-grid h3 { font-size: 17px; }
+  .reading-grid p { font-size: 13px; }
+}

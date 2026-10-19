@@ -47,3 +47,10 @@
 本次扩写继续采用上述来源，补充说明地形先后关系、内部结构模型、潮汐耗散与仪器调查方法。Europa Clipper 环绕木星、反复飞掠的辐射环境原因，依据 [NASA 任务 FAQ](https://science.nasa.gov/mission/europa-clipper/mission-faq/)。水岩反应、化学能、宜居条件与有机物的科学边界，依据 [NASA Ingredients for Life](https://science.nasa.gov/mission/europa-clipper/why-europa-ingredients-for-life/)。
 
 结尾对火星与木卫二探索路线的比较，以及对未来探索意义的追问，是科普叙述与作者式讨论，不是新的观测结论。29 km 估计对应纯水冰假设下、所观测区域的冷硬导热层；海洋水量为模型估计，未来任务节点继续标为计划。
+
+## 2026-10-19 介绍补写资料
+
+- [宜居条件、辐射与物质交换](https://science.nasa.gov/mission/europa-clipper/why-europa-ingredients-for-life/)
+- [塔拉区二氧化碳与内部碳来源线索](https://www.nasa.gov/solar-system/nasas-webb-finds-carbon-source-on-surface-of-jupiters-moon-europa/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。

@@ -44,3 +44,14 @@
 Three.js / OrbitControls 从现有 Neptune 项目复制，许可证在 vendor/LICENSE。布局和交互延续本地 Mercury、Neptune 等界面。
 
 背景音乐 ad-astra.mp3 沿用本地项目，仅供本地预览；公开发布前请确认音乐授权。显式点击后播放，循环并淡入，离开页面停止。本项目不自动播放音乐，也不访问外部 CDN。
+
+## 2026-10-19 介绍补写资料
+
+- [行星结构、密度与大气](https://science.nasa.gov/saturn/facts/)
+- [极区六边形](https://science.nasa.gov/mission/cassini/science/saturn/hexagon-in-motion/)
+- [环的动力学](https://science.nasa.gov/mission/cassini/faq/)
+- [环震学](https://ntrs.nasa.gov/api/citations/20140010624/downloads/20140010624.pdf)
+- [土卫六](https://science.nasa.gov/saturn/moons/titan/)
+- [土卫二](https://science.nasa.gov/saturn/moons/enceladus/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。

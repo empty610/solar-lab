@@ -46,3 +46,10 @@ Three.js 与 OrbitControls 从用户现有 Venus 项目使用的本地库复制�
 ## 音频
 
 `assets/ad-astra.mp3` 从用户原有网站 `shared/audio/ad astra.mp3` 复制用于本地预览；未增加授权声明或重新发布。
+
+## 2026-10-19 介绍补写资料
+
+- [水星的外逸层、磁场与地表](https://science.nasa.gov/mercury/facts/)
+- [信使号飞行路线与探测](https://science.nasa.gov/mission/messenger/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。

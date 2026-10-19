@@ -32,3 +32,12 @@
 模型贴图清晰度不均，未完整成像区域可能填补。增强色、展示光照、起始朝向和转动角度不代表真实时刻。双星全景使用直径比例 1214 / 2377，中心距离为 19640 / 1188.5 个冥王星半径；轨道为简化圆。二维演示用半径 30 和 246 的轨道示意近似质量比，天体图像适度放大，表面小点说明相互潮汐锁定。
 
 Three.js 和 OrbitControls 沿用同目录其他行星页的本地版本。MIT 许可见 `vendor/LICENSE`。
+
+## 2026-10-19 介绍补写资料
+
+- [冥王星结构、冰原、轨道与分类](https://science.nasa.gov/dwarf-planets/pluto/facts/)
+- [海王星与冥王星共振](https://science.nasa.gov/neptune/neptune-facts/)
+- [冥卫一红色极区的解释](https://www.nasa.gov/missions/pluto-paints-its-largest-moon-red/)
+- [新视野号](https://science.nasa.gov/mission/new-horizons/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。

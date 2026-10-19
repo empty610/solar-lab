@@ -33,7 +33,15 @@
       $('photo-image').alt = button.querySelector('img').alt;
       $('photo-title').textContent = p.title;
       $('photo-kicker').textContent = p.kicker;
-      $('photo-description').textContent = p.copy;
+      const paragraphs = [p.copy, ...Array.from(
+        button.closest('.photo-card').querySelectorAll('.photo-copy > p'),
+        paragraph => paragraph.textContent.trim(),
+      )];
+      $('photo-description').replaceChildren(...paragraphs.map(text => {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = text;
+        return paragraph;
+      }));
       $('photo-source').href = p.url;
       dialog.showModal();
       document.body.style.overflow = 'hidden';

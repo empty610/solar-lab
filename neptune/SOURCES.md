@@ -28,3 +28,11 @@
 ## 本地沿用内容
 
 设计风格参考现有 Mercury preview v2、Jupiter preview v1 等本地项目；Three.js / OrbitControls 从 Jupiter 项目的 vendor 目录复制，许可随附。音乐 `ad-astra.mp3` 从同一项目复制，仅供本地预览，公开发布前需确认音乐授权。
+
+## 2026-10-19 介绍补写资料
+
+- [海王星大气、轨道与卫星](https://science.nasa.gov/neptune/neptune-facts/)
+- [旅行者观测中的风速](https://science.nasa.gov/mission/voyager/fact-sheet/)
+- [冰巨星的内部热量](https://science.nasa.gov/science-research/planetary-science/nasa-oxford-discover-warmer-uranus-than-once-thought/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。

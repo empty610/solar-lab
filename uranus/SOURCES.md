@@ -15,3 +15,12 @@
 四季实验室为圆轨道俯视投影，自转轴的出平面分量省略；相对尺寸与距离经过压缩。零点定义为北半球夏至，21、42、63 年分别是近似的秋分、冬至、春分，不对应具体地球历日期。默认静止，播放时每秒推进两个地球年。方位与季节描述基于太阳与自转轴的相对位置，不能用于精密星历或气象预报。
 
 Three.js 与 OrbitControls 沿用现有项目本地版本，MIT 许可位于 `vendor/LICENSE`。导航、音乐和自动隐藏控件复用 `shared/`。图像信用归原机构所有，不表示它们对本项目背书。
+
+## 2026-10-19 介绍补写资料
+
+- [大气、自转、磁场与环](https://science.nasa.gov/uranus/facts/)
+- [五颗主要卫星](https://science.nasa.gov/uranus/moons/)
+- [探测与环的发现](https://science.nasa.gov/uranus/exploration/)
+- [韦布的近红外观测](https://science.nasa.gov/missions/webb/nasas-webb-rings-in-holidays-with-ringed-planet-uranus/)
+
+新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
