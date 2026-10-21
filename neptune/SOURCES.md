@@ -11,7 +11,7 @@
 - [海卫一全球拼接 PIA00317](https://science.nasa.gov/photojournal/global-color-mosaic-of-triton/)：NASA/JPL/USGS；旅行者二号。橙、紫、紫外滤光片映射色。文件 `assets/triton-mosaic.jpg` 已缩小至适合网页的分辨率。
 - [海王星 NIRCam 近景 weic2214a](https://esawebb.org/images/weic2214a/)：NASA, ESA, CSA, STScI。2022 年发布，近红外映射色。文件 `assets/webb-rings.jpg`。
 
-贴图压缩为 JPEG，几何和纹理嵌入 `assets/models.js`，方便 file:// 直接查看。原始 GLB 不属于运行时必需文件，未重复保留在交付目录。图片信用信息随卡片弹窗保留；没有声称 NASA/ESA 对本项目背书。
+贴图压缩为 JPEG，几何和纹理按观察目标保存在 `assets/models.js`（海王星）与 `assets/triton-model.js`（海卫一），支持 file:// 直接查看。数据仅拆分，没有改变原始几何、UV、节点方向和贴图值。原始 GLB 不属于运行时必需文件，未重复保留在交付目录。图片信用信息随卡片弹窗保留；没有声称 NASA/ESA 对本项目背书。
 
 ## 事实与说明
 

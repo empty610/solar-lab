@@ -84,10 +84,11 @@
           '%。观察距离如何随时间改变。';
     subscribers.forEach((fn) => fn(day));
   }
+  let orbitActive = true;
   function syncAnimation() {
     last = 0;
     if (frameId !== null) cancelAnimationFrame(frameId);
-    frameId = playing && !document.hidden ? requestAnimationFrame(tick) : null;
+    frameId = playing && orbitActive && !document.hidden ? requestAnimationFrame(tick) : null;
   }
   function setPlaying(value) {
     playing = value;
@@ -160,11 +161,14 @@
     speed = Number(event.target.value);
     $('orbit-feedback').textContent = '播放速度已调整为 ' + speed + ' 地球日 / 秒。';
   });
-  document.addEventListener('visibilitychange', syncAnimation);
+  SolarUI.activity([$('tides'), $('model-stage')], active => {
+    orbitActive = active;
+    syncAnimation();
+  });
   function tick(now) {
     frameId = null;
-    if (!playing || document.hidden) return;
-    if (playing && !document.hidden) {
+    if (!playing || !orbitActive || document.hidden) return;
+    if (playing && orbitActive && !document.hidden) {
       if (last) day = Math.min(end, day + Math.min((now - last) / 1000, 0.08) * speed);
       last = now;
       renderTime();
@@ -174,7 +178,7 @@
           '一次完整公转已完成；同步自转也完成一圈。可以重新播放或比较公转阶段。';
       }
     }
-    if (playing && !document.hidden) frameId = requestAnimationFrame(tick);
+    if (playing && orbitActive && !document.hidden) frameId = requestAnimationFrame(tick);
   }
   syncAnimation();
   renderTime();

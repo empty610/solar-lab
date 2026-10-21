@@ -24,7 +24,14 @@
     }));
     return pending.get(source);
   }
-  window.ModelLoader = Object.freeze({ loadScript });
+  async function loadDetail(id) {
+    const template = [...document.querySelectorAll('template[data-model-detail]')]
+      .find(element => element.dataset.modelDetail === id);
+    if (!template) throw new Error('Missing model detail: ' + id);
+    for (const script of template.content.querySelectorAll('script[src]'))
+      await loadScript(script.getAttribute('src'));
+  }
+  window.ModelLoader = Object.freeze({ loadScript, loadDetail });
   for (const template of document.querySelectorAll('template[data-model-target]')) {
     const stage = document.getElementById(template.dataset.modelTarget);
     if (!stage) continue;

@@ -112,36 +112,48 @@
       moonMeshes = {},
       tracks = [];
     system.add(planetSpin, rings);
-    const materialRecords = [];
-    for (const id of ['saturn', ...moonIds]) {
-      const group = id === 'saturn' ? planetSpin : new THREE.Group();
-      if (id !== 'saturn') {
-        moonGroups[id] = group;
-        system.add(group);
-      }
-      const m = window.SATURN_MODELS[id];
-      for (const part of m.parts) {
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.Float32BufferAttribute(part.positions, 3));
-        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(part.normals, 3));
-        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(part.uv, 2));
-        geometry.setIndex(part.indices);
-        geometry.applyQuaternion(new THREE.Quaternion(...part.rotation));
-        const mat = new THREE.MeshStandardMaterial({
-          roughness: 1,
-          metalness: 0,
-          side: part.ring ? THREE.DoubleSide : THREE.FrontSide,
-          transparent: part.ring,
-          alphaTest: part.ring ? 0.03 : 0,
-          depthWrite: !part.ring,
-        });
-        const mesh = new THREE.Mesh(geometry, mat);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        (part.ring ? rings : group).add(mesh);
-        if (id !== 'saturn') moonMeshes[id] = mesh;
-        materialRecords.push({ mat, id, index: part.texture, ring: part.ring });
-      }
+    for (const id of moonIds) {
+      const group = new THREE.Group();
+      moonGroups[id] = group;
+      system.add(group);
+    }
+    const bodyLoads = new Map();
+    function prepareBody(id) {
+      if (!bodyLoads.has(id)) bodyLoads.set(id, (async () => {
+        if (!window.SATURN_MODELS[id]) await ModelLoader.loadDetail(id);
+        if (failed) return;
+        const data = window.SATURN_MODELS[id];
+        const textures = await Promise.all(data.textures.map(url => textureSet.load(url, { flipY: false })));
+        if (failed || textures.some(texture => !texture)) return;
+        for (const part of data.parts) {
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.Float32BufferAttribute(part.positions, 3));
+          geometry.setAttribute('normal', new THREE.Float32BufferAttribute(part.normals, 3));
+          geometry.setAttribute('uv', new THREE.Float32BufferAttribute(part.uv, 2));
+          geometry.setIndex(part.indices);
+          geometry.applyQuaternion(new THREE.Quaternion(...part.rotation));
+          const mat = new THREE.MeshStandardMaterial({
+            roughness: 1,
+            metalness: 0,
+            side: part.ring ? THREE.DoubleSide : THREE.FrontSide,
+            transparent: part.ring,
+            alphaTest: part.ring ? 0.03 : 0,
+            depthWrite: !part.ring,
+          });
+          const mesh = new THREE.Mesh(geometry, mat);
+          mat.map = textures[part.texture];
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          (part.ring ? rings : id === 'saturn' ? planetSpin : moonGroups[id]).add(mesh);
+          if (id !== 'saturn') moonMeshes[id] = mesh;
+        }
+        updateBodies();
+        modelLoop?.invalidate();
+      })());
+      return bodyLoads.get(id);
+    }
+    function prepareView(id) {
+      return Promise.all((id === 'system' ? ['saturn', ...moonIds] : [id === 'rings' ? 'saturn' : id]).map(prepareBody));
     }
     for (const id of moonIds) {
       const points = [];
@@ -224,7 +236,7 @@
         group.visible = all || selected === id;
         group.position.set(all ? p.x : 0, 0, all ? p.z : 0);
         group.rotation.y = p.angle;
-        moonMeshes[id].scale.setScalar(all ? m.radius / D.radius : 1);
+        moonMeshes[id]?.scale.setScalar(all ? m.radius / D.radius : 1);
       }
       tracks.forEach((t) => (t.visible = all));
     }
@@ -248,6 +260,10 @@
         () => {
           if (failed) return;
           selected = id;
+          $('model-status').textContent = '正在准备观察目标…';
+          prepareView(id).then(() => {
+            if (!failed && selected === id) $('model-status').textContent = '模型就绪 · 本地资源';
+          }).catch(fail);
           profile();
           updateBodies();
           spinUI();
@@ -311,17 +327,7 @@
       e.preventDefault();
       fail('WebGL context lost; reload to restore');
     });
-    const textures = {};
-    for (const [id, m] of Object.entries(window.SATURN_MODELS))
-      textures[id] = m.textures.map(url => textureSet.load(url, { flipY: false }));
-    Promise.all(
-      materialRecords.map(async (rec) => {
-        const texture = await textures[rec.id][rec.index];
-        if (failed || !texture) return;
-        rec.mat.map = texture;
-        rec.mat.needsUpdate = true;
-      }),
-    )
+    prepareView('saturn')
       .then(() => {
         if (failed) return;
         profile();

@@ -111,19 +111,32 @@
     moonPlane.rotation.x = (157.3 * Math.PI) / 180;
     moonPlane.add(moonSpin);
     const meshes = {};
-    for (const id of ['neptune', 'triton']) {
-      const m = window.NEPTUNE_MODELS[id],
-        geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(m.positions, 3));
-      geometry.setAttribute('normal', new THREE.Float32BufferAttribute(m.normals, 3));
-      geometry.setAttribute('uv', new THREE.Float32BufferAttribute(m.uv, 2));
-      geometry.setIndex(m.indices);
-      geometry.applyQuaternion(new THREE.Quaternion(...m.rotation));
-      meshes[id] = new THREE.Mesh(
-        geometry,
-        new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }),
-      );
-      (id === 'neptune' ? planetSpin : moonSpin).add(meshes[id]);
+    const bodyLoads = new Map();
+    function prepareBody(id) {
+      if (!bodyLoads.has(id)) bodyLoads.set(id, (async () => {
+        if (!window.NEPTUNE_MODELS[id]) await ModelLoader.loadDetail(id);
+        if (failed) return;
+        const m = window.NEPTUNE_MODELS[id];
+        const texture = await textureSet.load(m.texture, { flipY: false });
+        if (failed || !texture) return;
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(m.positions, 3));
+        geometry.setAttribute('normal', new THREE.Float32BufferAttribute(m.normals, 3));
+        geometry.setAttribute('uv', new THREE.Float32BufferAttribute(m.uv, 2));
+        geometry.setIndex(m.indices);
+        geometry.applyQuaternion(new THREE.Quaternion(...m.rotation));
+        meshes[id] = new THREE.Mesh(
+          geometry,
+          new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0, map: texture }),
+        );
+        (id === 'neptune' ? planetSpin : moonSpin).add(meshes[id]);
+        updateBodies();
+        modelLoop?.invalidate();
+      })());
+      return bodyLoads.get(id);
+    }
+    function prepareView(id) {
+      return Promise.all((id === 'system' ? ['neptune', 'triton'] : [id === 'rings' ? 'neptune' : id]).map(prepareBody));
     }
     // Thin annuli: brightness and radial width deliberately amplified, no texture dependency.
     for (const [radius, width, opacity] of [
@@ -229,7 +242,7 @@
       moonPlane.visible = all || selected === 'triton';
       ringGroup.visible = all || selected === 'rings';
       track.visible = all;
-      meshes.triton.scale.setScalar(all ? D.tritonRadius / D.radius : 1);
+      meshes.triton?.scale.setScalar(all ? D.tritonRadius / D.radius : 1);
       moonSpin.position.set(
         all ? (D.tritonOrbit / D.radius) * Math.cos(a) : 0,
         0,
@@ -244,6 +257,10 @@
         () => {
           if (failed) return;
           selected = id;
+          $('model-status').textContent = '正在准备观察目标…';
+          prepareView(id).then(() => {
+            if (!failed && selected === id) $('model-status').textContent = '模型就绪 · 本地资源';
+          }).catch(fail);
           profile(id);
           updateBodies();
           spinLabel();
@@ -319,12 +336,7 @@
       e.preventDefault();
       fail('WebGL context lost; reload to restore.');
     });
-    Promise.all(['neptune', 'triton'].map(async id => {
-      const texture = await textureSet.load(window.NEPTUNE_MODELS[id].texture, { flipY: false });
-      if (failed || !texture) return;
-      meshes[id].material.map = texture;
-      meshes[id].material.needsUpdate = true;
-    }))
+    prepareView('neptune')
       .then(() => {
         if (failed) return;
         renderer.compile(scene, camera);

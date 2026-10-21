@@ -100,6 +100,6 @@ Windows 默认使用 Edge，其他平台首次检查前运行 `npx playwright in
 
 脚本与样式的内容发生变化时，构建会生成不同的文件地址，已有浏览器缓存也会请求新资源。根目录 `_headers` 仅为 `shared/cache/*` 设置一年 immutable 缓存；HTML 和原址可变的旧 JS/CSS 要求重新校验。图片、纹理和音频继续使用默认缓存。八页相同的 Three.js 与七页相同的 OrbitControls 共用 `shared/vendor/`，金星 controls 与火星定制库分别保留。自定义域名的外部缓存规则仍可能覆盖响应头，需要独立核对线上结果。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
 
-总览与正文影像卡片使用 WebP 预览，放大窗口保留原图和署名。模型库在模型区域首次可见时加载，火星隐藏巡视器图片与卫星精细模型、木星卫星贴图按需准备；Mars/Jupiter 的内嵌贴图仅在 file:// 打开时加载。跨页连接动画期间预取目标页的阅读界面资源。具体约定与复查结果见 [加载性能说明](docs/loading-performance.md)。
+总览与正文影像卡片使用 WebP 预览，放大窗口保留原图和署名。模型库在模型区域首次可见时加载，火星隐藏巡视器图片与卫星精细模型、土星和海王星的卫星模型、木星与木卫二的贴图按观察目标准备；Mars/Jupiter/Europa 的内嵌贴图仅在 file:// 打开时加载。五页轨道演示在全部关联图表离屏后休眠，火星天空轨迹复用固定星历采样。跨页连接动画期间预取目标页的阅读界面资源。具体约定与复查结果见 [加载性能说明](docs/loading-performance.md)。
 
 运行 `npm run check:browser -- uranus-entry`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；默认检查只访问本机；线上检查需显式运行对应 tests/browser 脚本并加 --live。

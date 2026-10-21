@@ -80,10 +80,11 @@
     }
     subscribers.forEach((fn) => fn(day));
   }
+  let orbitActive = true;
   function syncAnimation() {
     last = 0;
     if (frameId !== null) cancelAnimationFrame(frameId);
-    frameId = playing && !document.hidden ? requestAnimationFrame(tick) : null;
+    frameId = playing && orbitActive && !document.hidden ? requestAnimationFrame(tick) : null;
   }
   function setPlaying(value) {
     playing = value;
@@ -125,17 +126,20 @@
   $('orbit-speed').addEventListener('change', (e) => {
     speed = Number(e.target.value);
   });
-  document.addEventListener('visibilitychange', syncAnimation);
+  SolarUI.activity([$('orbits'), $('model-stage')], active => {
+    orbitActive = active;
+    syncAnimation();
+  });
   function tick(now) {
     frameId = null;
-    if (!playing || document.hidden) return;
-    if (playing && !document.hidden) {
+    if (!playing || !orbitActive || document.hidden) return;
+    if (playing && orbitActive && !document.hidden) {
       if (last) day = Math.min(end, day + Math.min((now - last) / 1000, 0.08) * speed);
       last = now;
       renderTime();
       if (day >= end) setPlaying(false);
     }
-    if (playing && !document.hidden) frameId = requestAnimationFrame(tick);
+    if (playing && orbitActive && !document.hidden) frameId = requestAnimationFrame(tick);
   }
   syncAnimation();
   renderTime();

@@ -35,7 +35,8 @@
     console.warn('Europa model:', error);
   }
   try {
-    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.EUROPA_TEXTURES)
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls ||
+        (location.protocol === 'file:' && !window.EUROPA_TEXTURES))
       throw new Error('Local libraries or textures missing');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(37, 1, 0.001, 500);
@@ -50,7 +51,25 @@
     renderer.toneMappingExposure = 1.12;
     mount.appendChild(renderer.domElement);
     cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
-    textureSet = ModelRuntime.textures(THREE, renderer);
+    textureSet = ModelRuntime.textures(THREE, renderer, {
+      crossOrigin: location.protocol === 'file:' ? 'anonymous' : null,
+    });
+    const bodyTextures = new Map();
+    function ensureTextures(id) {
+      return Promise.all((id === 'system' ? Object.keys(bodies) : [id]).map(bodyId => {
+        if (!bodyTextures.has(bodyId)) bodyTextures.set(bodyId, textureSet.load(
+          location.protocol === 'file:' ? window.EUROPA_TEXTURES[bodyId] : 'assets/' + bodyId + '.jpg',
+          { flipY: bodyId !== 'jupiter' },
+        ).then(texture => {
+          if (failed || !texture) return;
+          meshes[bodyId].material.map = texture;
+          meshes[bodyId].material.needsUpdate = true;
+          meshes[bodyId].visible = true;
+          modelLoop?.invalidate();
+        }));
+        return bodyTextures.get(bodyId);
+      }));
+    }
     renderer.domElement.setAttribute(
       'aria-label',
       '木卫二与木星三维模型，可拖动或用方向键转动，加减键缩放，0 键复位',
@@ -84,6 +103,7 @@
         geometry.setIndex(source.indices);
       } else geometry = new THREE.SphereGeometry(radius, 80, 56);
       const mesh = new THREE.Mesh(geometry, material);
+      mesh.visible = false;
       if (id === 'jupiter') mesh.rotation.y = -1.1;
       meshes[id] = mesh;
       scene.add(mesh);
@@ -163,6 +183,7 @@
       if (failed) return;
       modelLoop?.invalidate();
       if (id !== 'system' && !meshes[id]) return;
+      ensureTextures(id).catch(fail);
       const fromId = selected;
       if (!transition) savedRotate = controls.autoRotate;
       controls.autoRotate = false;
@@ -347,15 +368,7 @@
       fail('WebGL context lost');
     });
 
-    let completed = 0;
-    Promise.all(Object.keys(bodies).map(async id => {
-      const texture = await textureSet.load(window.EUROPA_TEXTURES[id], { flipY: id !== 'jupiter' });
-      if (failed || !texture) return;
-      meshes[id].material.map = texture;
-      meshes[id].material.needsUpdate = true;
-      completed++;
-      status.textContent = `已准备 ${completed} / 2 个天体`;
-    }))
+    ensureTextures('europa')
       .then(() => {
         if (failed) return;
         renderer.render(scene, camera);
@@ -368,6 +381,8 @@
         window.EuropaUI?.camera(selected, 'ready');
       })
       .catch(fail);
+    const textureFrustum = new THREE.Frustum(), textureProjection = new THREE.Matrix4();
+    const textureBounds = new THREE.Sphere();
     function draw(dt) {
       if (transition) {
         const f = transition;
@@ -394,6 +409,17 @@
         if (t === 1) finishFlight();
       }
       const moved = controls.update();
+      // Orbiting a close-up can bring its companion into the background even
+      // without a view-button click. Prepare any newly visible body as well.
+      if (bodyTextures.size < Object.keys(bodies).length) {
+        camera.updateMatrixWorld();
+        textureFrustum.setFromProjectionMatrix(textureProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+        for (const id of Object.keys(bodies)) {
+          textureBounds.center.copy(meshes[id].position);
+          textureBounds.radius = radiusFor(id) * 1.15;
+          if (!bodyTextures.has(id) && textureFrustum.intersectsSphere(textureBounds)) ensureTextures(id).catch(fail);
+        }
+      }
       renderer.render(scene, camera);
       if (selected === 'system') {
         const left = mount.offsetLeft,

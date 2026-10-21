@@ -192,5 +192,43 @@
     viewers.set(element, viewer);
     return viewer;
   }
-  window.SolarUI = Object.freeze({ motion, tabs, dialog });
+  // A shared clock may drive several diagrams. Sleep only when all of them
+  // are out of view, without changing the user's playback selection.
+  function activity(elements, onChange) {
+    const targets = [...new Set(elements.filter(Boolean))];
+    let active, suspended = false;
+    const visible = element => {
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.right > 0
+        && rect.top < innerHeight && rect.left < innerWidth;
+    };
+    function check() {
+      const next = !suspended && !document.hidden && targets.some(visible);
+      if (next !== active) { active = next; onChange(active); }
+    }
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver(check) : null;
+    targets.forEach(element => observer?.observe(element));
+    const hide = () => { suspended = true; check(); };
+    const show = () => { suspended = false; check(); };
+    document.addEventListener('visibilitychange', check);
+    window.addEventListener('pagehide', hide);
+    window.addEventListener('pageshow', show);
+    if (!observer) {
+      window.addEventListener('scroll', check, { passive: true });
+      window.addEventListener('resize', check);
+    }
+    check();
+    return {
+      get active() { return active; },
+      dispose() {
+        observer?.disconnect();
+        document.removeEventListener('visibilitychange', check);
+        window.removeEventListener('pagehide', hide);
+        window.removeEventListener('pageshow', show);
+        window.removeEventListener('scroll', check);
+        window.removeEventListener('resize', check);
+      },
+    };
+  }
+  window.SolarUI = Object.freeze({ motion, tabs, dialog, activity });
 })();

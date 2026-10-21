@@ -4,6 +4,29 @@ import vm from 'node:vm';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 const source = fs.readFileSync(new URL('../shared/model-runtime.js', import.meta.url), 'utf8');
+test('split Saturn and Neptune targets retain original geometry, UVs and embedded textures', () => {
+  const expected = {
+    saturn: {
+      saturn: 'bb4534793eaad08f011128aaa55c099fd92c6f7ba90942923e4f24360e5120bd',
+      titan: '5a2af7e3388213d85abe8586f498906346b95969c8fdd5d1db35eee4f3279eb5',
+      enceladus: 'a9d9f08b7ad134ded6c946facbc7dfb4bd0829691ecf6e0e7d595d2918b23d12',
+    },
+    neptune: {
+      neptune: '82a9cc7fdd8576af4f2ca90496e4f94281d1418947830cfb6b25f4de0e2e9bef',
+      triton: 'a458169140fdb694ba2fc00ef35b3c8849f20c849b314fa73c9d8c6a2500151c',
+    },
+  };
+  for (const [page, targets] of Object.entries(expected)) {
+    const context = {window:{}};
+    vm.runInNewContext(fs.readFileSync(new URL('../' + page + '/assets/models.js', import.meta.url), 'utf8'), context);
+    const data = context.window[page.toUpperCase() + '_MODELS'];
+    assert.deepEqual(Object.keys(data), [page], 'initial packet contains only the primary planet');
+    for (const [id, digest] of Object.entries(targets)) {
+      if (id !== page) vm.runInNewContext(fs.readFileSync(new URL('../' + page + '/assets/' + id + '-model.js', import.meta.url), 'utf8'), context);
+      assert.equal(createHash('sha256').update(JSON.stringify(data[id])).digest('hex'), digest, page + '/' + id);
+    }
+  }
+});
 test('split moon assets preserve every original geometry and texture value', () => {
   const expected = {
     phobos: 'b275ea480c7d1e286b50369b8af1aa8b52098237f4c570064cfa0b61764717bf',

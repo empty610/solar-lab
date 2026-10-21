@@ -10,7 +10,7 @@
 - [土卫六模型](https://science.nasa.gov/resource/titan-3d-model/) · [原始 GLB](https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/t/Titan_1_5150.glb)
 - [土卫二模型](https://science.nasa.gov/resource/enceladus-3d-model/) · [原始 GLB](https://assets.science.nasa.gov/content/dam/science/psd/solar/2023/09/e/Enceladus_1_504.glb)
 
-保留原始几何、UV 和节点方向；归一化土星赤道半径，保留扁率。土星环用官方透明 PNG，并只渲染一份双面环，避免重叠闪烁。球体贴图压缩为 JPEG；几何和贴图嵌入 assets/models.js，支持 file:// 本地查看。纹理是可视化素材，不是严格的自然色或实时观测。土卫六模型为表面地图，不表示肉眼能穿透浓雾看到这些细节。
+保留原始几何、UV 和节点方向；归一化土星赤道半径，保留扁率。土星环用官方透明 PNG，并只渲染一份双面环，避免重叠闪烁。球体贴图压缩为 JPEG；几何和贴图按观察目标保存在 `assets/models.js`（土星与环）、`assets/titan-model.js` 和 `assets/enceladus-model.js`，支持 file:// 本地查看。数据仅拆分，没有改变原始几何、UV、节点方向和贴图值。纹理是可视化素材，不是严格的自然色或实时观测。土卫六模型为表面地图，不表示肉眼能穿透浓雾看到这些细节。
 
 ## 图片档案
 

@@ -30,8 +30,28 @@
       })
       .join(' ');
   $('sky-reference-path').setAttribute('d', pathFor(samples));
-  const segment = (from, to) =>
-    to > from ? pathFor([from, ...samples.filter((t) => t > from && t < to), to]) : '';
+  // The reference ephemeris samples never change. Reuse their projected path
+  // commands; each moving trail needs only its two exact boundary positions.
+  const commands = points.map(p => {
+    const projected = project(p);
+    return `L${projected.x.toFixed(3)},${projected.y.toFixed(3)}`;
+  });
+  function boundary(time, after) {
+    let lo = 0, hi = samples.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (samples[mid] < time || (after && samples[mid] === time)) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
+  function segment(from, to) {
+    if (to <= from) return '';
+    const a = pointAt(from), b = pointAt(to);
+    const middle = commands.slice(boundary(from, true), boundary(to, false));
+    return [`M${a.x.toFixed(3)},${a.y.toFixed(3)}`, ...middle,
+      `L${b.x.toFixed(3)},${b.y.toFixed(3)}`].join(' ');
+  }
   $('sky-endpoints').innerHTML = [start, end]
     .map((t, i) => {
       const p = pointAt(t);

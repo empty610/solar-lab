@@ -153,10 +153,11 @@
     day = clamp(value, 0, CYCLE);
     render();
   }
+  let orbitActive = true;
   function syncAnimation() {
     last = 0;
     if (frameId !== null) cancelAnimationFrame(frameId);
-    frameId = playing && !document.hidden ? requestAnimationFrame(frame) : null;
+    frameId = playing && orbitActive && !document.hidden ? requestAnimationFrame(frame) : null;
   }
   function setPlaying(value) {
     playing = value;
@@ -166,18 +167,21 @@
     $('play').setAttribute('aria-pressed', String(value));
     window.dispatchEvent(new CustomEvent('mars-orbit-playchange', { detail: { playing } }));
   }
-  document.addEventListener('visibilitychange', syncAnimation);
+  SolarUI.activity([document.querySelector('.orbit-panel'), $('apparent-motion')], active => {
+    orbitActive = active;
+    syncAnimation();
+  });
   function frame(t) {
     frameId = null;
-    if (!playing || document.hidden) return;
-    if (playing && !document.hidden) {
+    if (!playing || !orbitActive || document.hidden) return;
+    if (playing && orbitActive && !document.hidden) {
       if (last) {
         day = (day + Math.min(t - last, 100) * 0.018 * speed) % CYCLE;
         render();
       }
       last = t;
     } else last = 0;
-    if (playing && !document.hidden) frameId = requestAnimationFrame(frame);
+    if (playing && orbitActive && !document.hidden) frameId = requestAnimationFrame(frame);
   }
   $('play').onclick = () => setPlaying(!playing);
   $('reset').onclick = () => setDay(0, true);
