@@ -74,8 +74,29 @@
   ];
   let navigationPending = false;
   let navigationTimer;
-  function prepareDestination(destination) {
+  let manifest;
+  try { manifest = JSON.parse(document.getElementById('archive-prefetch')?.textContent || 'null'); }
+  catch { /* Source previews can prepare reading assets from their HTML instead. */ }
+  const prepared = new Set([...document.querySelectorAll('script[src], link[href]')]
+    .map(node => node.src || node.href));
+  function prepareAssets(references, base) {
+    for (const reference of references) {
+      const url = new URL(reference, base);
+      if (url.origin !== location.origin || prepared.has(url.href)) continue;
+      prepared.add(url.href);
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = url.pathname.endsWith('.css') ? 'style' : 'script';
+      link.href = url.href;
+      document.head.append(link);
+    }
+  }
+  function prepareDestination(destination, archive) {
     if (!/^https?:$/.test(location.protocol)) return;
+    if (Array.isArray(manifest?.[archive])) {
+      prepareAssets(manifest[archive], location.origin + '/');
+      return;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 5000);
     fetch(destination.href, { credentials: 'same-origin', signal: controller.signal })
@@ -84,15 +105,8 @@
         const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
         // querySelectorAll does not enter inert model templates. Only prepare
         // the next page's reading UI; model downloads still wait for visibility.
-        for (const node of doc.querySelectorAll('link[rel="stylesheet"][href], script[defer][src]')) {
-          const url = new URL(node.getAttribute('href') || node.getAttribute('src'), response.url);
-          if (url.origin !== location.origin) continue;
-          const link = document.createElement('link');
-          link.rel = 'prefetch';
-          link.as = node.tagName === 'LINK' ? 'style' : 'script';
-          link.href = url.href;
-          document.head.append(link);
-        }
+        prepareAssets([...doc.querySelectorAll('link[rel="stylesheet"][href], script[defer][src]')]
+          .map(node => node.getAttribute('href') || node.getAttribute('src')), response.url);
       }).catch(() => {}).finally(() => clearTimeout(timer));
   }
   document.addEventListener('click', (event) => {
@@ -118,12 +132,13 @@
       return;
     const archive = archives.find(([, pattern]) => pattern.test(destination.pathname));
     if (!archive) return;
+    if (/^https?:$/.test(location.protocol)) destination.pathname = destination.pathname.replace(/\/index\.html$/, '/');
     // Like the original site, reduced motion keeps the connection screen visible.
     // The CSS removes orbit motion while retaining the one-second hand-off.
     event.preventDefault();
     if (navigationPending) return;
     navigationPending = true;
-    prepareDestination(destination);
+    prepareDestination(destination, archive[0]);
     transition.querySelector('p').textContent = `${archive[0].toUpperCase()} // ESTABLISHING LINK`;
     transition.setAttribute('aria-hidden', 'false');
     transition.classList.add('is-mounted');

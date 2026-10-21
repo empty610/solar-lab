@@ -99,6 +99,27 @@ test('missing responsive previews are rejected before publication', t => {
   assert.throws(() => buildSite(root), /Missing or incorrectly cased reference.*missing.webp/);
 });
 
+test('navigation manifest versions reading assets and excludes model templates and external scripts', t => {
+  const { root, put } = fixture(t);
+  put('venus/index.html', '<script src="../shared/runtime.js?mode=read#notes" defer></script><link rel="stylesheet" href="../shared/style.css"><script defer src="https://example.org/external.js"></script><template data-model-target="stage"><script defer src="../shared/model.js"></script></template>');
+  buildSite(root);
+  const read = () => JSON.parse(fs.readFileSync(path.join(root, 'dist/terminal/index.html'), 'utf8')
+    .match(/id="archive-prefetch">([^<]+)<\/script>/)[1]);
+  const first = read();
+  assert.equal(first.venus.length, 2);
+  assert(first.venus.every(url => url.startsWith('/shared/cache/')));
+  assert(first.venus.some(url => /runtime\.js\?mode=read&v=[a-f0-9]{12}#notes$/.test(url)));
+  assert(first.venus.every(url => !url.includes('/model.js') && !url.includes('external')));
+  for (const reference of first.venus) {
+    const url = new URL(reference, 'https://solar.invalid');
+    const bytes = fs.readFileSync(path.join(root, 'dist', url.pathname));
+    assert.equal(createHash('sha256').update(bytes).digest('hex').slice(0, 12), url.searchParams.get('v'));
+  }
+  put('shared/runtime.js', 'window.fixture = false;');
+  buildSite(root);
+  assert.notDeepEqual(read().venus, first.venus);
+});
+
 test('repeated builds are deterministic, remove stale output and change versions after an asset edit', t => {
   const { root, put } = fixture(t);
   buildSite(root);

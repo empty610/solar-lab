@@ -90,6 +90,17 @@
         document.head.append(link);
         return link;
       });
+      // Mars also uses this original JPG in hidden reading panels. Those images
+      // stay lazy; prepare the texture only when its model is actually visible.
+      if (/^https?:$/.test(location.protocol) && template.dataset.modelImageSrc) {
+        const image = document.createElement('link');
+        image.rel = 'preload';
+        image.as = 'image';
+        image.fetchPriority = 'high';
+        image.href = new URL(template.dataset.modelImageSrc, document.baseURI).href;
+        document.head.append(image);
+        preloads.push(image);
+      }
       try {
         for (const [index, source] of scripts.entries()) {
           if (index === scripts.length - 1) restore();

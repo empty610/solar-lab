@@ -146,7 +146,10 @@ const stageId = name => name === 'mercury' ? 'planet-stage' : ['venus','mars'].i
       else if(name==='venus') await offline.waitForFunction(()=>!!document.querySelector('#venus-3d canvas'));
       else if(name==='mars') {
         await offline.waitForFunction(()=>MarsModelView.loaded);
-        assert(await offline.evaluate(()=>[...document.images].filter(img=>img.src.endsWith('/mars-texture.jpg')).every(img=>img.complete&&img.naturalWidth>0)), 'offline Mars map images remain readable');
+        await offline.locator('#rovers-tab').click();
+        const map=offline.locator('.world-texture');await map.scrollIntoViewIfNeeded();
+        await map.evaluate(img=>img.decode());
+        assert(await map.evaluate(img=>img.complete&&img.naturalWidth>0), 'offline Mars map loads when its panel is shown');
       }
       else await offline.waitForFunction(()=>JupiterView.ready);
       await offline.close();

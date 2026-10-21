@@ -1456,3 +1456,10 @@ dialog::backdrop {
     font-size: 66px;
   }
 }
+/* HTML images inside SVG keep native lazy loading, including without JS. */
+#binary-svg foreignObject img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

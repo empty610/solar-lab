@@ -76,7 +76,7 @@
     ]) {
       const group = $(id);
       group.setAttribute('transform', 'translate(' + pos.join(' ') + ')');
-      group.querySelector('image').setAttribute('transform', 'rotate(' + phase + ')');
+      group.querySelector('foreignObject').setAttribute('transform', 'rotate(' + phase + ')');
       const dot = group.querySelector('.facing-dot');
       dot.setAttribute('cx', direction * c);
       dot.setAttribute('cy', direction * s);

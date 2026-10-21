@@ -152,7 +152,7 @@
             暂停自转
           </button>
           <div class="planet-fallback">
-            <img src="assets/mars-texture.jpg" alt="火星全球表面贴图" /><span
+            <img loading="lazy" src="assets/mars-texture.jpg" alt="火星全球表面贴图" /><span
               >当前设备无法显示三维模型，已显示全球贴图。</span
             >
           </div>
@@ -193,6 +193,7 @@
                 <div class="world-map" id="rover-world-map">
                   <img
                     class="world-texture"
+                    loading="lazy"
                     src="assets/mars-texture.jpg"
                     alt="火星等距圆柱投影全球地图"
                     draggable="false"
@@ -922,6 +923,7 @@
             ><span id="sky-status" role="status">逆行 · 向西</span>
           </div>
           <div class="sky-stage">
+            <img class="sky-background" loading="lazy" width="1024" height="574" src="assets/milky-way-2mass.jpg" alt="" aria-hidden="true" />
             <svg
               id="sky-map"
               viewBox="0 0 720 300"
@@ -1074,7 +1076,7 @@
     </button>
     <template data-moon-detail="phobos"><script src="assets/moons/phobos.js"></script></template>
     <template data-moon-detail="deimos"><script src="assets/moons/deimos.js"></script></template>
-    <template data-model-target="mars-stage">
+    <template data-model-target="mars-stage" data-model-image-src="assets/mars-texture.jpg">
       <script src="vendor/three.js"></script>
       <script src="vendor/OrbitControls.js"></script>
       <script src="assets/mars-texture.js" data-file-only></script>

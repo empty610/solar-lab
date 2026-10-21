@@ -89,6 +89,28 @@ export function cacheAssets(root, files) {
   return assets;
 }
 
+// Reading-only dependencies for navigation: model templates remain demand-loaded.
+export function navigationManifest(root, assets) {
+  const manifest = {};
+  for (const page of pages) {
+    const relative = page + '/index.html';
+    const html = versionHTML(fs.readFileSync(path.join(root, relative), 'utf8'), relative, root, assets)
+      .replace(/<template\b[\s\S]*?<\/template>/gi, '');
+    const urls = new Set();
+    for (const match of html.matchAll(/<(link|script)\b([^>]*)>/gi)) {
+      const attribute = name => match[2].match(new RegExp('\\b' + name + '=["\']([^"\']+)["\']', 'i'))?.[1];
+      const style = match[1].toLowerCase() === 'link' && attribute('rel') === 'stylesheet';
+      if (!style && !(match[1].toLowerCase() === 'script' && /\bdefer\b/i.test(match[2]))) continue;
+      const reference = attribute(style ? 'href' : 'src');
+      if (!reference || /^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(reference)) continue;
+      const url = new URL(reference, 'https://solar.invalid/' + relative);
+      urls.add(url.pathname + url.search + url.hash);
+    }
+    manifest[page] = [...urls];
+  }
+  return JSON.stringify(manifest).replaceAll('<', '\\u003c');
+}
+
 export function validateSite(root = sourceRoot, { syntax = true } = {}) {
   root = path.resolve(root);
   const files = runtimeFiles(root), known = new Set(files);

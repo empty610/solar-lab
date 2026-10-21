@@ -6,7 +6,8 @@
     <meta http-equiv="refresh" content="0; url=terminal/index.html" />
     <title>Solar Laboratory · 太阳系</title>
     <script>
-      location.replace('terminal/index.html' + location.search + location.hash);
+      const terminal = /^https?:$/.test(location.protocol) ? 'terminal/' : 'terminal/index.html';
+      location.replace(terminal + location.search + location.hash);
     </script>
   </head>
   <body>

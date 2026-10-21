@@ -108,7 +108,7 @@ const server = http.createServer((request, response) => {
         errors.push(response.status() + ' ' + response.url());
     });
     await page.goto(base + '/');
-    await page.waitForURL('**/terminal/index.html');
+    await page.waitForURL('**/terminal/');
     await page.waitForFunction(() => window.SolarAtlasLabels);
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(1200);
@@ -155,7 +155,7 @@ const server = http.createServer((request, response) => {
       'VENUS // ESTABLISHING LINK',
     );
     await page.waitForTimeout(500);
-    assert(page.url().endsWith('/terminal/index.html'), 'show the hand-off before navigating');
+    assert(page.url().endsWith('/terminal/'), 'show the hand-off before navigating');
     assert.equal(
       await page
         .locator('.dc-transition-orbit-a')
@@ -165,7 +165,7 @@ const server = http.createServer((request, response) => {
     await page.screenshot({
       path: path.resolve(__dirname, '../../.qa/link-transition.png'),
     });
-    await page.waitForURL('**/venus/index.html');
+    await page.waitForURL('**/venus/');
     assert(Date.now() - navigationStart >= 1000, 'personal site one-second transition');
     await page.locator('a[aria-label="返回太阳系 Terminal"]').click();
     await page.locator('#dc-page-transition.is-active').waitFor();
@@ -173,7 +173,7 @@ const server = http.createServer((request, response) => {
       await page.locator('.dc-transition-core p').textContent(),
       'TERMINAL // ESTABLISHING LINK',
     );
-    await page.waitForURL('**/terminal/index.html');
+    await page.waitForURL('**/terminal/');
     await page.goBack();
     assert.equal(
       await page.locator('#dc-page-transition').getAttribute('aria-hidden'),
@@ -190,7 +190,7 @@ const server = http.createServer((request, response) => {
       'none',
       'reduced motion keeps a static connection screen',
     );
-    await page.waitForURL('**/terminal/index.html');
+    await page.waitForURL('**/terminal/');
     assert.equal(
       await page.locator('#dc-page-transition.is-mounted').count(),
       0,
@@ -236,7 +236,7 @@ const server = http.createServer((request, response) => {
         await onward.evaluate(element => element.click());
         await page.locator('#dc-page-transition.is-active').waitFor();
         assert.equal(await page.locator('.dc-transition-core p').textContent(), nextStation[name].toUpperCase() + ' // ESTABLISHING LINK');
-        await page.waitForURL('**/' + nextStation[name] + '/index.html');
+        await page.waitForURL('**/' + nextStation[name] + '/');
         await page.goto(base + '/' + name + '/index.html');
         await page.waitForTimeout(350);
         const back = page.locator('a[aria-label="返回太阳系 Terminal"]');
@@ -319,7 +319,7 @@ const server = http.createServer((request, response) => {
           await page.locator('#world-map-dialog').waitFor({ state: 'hidden' });
         }
         await back.click({ force: true });
-        await page.waitForURL('**/terminal/index.html');
+        await page.waitForURL('**/terminal/');
         await page.goto(base + '/' + name + '/index.html');
         await page.waitForTimeout(500);
       }

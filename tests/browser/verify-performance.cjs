@@ -94,16 +94,18 @@ const server=http.createServer((req,res)=>{
   await page.goto(base+'/jupiter/');await page.waitForFunction(()=>JupiterView.ready);
   assert.equal(requests.filter(url=>url===vendorPath).length,before,'second archive reuses cached common Three.js');
   await page.goto(base+'/terminal/');requests.length=0;
-  const preparation=new Promise(resolve=>server.on('request',function listener(req){if(req.url==='/saturn/index.html'){server.off('request',listener);resolve();}}));
   const preparedStyle=page.waitForResponse(response=>new URL(response.url()).pathname.endsWith('/saturn/style.css'));
-  await page.locator('#enter-link').click();await preparation;
+  await page.locator('#enter-link').click();
   await preparedStyle;
   assert(new URL(page.url()).pathname==='/terminal/','destination fetch starts during the transition');
+  assert(!requests.some(url=>/^\/saturn\/(?:index\.html)?$/.test(url)),'published transition prepares assets without fetching target HTML');
   assert(!requests.some(url=>url.endsWith('/saturn/model.js')),'transition prefetch excludes the model template');
-  await page.waitForURL('**/saturn/index.html');
+  await page.waitForURL('**/saturn/');
   await page.waitForFunction(()=>document.getElementById('model-loading').hidden);
   await context.close();
-  console.log('PASS: immutable shared library is reused across archives; destination preparation starts during the transition');
+  assert.equal(requests.filter(url=>url==='/saturn/').length,1,'one canonical document request');
+  assert(!requests.some(url=>url==='/saturn/index.html'),'canonical navigation avoids index.html redirect');
+  console.log('PASS: cached shared library; reading assets prepare during transition without HTML fetch; one canonical navigation');
 
   const late=await browser.newPage({reducedMotion:'reduce'}),errors=[];
   late.on('pageerror',error=>errors.push(error.message));

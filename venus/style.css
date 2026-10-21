@@ -919,13 +919,26 @@ button {
   overflow: hidden;
   border: 1px solid rgba(155, 143, 129, 0.28);
   border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(5, 8, 14, 0.14), rgba(4, 6, 11, 0.38)),
-    url('milky-way-2mass.jpg') center 48% / cover no-repeat,
-    #080b12;
+  background: #080b12;
   box-shadow: inset 0 0 44px rgba(0, 0, 0, 0.36);
 }
 
+.sky-stage .sky-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+}
+.sky-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 8, 14, 0.14), rgba(4, 6, 11, 0.38));
+}
 .sky-stage svg {
   position: relative;
   z-index: 1;

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { sourceRoot, validateSite, versionHTML, cacheAssets } from './site.mjs';
+import { sourceRoot, validateSite, versionHTML, cacheAssets, navigationManifest, pages } from './site.mjs';
 
 // Only these fixed, local directories are ever replaced or recursively removed.
 function outputPath(root, name) {
@@ -32,10 +32,17 @@ export function buildSite(root = sourceRoot, { dryRun = false } = {}) {
     fs.mkdirSync(staging);
     try {
       const assets = cacheAssets(root, files);
+      const manifest = '<script type="application/json" id="archive-prefetch">' + navigationManifest(root, assets) + '</script>';
       for (const relative of files) {
         const from = path.join(root, relative), to = path.join(staging, relative);
         fs.mkdirSync(path.dirname(to), { recursive: true });
-        if (relative.endsWith('.html')) fs.writeFileSync(to, versionHTML(fs.readFileSync(from, 'utf8'), relative, root, assets));
+        if (relative.endsWith('.html')) {
+          let html = versionHTML(fs.readFileSync(from, 'utf8'), relative, root, assets);
+          if (pages.some(page => relative === page + '/index.html')) {
+            html = /<\/body>/i.test(html) ? html.replace(/<\/body>/i, manifest + '\n  </body>') : html + manifest;
+          }
+          fs.writeFileSync(to, html);
+        }
         else fs.copyFileSync(from, to);
       }
       for (const asset of assets.values()) {
