@@ -13,14 +13,8 @@
     <link rel="stylesheet" href="style.css?v=5761f8c0ad44" />
     <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script src="vendor/three.min.js" defer></script>
-    <script src="vendor/OrbitControls.js" defer></script>
     <script src="data.js?v=d7f35606d993" defer></script>
-    <script src="assets/textures.js" defer></script>
-    <script src="assets/jupiter-geometry.js" defer></script>
     <script src="app.js?v=d78109320f35" defer></script>
-    <script defer src="../shared/model-runtime.js"></script>
-    <script src="model.js?v=84cd95ba43f9" defer></script>
     <link rel="stylesheet" href="../shared/interface.css?v=4afb884b2018" />
     <script
       defer
@@ -33,6 +27,7 @@
     <script defer src="../shared/music.js?v=feb5b11068db"></script>
     <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
   <link rel="stylesheet" href="../shared/reading.css?v=98d6d20df923" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
   <body id="top">
     <a class="skip-link" href="#moons">跳到卫星介绍</a>
@@ -100,7 +95,7 @@
             <p>正在准备木星与四颗卫星<small>LOADING LOCAL SURFACE MAPS</small></p>
           </div>
           <div class="model-fallback" id="model-fallback" hidden>
-            <img id="fallback-image" src="assets/jupiter.jpg" alt="木星表面纹理图" />
+            <img loading="lazy" id="fallback-image" src="assets/jupiter.jpg" alt="木星表面纹理图" />
             <p>当前设备未能启动三维视图；下面的影像、介绍与轨道演示仍可阅读。</p>
           </div>
           <div class="model-caption">
@@ -181,7 +176,7 @@
         </article>
         <figure class="weather-image">
           <button class="photo-button" data-photo="storm" aria-label="查看木星大红斑完整图片">
-            <img
+            <img srcset="assets/previews/great-red-spot-480.webp 480w, assets/previews/great-red-spot-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/great-red-spot.jpg"
               alt="朱诺号拍摄的木星大红斑及周围翻涌的云带"
               width="1620"
@@ -212,7 +207,7 @@
         <div class="moon-grid">
           <article class="moon-card">
             <button class="moon-picture" data-focus="io" aria-label="在三维视图中观察木卫一">
-              <img
+              <img srcset="assets/previews/io-480.webp 480w, assets/previews/io-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/io.jpg"
                 alt="木卫一黄色和深色相间的全球表面拼接纹理"
                 width="2048"
@@ -240,7 +235,7 @@
           </article>
           <article class="moon-card featured">
             <button class="moon-picture" data-focus="europa" aria-label="在三维视图中观察木卫二">
-              <img
+              <img srcset="assets/previews/europa-480.webp 480w, assets/previews/europa-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/europa.jpg"
                 alt="木卫二水冰表面和密集的褐色裂纹拼接纹理"
                 width="2048"
@@ -270,7 +265,7 @@
           </article>
           <article class="moon-card">
             <button class="moon-picture" data-focus="ganymede" aria-label="在三维视图中观察木卫三">
-              <img
+              <img srcset="assets/previews/ganymede-480.webp 480w, assets/previews/ganymede-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/ganymede.jpg"
                 alt="木卫三深色古老地形与较浅色沟槽地形的拼接纹理"
                 width="2048"
@@ -300,7 +295,7 @@
           </article>
           <article class="moon-card">
             <button class="moon-picture" data-focus="callisto" aria-label="在三维视图中观察木卫四">
-              <img
+              <img srcset="assets/previews/callisto-480.webp 480w, assets/previews/callisto-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/callisto.jpg"
                 alt="木卫四深色表面遍布明亮撞击坑的拼接纹理"
                 width="2048"
@@ -344,7 +339,7 @@
         </div>
         <div class="europa-hero">
           <button class="europa-photo" data-photo="europa" aria-label="放大木卫二伽利略号影像">
-            <img
+            <img srcset="assets/previews/europa-global-480.webp 480w, assets/previews/europa-global-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/europa-global.jpg"
               alt="伽利略号拍摄的木卫二，浅色冰壳上遍布红褐色裂纹"
               width="2300"
@@ -744,5 +739,13 @@
     >
       <span aria-hidden="true">♪</span>
     </button>
+    <template data-model-target="model-stage">
+      <script src="../shared/vendor/three.min.js"></script>
+      <script src="../shared/vendor/OrbitControls.js"></script>
+      <script src="assets/textures.js" data-file-only></script>
+      <script src="assets/jupiter-geometry.js"></script>
+      <script src="../shared/model-runtime.js"></script>
+      <script src="model.js?v=84cd95ba43f9"></script>
+    </template>
   </body>
 </html>

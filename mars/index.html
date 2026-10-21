@@ -11,14 +11,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script defer src="vendor/three.js"></script>
-    <script defer src="vendor/OrbitControls.js"></script>
-    <script defer src="assets/mars-texture.js"></script>
     <script defer src="simulation.js?v=3a9cd0954cbd"></script>
-    <script defer src="assets/moons/moon-assets.js"></script>
-    <script defer src="moons.js?v=07e8b990c5f4"></script>
-    <script defer src="../shared/model-runtime.js"></script>
-    <script defer src="planet.js?v=07426cc45af0"></script>
     <link rel="stylesheet" href="rovers.css?v=846bdc872e38" />
     <script defer src="rover-data.js?v=3a6b860e473c"></script>
     <script defer src="rovers.js?v=c2829ad3d48f"></script>
@@ -39,6 +32,7 @@
     <script defer src="../shared/idle-controls.js?v=9d6923d5378e"></script>
     <script defer src="../shared/music.js?v=feb5b11068db"></script>
     <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
   <body>
     <main class="app">
@@ -218,7 +212,7 @@
                 <span id="rover-concept-title">探测器概念图</span><small>ARTIST CONCEPT</small>
               </div>
               <button type="button" id="rover-concept-expand" aria-label="放大探测器概念图">
-                <img id="rover-concept-image" alt="" decoding="async" /><span>查看大图 ↗</span>
+                <img loading="lazy" id="rover-concept-image" alt="" decoding="async" /><span>查看大图 ↗</span>
               </button>
               <figcaption>
                 <p id="rover-concept-note"></p>
@@ -265,7 +259,7 @@
                   tabindex="0"
                   aria-label="巡视路线图，放大后可拖动查看"
                 >
-                  <img id="rover-route-image" alt="" draggable="false" />
+                  <img loading="lazy" id="rover-route-image" alt="" draggable="false" />
                   <span id="route-loading" class="route-loading" role="status"
                     >正在载入路线图…</span
                   >
@@ -327,7 +321,7 @@
                   <h4 id="rover-surface-title"></h4>
                 </header>
                 <button type="button" id="rover-surface-expand">
-                  <img id="rover-surface-image" alt="" decoding="async" /><span>点击放大 ↗</span>
+                  <img loading="lazy" id="rover-surface-image" alt="" decoding="async" /><span>点击放大 ↗</span>
                 </button>
                 <figcaption>
                   <p id="rover-surface-note"></p>
@@ -517,7 +511,7 @@
             data-image-full="assets/olympus.jpg"
             aria-label="放大奥林帕斯山图片并阅读介绍"
           >
-            <figure><img src="assets/olympus.jpg" alt="奥林帕斯山" loading="lazy" /></figure>
+            <figure><img srcset="assets/previews/olympus-480.webp 480w, assets/previews/olympus-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/olympus.jpg" alt="奥林帕斯山" loading="lazy" /></figure>
             <div class="terrain-copy">
               <span class="terrain-kicker">Shield volcano</span>
               <h3>奥林帕斯山</h3>
@@ -543,7 +537,7 @@
             data-image-full="assets/valles.jpg"
             aria-label="放大水手号峡谷图片并阅读介绍"
           >
-            <figure><img src="assets/valles.jpg" alt="水手号峡谷" loading="lazy" /></figure>
+            <figure><img srcset="assets/previews/valles-480.webp 480w, assets/previews/valles-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/valles.jpg" alt="水手号峡谷" loading="lazy" /></figure>
             <div class="terrain-copy">
               <span class="terrain-kicker">Canyon system</span>
               <h3>水手号峡谷</h3>
@@ -570,7 +564,7 @@
             data-image-full="assets/jezero.jpg"
             aria-label="放大杰泽罗三角洲图片并阅读介绍"
           >
-            <figure><img src="assets/jezero.jpg" alt="杰泽罗三角洲" loading="lazy" /></figure>
+            <figure><img srcset="assets/previews/jezero-480.webp 480w, assets/previews/jezero-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/jezero.jpg" alt="杰泽罗三角洲" loading="lazy" /></figure>
             <div class="terrain-copy">
               <span class="terrain-kicker">Ancient river delta</span>
               <h3>杰泽罗三角洲</h3>
@@ -596,7 +590,7 @@
             data-image-full="assets/polar.jpg"
             aria-label="放大极冠与层状沉积图片并阅读介绍"
           >
-            <figure><img src="assets/polar.jpg" alt="极冠与层状沉积" loading="lazy" /></figure>
+            <figure><img srcset="assets/previews/polar-480.webp 480w, assets/previews/polar-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/polar.jpg" alt="极冠与层状沉积" loading="lazy" /></figure>
             <div class="terrain-copy">
               <span class="terrain-kicker">Polar layered deposits</span>
               <h3>极冠与层状沉积</h3>
@@ -638,7 +632,7 @@
             data-image-caption="塔尔西斯火山群是太阳系中规模最大的火山构造，是一个由众多火山与广阔熔岩平原组构成的巨型火山高原，占据了火星表面积的四分之一，其巨大的表面质量甚至使火星自转轴倾斜了20°左右。这些火山的活动历史非常悠久，最早可追溯到约40亿年前，最主流观点认为高原的形成与火星地幔的一个长期热点有关，热柱源源不断地提供着岩浆，最终形成了火山群与整个高地。该地区巨大的火山活动释放了大量的二氧化碳与水汽，可能深刻影响了火星的早期气候，为液态海洋的存在创造了条件，并可能导致了水手号峡谷的初步张裂。维京系列传回轨道拼接影像，色彩经过处理。 来源：NASA/JPL/USGS · PIA00408"
           >
             <figure>
-              <img
+              <img srcset="assets/previews/landform-tharsis-480.webp 480w, assets/previews/landform-tharsis-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/landform-tharsis.jpg"
                 alt="塔尔西斯火山群：维京系列传回影像中的塔尔西斯隆起，三座大型盾状火山呈链状排列。"
                 loading="lazy"
@@ -657,7 +651,7 @@
             data-image-caption="火星的南北二分性成因尚未由定论，主流观点认为是一次巨大的外源性撞击影响了火星地幔的流动情况，最终通过应力拉拽与岩浆添加等情况使得火星北部更低且发生了更多年轻地质活动，最终表现为更加平整与光滑的外表。火星快车 HRSC 影像。CC BY-SA 3.0 IGO，卡片仅裁切显示，点击查看完整原图。 来源：ESA/DLR/FU Berlin (G. Neukum)"
           >
             <figure>
-              <img
+              <img srcset="assets/previews/landform-craters-480.webp 480w, assets/previews/landform-craters-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/landform-craters.jpg"
                 alt="南半球高地撞击坑群：普罗米修斯高地的大小撞击坑，保留着撞击与后期侵蚀的痕迹。"
                 loading="lazy"
@@ -676,7 +670,7 @@
             data-image-caption="火星极区那种漂亮的“螺旋纹”，主要不是冰本身旋转形成的，而是冰盖表面被风长期雕刻出的巨大螺旋状沟槽。关键在于三个因素。首先，火星北极冰盖并不是一整块光滑的冰，因此冰盖的表面存在高低起伏，于是面向太阳的一侧和背向太阳的一侧获得了不同的太阳辐射，水冰的升华速度也就不同，也就形成了最初的沟槽；其次，火星的极地存在很强的下降风，冷而密的空气会从较高的极冠向低处流动，形成类似地球南极的下坡风，冰盖表面的沟槽会接着引导这些气流，风又会搬运尘埃、改变表面的热量交换和升华过程，使沟槽继续向大的沟壑演化；最后，基于火星的自转，从极区向外运动的空气不会笔直向外流，而会发生偏转。让风场与沟槽的走向从单纯的“从北极向四周放射”，而变为偏转风，这被称为科里奥利效应。久而久之，冰盖上的沟壑就会形成围绕北极点展开的巨大螺旋结构。至于你看到的孔洞——看起来像“瑞士奶酪”的东西，实际上是干冰升华留下的，在南极分布较多。火星快车 HRSC 于 2014 年 5 月 2 日拍摄，右侧为北极冰盖，左侧为云层；点击查看完整原图。 来源：Ernst Hauber &amp; HRSC Team · DLR"
           >
             <figure>
-              <img
+              <img srcset="assets/previews/landform-ice-clouds-480.webp 480w, assets/previews/landform-ice-clouds-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/landform-ice-clouds.png"
                 alt="极地冰盖：北极水冰盖与螺旋状暗色沟槽，记录着极区冰与尘埃的积累。"
                 loading="lazy"
@@ -695,7 +689,7 @@
             data-image-caption="埃伯斯瓦尔德三角洲拥有全火星保存最好的分道河流系统，甚至能识别出天然堤，牛轭湖等细节，这里的沉积岩层是寻找火星古代生命迹象的高优先级目标，因为地球上类似的三角洲环境能高效地富集和保存有机分子。 火星全球勘测者 MOC 轨道影像，展示古三角洲局部。 来源：NASA/JPL/MSSS · PIA04293"
           >
             <figure>
-              <img
+              <img srcset="assets/previews/landform-water-480.webp 480w, assets/previews/landform-water-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/landform-water.jpg"
                 alt="水成地貌：埃伯斯瓦尔德三角洲的古河道与沉积结构，留下流水塑造地表的证据。"
                 loading="lazy"
@@ -714,7 +708,7 @@
             data-image-caption="新月形沙丘广泛存在于北极附近的奥林匹亚沙丘群与极北沙丘群两大沙丘场中，它们是单一主导风向下形成的经典地貌，最引人注目的特点是它们会随火星的季节变化发生剧烈的外观转变：冬季因覆霜而为亮白色，春季开始解冻后下部的暗色沙粒逐渐暴露，观察起来就像一个个暗色斑点逐渐扩张，最终“吞噬”整个沙丘，秋季又像地球上群山被雪一样，逐渐被干冰与水冰形成的落霜淹没。这些沙丘的演化是研究火星气候与大气环流的重要档案。 火星勘测轨道器 HiRISE 增强色彩影像，蓝色不代表存在液态水。 来源：NASA/JPL-Caltech/Univ. of Arizona · PIA20469"
           >
             <figure>
-              <img
+              <img srcset="assets/previews/landform-wind-480.webp 480w, assets/previews/landform-wind-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/landform-wind.jpg"
                 alt="风成地貌：北极附近的新月形沙丘与风成沙脊，展现风对砂粒的搬运和堆积。"
                 loading="lazy"
@@ -1078,5 +1072,16 @@
     >
       <span aria-hidden="true">♪</span>
     </button>
+    <template data-moon-detail="phobos"><script src="assets/moons/phobos.js"></script></template>
+    <template data-moon-detail="deimos"><script src="assets/moons/deimos.js"></script></template>
+    <template data-model-target="mars-stage">
+      <script src="vendor/three.js"></script>
+      <script src="vendor/OrbitControls.js"></script>
+      <script src="assets/mars-texture.js" data-file-only></script>
+      <script src="assets/moons/moon-bounds.js"></script>
+      <script src="moons.js?v=07e8b990c5f4"></script>
+      <script src="../shared/model-runtime.js"></script>
+      <script src="planet.js?v=07426cc45af0"></script>
+    </template>
   </body>
 </html>

@@ -2,7 +2,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { sourceRoot } from './site.mjs';
 
-const core = ['site', 'ui', 'model-runtime', 'authored-copy', 'recovered-copy', 'terminal-controls', 'archive-music'];
+const core = ['site', 'ui', 'model-runtime', 'loading', 'performance', 'authored-copy', 'recovered-copy', 'terminal-controls', 'archive-music'];
 const extended = ['review', 'second-review', 'third-review', 'uranus', 'uranus-entry'];
 const args = process.argv.slice(2);
 const all = [...core, ...extended];

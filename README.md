@@ -66,7 +66,7 @@ Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css
 
 金星地貌与火星“地表外观”的原文放在 `.terrain-copy` 中，卡片可展开，放大窗口始终显示完整介绍。火星五类地貌的详细说明保存在卡片的 `data-image-caption` 中，弹窗按句子分段，保留全部原文和署名。修改后可运行 `npm run check:browser -- recovered-copy` 对照已恢复原稿，检查卡片、展开与放大窗口。
 
-应用脚本和样式的内容哈希由 `npm run build` 写入 dist 中的 HTML，源码不会回写。开发服务器使用 no-store，直接刷新即可读取修改后的文件。
+应用脚本和样式由 `npm run build` 复制到 dist 内的 `shared/cache/<内容哈希>/<原路径>`，HTML 引用指向这些地址并保留版本参数；源码不会回写。CSS 中的图片相对路径随输出位置调整，内嵌 SVG 与选择器保持原样。开发服务器使用 no-store，直接刷新即可读取修改后的文件。
 
 ## 素材与来源
 
@@ -98,6 +98,8 @@ Windows 默认使用 Edge，其他平台首次检查前运行 `npx playwright in
 
 ## Terminal 更新与浏览器缓存
 
-Terminal 的脚本和样式引用带有内容版本参数，已有浏览器缓存也会请求新的资源地址。根目录 `_headers` 为 Terminal 和 shared 中的 JS/CSS 设置明确的 `no-cache` 校验指令，防止档案入口发布后仍被旧脚本显示为“待收录”；图片、纹理和音频继续使用默认缓存。修改 Terminal 运行资源后运行构建即可生成新的版本参数。自定义域名的缓存规则可能覆盖资源 TTL，因此内容版本参数同时负责绕过已有缓存。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+脚本与样式的内容发生变化时，构建会生成不同的文件地址，已有浏览器缓存也会请求新资源。根目录 `_headers` 仅为 `shared/cache/*` 设置一年 immutable 缓存；HTML 和原址可变的旧 JS/CSS 要求重新校验。图片、纹理和音频继续使用默认缓存。八页相同的 Three.js 与七页相同的 OrbitControls 共用 `shared/vendor/`，金星 controls 与火星定制库分别保留。自定义域名的外部缓存规则仍可能覆盖响应头，需要独立核对线上结果。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+
+总览与正文影像卡片使用 WebP 预览，放大窗口保留原图和署名。模型库在模型区域首次可见时加载，火星隐藏巡视器图片与卫星精细模型、木星卫星贴图按需准备；Mars/Jupiter 的内嵌贴图仅在 file:// 打开时加载。跨页连接动画期间预取目标页的阅读界面资源。具体约定与复查结果见 [加载性能说明](docs/loading-performance.md)。
 
 运行 `npm run check:browser -- uranus-entry`，验证带旧缓存访问时，星图、目录、键盘和快捷入口仍能进入天王星档案；默认检查只访问本机；线上检查需显式运行对应 tests/browser 脚本并加 --live。

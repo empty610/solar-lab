@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = (id) => document.getElementById(id),
     stage = $('model-stage'),
     mount = $('model-mount'),
@@ -259,7 +260,7 @@
       controls.enablePan = false;
       controls.rotateSpeed = 0.65;
       controls.zoomSpeed = 0.65;
-      modelLoop = ModelRuntime.loop({ element: stage, fps: 30, draw: (step) => animate(step) });
+      modelLoop = ModelRuntime.loop({ element: stage, fps: 60, draw: (step) => animate(step) });
       modelLoop.bind(controls);
       textureSet = ModelRuntime.textures(T, renderer);
       controls.addEventListener('change', () => {

@@ -22,7 +22,10 @@ const server = http.createServer((req,res) => {
   let data=fs.readFileSync(file);
   if(url.pathname==='/terminal/app.js' && legacy)data=Buffer.from(oldApp);
   if(file.endsWith(path.join('terminal','index.html')) && (legacy || unversionedHTML)) {
-    data=Buffer.from(data.toString('utf8').replace(/(src|href)="([^"?#]+\.(?:js|css))\?[^" ]*"/g,'$1="$2"'));
+    data=Buffer.from(data.toString('utf8')
+      .replace(/(src|href)="\.\.\/shared\/cache\/[a-f0-9]{12}\/([^"?]+\.(?:js|css))\?[^" ]*"/g,
+        (_, attribute, source) => attribute + '="' + path.posix.relative('terminal', source) + '"')
+      .replace(/(src|href)="([^"?#]+\.(?:js|css))\?[^" ]*"/g,'$1="$2"'));
   }
   res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':file.endsWith('.html')?'public, max-age=0, must-revalidate':'public, max-age=14400, must-revalidate'});
   res.end(data);
@@ -56,8 +59,8 @@ const server = http.createServer((req,res) => {
           requests.length=0;
         }
         await page.goto(base+'/terminal/', {waitUntil:'domcontentloaded'});
-        const appURL=await page.locator('script[src^="app.js"]').getAttribute('src');
-        assert.match(appURL,/^app\.js\?v=[a-f0-9]{12}$/,'Terminal requests a content-versioned app');
+        const appURL=await page.locator('script[src*="/terminal/app.js"]').getAttribute('src');
+        assert.match(appURL,/\/cache\/[a-f0-9]{12}\/terminal\/app\.js\?v=[a-f0-9]{12}$/,'Terminal requests a content-addressed app');
         assert(await page.locator('.body-point[data-select="uranus"]').evaluate(e=>!e.classList.contains('unavailable')));
         await page.locator('.body-point[data-select="uranus"]').evaluate(e=>e.click());
         assert.equal(await page.locator('#destination-name').textContent(),'天王星');
@@ -81,7 +84,7 @@ const server = http.createServer((req,res) => {
         assert.equal(await page.locator('#enter-link').getAttribute('href'),'../uranus/index.html');
         assert.equal(await page.locator('#dock-enter').getAttribute('href'),'../uranus/index.html');
         await page.screenshot({path:path.join(output,'uranus-entry-'+(live?'live-':'cache-')+width+'.png'),fullPage:true});
-        if(!live)assert(requests.includes('/terminal/'+appURL),'new script URL was fetched despite an old fresh cache entry');
+        if(!live){const fetched=new URL(appURL,base+'/terminal/');assert(requests.includes(fetched.pathname+fetched.search),'new script URL was fetched despite an old fresh cache entry');}
         assert.deepEqual(errors,[]);
         console.log('PASS: '+width+'px, '+(live?'live entries':'upgrade from cached unavailable Uranus')+', star map, catalog, keyboard, dock and Uranus model');
       } finally {await context.close();}

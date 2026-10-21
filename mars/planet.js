@@ -1,5 +1,6 @@
 (function () {
   const stage = document.getElementById('mars-stage');
+  if (stage.dataset.modelLoad === 'error') return;
   const mount = document.getElementById('mars-3d');
   stage.classList.add('model-visual-pending');
 
@@ -34,7 +35,9 @@
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.12;
     mount.appendChild(renderer.domElement);
-    textureSet = ModelRuntime.textures(THREE, renderer);
+    // This local JPG also appears in HTML. Match its image request mode so the
+    // browser can reuse the response, including when opening the page offline.
+    textureSet = ModelRuntime.textures(THREE, renderer, { crossOrigin: null });
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let modelLoaded = false;
@@ -81,8 +84,8 @@
     const sphere = new THREE.Mesh(new THREE.SphereGeometry(1.34, 64, 64), material);
     world.add(sphere);
 
-    const textureSource = window.MARS_TEXTURE_DATA;
-    if (!textureSource) throw new Error('Embedded Mars texture is unavailable');
+    const textureSource = location.protocol === 'file:' ? window.MARS_TEXTURE_DATA : 'assets/mars-texture.jpg';
+    if (!textureSource) throw new Error('Mars texture is unavailable');
     textureSet.load(textureSource).then(map => {
       if (failed || !map) return;
       material.map = material.emissiveMap = map;
@@ -206,7 +209,7 @@
     resizeObserver.observe(mount);
     resize();
 
-    modelLoop = ModelRuntime.loop({ element: stage, fps: 40, draw: (step) => {
+    modelLoop = ModelRuntime.loop({ element: stage, fps: 60, draw: (step) => {
       moons.beforeFrame(step);
       const moved = controls.update();
       renderer.render(scene, camera);

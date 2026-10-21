@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = (id) => document.getElementById(id),
     stage = $('model-stage'),
     mount = $('model-mount'),
@@ -33,7 +34,7 @@
     console.warn('Jupiter model:', error);
   }
   try {
-    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls || !window.JOVIAN_TEXTURES)
+    if (!window.ModelRuntime || !window.THREE || !window.OrbitControls)
       throw new Error('Local libraries or textures missing');
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(37, 1, 0.001, 500);
@@ -49,6 +50,22 @@
     mount.appendChild(renderer.domElement);
     cleanup = () => ModelRuntime.disposeScene(scene, renderer, controls);
     textureSet = ModelRuntime.textures(THREE, renderer);
+    const bodyTextures = new Map();
+    function ensureTextures(id) {
+      const ids = id === 'system' ? Object.keys(bodies) : [id];
+      return Promise.all(ids.map(bodyId => {
+        if (!bodyTextures.has(bodyId)) bodyTextures.set(bodyId, textureSet.load(
+          location.protocol === 'file:' ? window.JOVIAN_TEXTURES?.[bodyId] : 'assets/' + bodyId + '.jpg',
+          { flipY: bodyId !== 'jupiter' },
+        ).then(texture => {
+          if (failed || !texture) return;
+          meshes[bodyId].material.map = texture;
+          meshes[bodyId].material.needsUpdate = true;
+          modelLoop?.invalidate();
+        }));
+        return bodyTextures.get(bodyId);
+      }));
+    }
     renderer.domElement.setAttribute(
       'aria-label',
       '木星及四颗伽利略卫星三维模型，可拖动旋转和缩放',
@@ -161,6 +178,7 @@
       controls.update();
       $('rotate-model').disabled = true;
       selected = id;
+      ensureTextures(id).catch(fail);
       const isSystem = id === 'system';
       $('model-labels').hidden = !isSystem || failed;
       rings.forEach((r) => (r.visible = isSystem));
@@ -283,15 +301,7 @@
       fail('WebGL context lost');
     });
 
-    let completed = 0;
-    Promise.all(Object.keys(bodies).map(async id => {
-      const texture = await textureSet.load(window.JOVIAN_TEXTURES[id], { flipY: id !== 'jupiter' });
-      if (failed || !texture) return;
-      meshes[id].material.map = texture;
-      meshes[id].material.needsUpdate = true;
-      completed++;
-      status.textContent = `已准备 ${completed} / 5 个天体`;
-    }))
+    ensureTextures('jupiter')
       .then(() => {
         if (failed) return;
         renderer.render(scene, camera);
@@ -299,7 +309,7 @@
         modelLoop.start();
         mount.classList.add('ready');
         $('model-loading').hidden = true;
-        status.textContent = '5 个天体已就绪';
+        status.textContent = '三维视图已就绪';
         status.classList.add('ready');
       })
       .catch(fail);

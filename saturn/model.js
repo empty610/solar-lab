@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = (id) => document.getElementById(id),
     D = window.SaturnData,
     mount = $('model-mount'),
@@ -376,7 +377,7 @@
       }
       return spinning || !!flight || moved;
     }
-    modelLoop = ModelRuntime.loop({ element: stage, draw: frame, fps: 35 });
+    modelLoop = ModelRuntime.loop({ element: stage, draw: frame, fps: 60 });
     modelLoop.bind(controls);
     stage.closest('section').addEventListener('click', modelLoop.invalidate);
     stage.addEventListener('keydown', modelLoop.invalidate);

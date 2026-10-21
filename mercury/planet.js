@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  if (document.getElementById('planet-stage').dataset.modelLoad === 'error') return;
   const stage = document.getElementById('planet-stage'),
     mount = document.getElementById('planet-mount');
   const status = document.getElementById('model-status'),

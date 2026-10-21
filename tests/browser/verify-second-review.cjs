@@ -29,7 +29,7 @@ const server = http.createServer((req, res) => {
     await check('viewport resize preserves the user camera direction', async () => {
       const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
       try {
-        await page.route('**/vendor/OrbitControls.js', async route => {
+        await page.route('**/vendor/OrbitControls.js*', async route => {
           const response = await route.fetch();
           await route.fulfill({ response, body: (await response.text()) + '\nconst OriginalControls = window.OrbitControls; window.OrbitControls = function(camera, element) { window.reviewCamera = camera; return new OriginalControls(camera, element); };' });
         });
@@ -73,7 +73,7 @@ const server = http.createServer((req, res) => {
       try {
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
-        await page.route('**/pluto/assets/models.js', async route => {
+        await page.route('**/pluto/assets/models.js*', async route => {
           const response = await route.fetch();
           const gate = '\nwindow.reviewTextureGate = []; const originalLoad = THREE.TextureLoader.prototype.load; THREE.TextureLoader.prototype.load = function(url, onLoad, ...args) { return originalLoad.call(this, url, texture => reviewTextureGate.push(() => onLoad(texture)), ...args); };';
           await route.fulfill({ response, body: (await response.text()) + gate });

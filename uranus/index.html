@@ -10,10 +10,6 @@
   <link rel="stylesheet" href="style.css?v=691750778169" />
   <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script defer src="vendor/three.min.js"></script>
-  <script defer src="vendor/OrbitControls.js"></script>
-  <script defer src="assets/model-data.js"></script>
-  <script defer src="model.js?v=eff9e559593e"></script>
   <script defer src="app.js?v=208e456f2d48"></script>
   <link rel="stylesheet" href="../shared/interface.css?v=4afb884b2018" />
   <link rel="stylesheet" href="../shared/music-controls.css?v=ec28daae37fd" />
@@ -22,6 +18,7 @@
   <script defer src="../shared/idle-controls.js?v=9d6923d5378e"></script>
   <script defer src="../shared/music.js?v=feb5b11068db"></script>
   <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
 <body id="top">
   <a class="skip" href="#main">跳到正文</a>
@@ -42,7 +39,7 @@
           <span class="stage-index" aria-hidden="true">VII</span>
           <div id="model-mount"></div>
           <div class="model-loading" id="model-loading" role="status"><i></i>正在展开青色世界</div>
-          <div class="model-fallback" id="model-fallback" hidden><img src="assets/globe.png" alt="天王星的青色圆盘，NASA 模型可视化" /><p>三维视图不可用，仍可阅读全部图文与季节演示。</p></div>
+          <div class="model-fallback" id="model-fallback" hidden><img loading="lazy" src="assets/globe.png" alt="天王星的青色圆盘，NASA 模型可视化" /><p>三维视图不可用，仍可阅读全部图文与季节演示。</p></div>
           <span class="stage-label">URANUS / ICE GIANT</span>
           <span class="stage-caption">拖动旋转 · 滚轮 / 双指缩放</span>
         </div>
@@ -87,9 +84,9 @@
       <a class="source" href="https://science.nasa.gov/missions/webb/nasas-webb-rings-in-holidays-with-ringed-planet-uranus/" target="_blank" rel="noopener">NASA / Webb · 季节与极区变化 ↗</a>
     </section>
     <section class="chapter" id="gallery" aria-labelledby="gallery-title"><div class="chapter-heading horizontal reveal"><div><p class="eyebrow">03 / MORE THAN ONE WAY TO SEE</p><h2 id="gallery-title">换一种光，<br />看见另一个世界。</h2></div><p>可见光、增强色与近红外，<br />各自讲述这颗行星的一部分。</p></div><div class="gallery-grid">
-      <button class="image-card reveal wide" data-photo="voyager"><span class="image-wrap"><img src="assets/voyager-colors.jpg" alt="旅行者二号的天王星真彩色与假彩色并列图" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>同一颗星球，两种读法。</strong><span>真彩色与假彩色 <i>↗</i></span></span></button>
-      <button class="image-card reveal" data-photo="webb"><span class="image-wrap"><img src="assets/webb-rings.png" alt="韦布近红外影像中的天王星极区和纤细行星环" loading="lazy"/></span><span class="image-caption"><small>WEBB · NIRCAM / 2023</small><strong>暗淡的环，终于亮起。</strong><span>近红外映射色 <i>↗</i></span></span></button>
-      <button class="image-card reveal" data-photo="crescent"><span class="image-wrap"><img src="assets/crescent.jpg" alt="旅行者二号离开时拍摄的天王星青色弯月" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>转身之后的一弯青色。</strong><span>离别视角 <i>↗</i></span></span></button>
+      <button class="image-card reveal wide" data-photo="voyager"><span class="image-wrap"><img srcset="assets/previews/voyager-colors-480.webp 480w, assets/previews/voyager-colors-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/voyager-colors.jpg" alt="旅行者二号的天王星真彩色与假彩色并列图" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>同一颗星球，两种读法。</strong><span>真彩色与假彩色 <i>↗</i></span></span></button>
+      <button class="image-card reveal" data-photo="webb"><span class="image-wrap"><img srcset="assets/previews/webb-rings-480.webp 480w, assets/previews/webb-rings-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/webb-rings.png" alt="韦布近红外影像中的天王星极区和纤细行星环" loading="lazy"/></span><span class="image-caption"><small>WEBB · NIRCAM / 2023</small><strong>暗淡的环，终于亮起。</strong><span>近红外映射色 <i>↗</i></span></span></button>
+      <button class="image-card reveal" data-photo="crescent"><span class="image-wrap"><img srcset="assets/previews/crescent-480.webp 480w, assets/previews/crescent-794.webp 794w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px" src="assets/crescent.jpg" alt="旅行者二号离开时拍摄的天王星青色弯月" loading="lazy"/></span><span class="image-caption"><small>VOYAGER 2 / 1986</small><strong>转身之后的一弯青色。</strong><span>离别视角 <i>↗</i></span></span></button>
     </div></section>
     <section class="chapter moon-section" id="moons" aria-labelledby="moons-title"><div class="chapter-heading reveal"><p class="eyebrow">04 / A LITERARY FAMILY</p><h2 id="moons-title">围绕它的，<br />是一整片戏剧与诗。</h2><p>这些卫星的名字，来自莎士比亚与亚历山大·蒲柏的作品。<br />五颗主要卫星，从内向外，围成另一层遥远的风景。</p><a class="source" href="https://science.nasa.gov/uranus/moons/" target="_blank" rel="noopener">NASA · 天王星卫星家族 ↗</a></div><ol class="moon-list"><li class="reveal"><span>01</span><div><strong>米兰达 <small>MIRANDA / 天卫五</small></strong><p>最小的一位，也是旅行者二号近距离记录过的冰月。</p>
 <p>米兰达的表面像是几套不同风格的地貌被拼在了一起：古老的撞击区、深切的断崖，以及带着平行沟槽的冠状构造彼此相接。曾经的内部活动与变形可能参与了这些地形的形成。这样的“拼接感”很容易让人想到先被打碎再拼起来的故事，但外观相似还不足以证明它真的经历过那样的过程。</p></div></li><li class="reveal"><span>02</span><div><strong>艾瑞尔 <small>ARIEL / 天卫一</small></strong><p>名字来自精灵；明亮的冰质世界绕行在更远处。</p>
@@ -109,5 +106,11 @@
   <dialog id="photo-dialog" aria-labelledby="photo-title"><button id="close-photo" class="dialog-close" aria-label="关闭影像介绍">×</button><img id="photo-image" alt=""/><div class="dialog-copy"><p class="eyebrow" id="photo-tag"></p><h2 id="photo-title"></h2><div id="photo-description"></div><a id="photo-source" class="source" target="_blank" rel="noopener">查看官方影像 ↗</a></div></dialog>
   <noscript><style>#model-loading{display:none}#model-fallback[hidden]{display:grid!important}.view-selector,.model-controls,.season-actions{display:none}</style><p class="noscript">三维观察需要 JavaScript；下方图文仍可阅读。季节图停留在北半球夏至示意。</p></noscript>
   <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio><button id="music-toggle" class="music-toggle" type="button" data-idle-hide aria-label="播放或暂停音乐" aria-pressed="false" title="音乐"><span aria-hidden="true">♪</span></button>
-</body>
+    <template data-model-target="model-stage">
+      <script src="../shared/vendor/three.min.js"></script>
+      <script src="../shared/vendor/OrbitControls.js"></script>
+      <script src="assets/model-data.js"></script>
+      <script src="model.js?v=eff9e559593e"></script>
+    </template>
+  </body>
 </html>

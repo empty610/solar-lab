@@ -27,6 +27,7 @@ function fixture(t) {
   put('shared/runtime.js', 'window.fixture = true;');
   put('shared/style.css', 'body{background:url("data:image/svg+xml,%3Csvg filter=\'url(%23n)\'/%3E")}');
   put('shared/audio/sample.mp3', '0123456789abcdef');
+  put('shared/model.js', 'window.modelFixture = true;');
   put('tests/private.txt', 'not a public asset');
   put('shared/.env', 'FAKE_FIXTURE=not-a-secret');
   put('mars/.qa/private.html', 'not a public asset');
@@ -56,6 +57,46 @@ test('build preserves source, authored markup, binary bytes and URL fragments; e
   assert.match(html, /runtime\.js\?mode=read&v=[a-f0-9]{12}#notes/);
   assert(fs.readFileSync(path.join(root,'dist/shared/audio/sample.mp3')).equals(fs.readFileSync(path.join(root,'shared/audio/sample.mp3'))));
   for (const file of ['tests/private.txt','shared/.env','mars/.qa/private.html']) assert(!fs.existsSync(path.join(root,'dist',file)));
+});
+
+test('inert model templates retain validated dependencies and generated versions', t => {
+  const { root, put } = fixture(t);
+  put('mars/index.html', '<main id="model-stage"></main><template data-model-target="model-stage"><script src="../shared/model.js"></script></template>');
+  buildSite(root);
+  const html = fs.readFileSync(path.join(root, 'dist/mars/index.html'), 'utf8');
+  assert.match(html, /<template data-model-target="model-stage"><script src="\.\.\/shared\/cache\/[a-f0-9]{12}\/shared\/model\.js\?v=[a-f0-9]{12}"><\/script><\/template>/);
+  const before = html;
+  put('shared/model.js', 'window.modelFixture = false;');
+  buildSite(root);
+  assert.notEqual(fs.readFileSync(path.join(root, 'dist/mars/index.html'), 'utf8'), before);
+  fs.unlinkSync(path.join(root, 'shared/model.js'));
+  assert.throws(() => buildSite(root), /Missing or incorrectly cased reference/);
+});
+
+test('immutable output uses content addresses and relocates CSS URLs without changing embedded SVG', t => {
+  const { root, put } = fixture(t);
+  put('shared/picture.jpg', 'image fixture');
+  const embedded = 'url("data:image/svg+xml,%3Csvg filter=\'url(%23n)\'/%3E")';
+  put('shared/style.css', 'a{background:url(picture.jpg)}b{background:' + embedded + '}');
+  buildSite(root);
+  const html = fs.readFileSync(path.join(root, 'dist/mars/index.html'), 'utf8');
+  for (const match of html.matchAll(/(?:src|href)="([^"?]+)\?[^"#]*v=([a-f0-9]{12})/g)) {
+    const file = path.resolve(root, 'dist/mars', match[1]);
+    const data = fs.readFileSync(file);
+    assert.equal(createHash('sha256').update(data).digest('hex').slice(0, 12), match[2]);
+    assert(match[1].includes('/cache/' + match[2] + '/'));
+    if (file.endsWith('.css')) {
+      assert(data.toString().includes(embedded));
+      const reference = data.toString().match(/a\{background:url\(([^)]+)\)/)[1];
+      assert.equal(fs.readFileSync(path.resolve(path.dirname(file), reference), 'utf8'), 'image fixture');
+    }
+  }
+});
+
+test('missing responsive previews are rejected before publication', t => {
+  const { root, put } = fixture(t);
+  put('mars/index.html', '<img src="../shared/audio/sample.mp3" srcset="missing.webp 480w, other.webp 960w">');
+  assert.throws(() => buildSite(root), /Missing or incorrectly cased reference.*missing.webp/);
 });
 
 test('repeated builds are deterministic, remove stale output and change versions after an asset edit', t => {

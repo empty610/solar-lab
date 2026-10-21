@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = id => document.getElementById(id);
   const mount = $('model-mount');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');

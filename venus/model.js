@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  if (document.getElementById('venus-stage').dataset.modelLoad === 'error') return;
   const stage = document.getElementById('venus-stage');
   const mount = document.getElementById('venus-3d');
 
@@ -118,6 +119,7 @@
     controls.rotateSpeed = 1.2;
     controls.zoomSpeed = 0.9;
 
+    let fitDistance = 0;
     const resize = () => {
       if (failed) return;
       modelLoop?.invalidate();
@@ -125,13 +127,21 @@
       const height = Math.max(mount.clientHeight, 1);
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
+      // Fit the glow inside both axes, leaving breathing room around the preview.
+      // Preserve the user's direction and zoom when the responsive layout changes.
+      const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * Math.min(1, camera.aspect) * 0.68);
+      const nextDistance = 1.47 / Math.sin(half);
+      camera.position.multiplyScalar(nextDistance / (fitDistance || camera.position.length()));
+      fitDistance = nextDistance;
+      controls.maxDistance = fitDistance * 2.5;
+      controls.update();
       camera.updateProjectionMatrix();
     };
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(mount);
     resize();
 
-    modelLoop = ModelRuntime.loop({ element: stage, fps: 40, draw: () => {
+    modelLoop = ModelRuntime.loop({ element: stage, fps: 60, draw: () => {
       const moved = controls.update();
       renderer.render(scene, camera);
       return controls.autoRotate || moved;

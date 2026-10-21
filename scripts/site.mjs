@@ -40,15 +40,17 @@ export function runtimeFiles(root = sourceRoot) {
   return files.sort();
 }
 
-export function versionHTML(html, relative, root) {
+export function versionHTML(html, relative, root, assets) {
   return html.replace(/((?:src|href)=(['"]))([^'"]+\.(?:js|css))([^'"]*)(\2)/g,
     (match, start, quote, reference, suffix, end) => {
-      if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(reference) || /^(?:vendor|assets)\//.test(reference)) return match;
+      if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(reference) || (!assets && /^(?:vendor|assets)\//.test(reference))) return match;
       const file = reference.startsWith('/')
         ? path.join(root, reference)
         : path.resolve(root, path.dirname(relative), reference);
       if (!file.startsWith(root + path.sep)) throw new Error('Asset outside site: ' + reference);
-      const version = createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0, 12);
+      const asset = assets?.get(slash(path.relative(root, file)));
+      const version = asset?.version || createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0, 12);
+      if (asset) reference = path.posix.relative(path.posix.dirname(relative), asset.path);
       const hashAt = suffix.indexOf('#');
       const fragment = hashAt < 0 ? '' : suffix.slice(hashAt);
       const search = hashAt < 0 ? suffix : suffix.slice(0, hashAt);
@@ -56,6 +58,35 @@ export function versionHTML(html, relative, root) {
       params.set('v', version);
       return `${start}${reference}?${params}${fragment}${end}`;
     });
+}
+
+// Output-only content-addressed copies keep legacy source URLs available. Their
+// basenames remain intact for diagnostics; CSS URLs must still work on file://.
+export function cacheAssets(root, files) {
+  const assets = new Map();
+  for (const relative of files.filter(file => file.endsWith('.html'))) {
+    const html = fs.readFileSync(path.join(root, relative), 'utf8');
+    for (const match of html.matchAll(/(?:src|href)=["']([^"'?#]+\.(?:js|css))(?:[^"']*)["']/g)) {
+      const reference = match[1];
+      if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(reference)) continue;
+      const source = reference.startsWith('/') ? reference.slice(1) : path.posix.normalize(path.posix.join(path.posix.dirname(relative), reference));
+      if (assets.has(source)) continue;
+      let data = fs.readFileSync(path.join(root, source));
+      if (source.endsWith('.css')) {
+        const destination = 'shared/cache/000000000000/' + source;
+        const text = data.toString('utf8').replace(/url\((?:(["'])([\s\S]*?)\1|([^)]*))\)/g, (whole, quote, quoted, plain) => {
+          const url = (quoted ?? plain).trim();
+          if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(url)) return whole;
+          const target = url.startsWith('/') ? url.slice(1) : path.posix.normalize(path.posix.join(path.posix.dirname(source), url));
+          return 'url(' + (quote || '') + path.posix.relative(path.posix.dirname(destination), target) + (quote || '') + ')';
+        });
+        data = Buffer.from(text);
+      }
+      const version = createHash('sha256').update(data).digest('hex').slice(0, 12);
+      assets.set(source, { path: 'shared/cache/' + version + '/' + source, version, data });
+    }
+  }
+  return assets;
 }
 
 export function validateSite(root = sourceRoot, { syntax = true } = {}) {
@@ -78,8 +109,14 @@ export function validateSite(root = sourceRoot, { syntax = true } = {}) {
     }
     // Embedded SVG data may itself contain url(#filter); those are not files.
     const referencesText = text.replace(/url\((["'])data:[\s\S]*?\1\)/g, '');
-    for (const match of referencesText.matchAll(/(?:src|href)=["']([^"']+)["']|url\(["']?([^\s)'";]+)["']?\)/g)) {
-      const reference = match[1] || match[2];
+    const referencePattern = relative.endsWith('.html')
+      ? /(?:src|href)=["']([^"']+)["']|url\(["']?([^\s)'";]+)["']?\)/g
+      : /url\(["']?([^\s)'";]+)["']?\)/g;
+    const localReferences = [...referencesText.matchAll(referencePattern)].map(match => match[1] || match[2]);
+    for (const match of referencesText.matchAll(/\bsrcset=["']([^"']+)["']/g)) {
+      for (const candidate of match[1].split(',')) localReferences.push(candidate.trim().split(/\s+/)[0]);
+    }
+    for (const reference of localReferences) {
       if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(reference)) continue;
       const url = reference.split(/[?#]/)[0];
       if (!url) continue;

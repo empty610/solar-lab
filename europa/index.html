@@ -14,15 +14,9 @@
     <link rel="stylesheet" href="interface.css?v=0552cc762f18" />
     <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script src="vendor/three.min.js" defer></script>
-    <script src="vendor/OrbitControls.js" defer></script>
     <script src="data.js?v=2db9697a2312" defer></script>
-    <script src="assets/textures.js" defer></script>
-    <script src="assets/jupiter-geometry.js" defer></script>
     <script src="ui.js?v=b9ad99b653cc" defer></script>
     <script src="app.js?v=8c2c0b099175" defer></script>
-    <script defer src="../shared/model-runtime.js"></script>
-    <script src="model.js?v=ce56aa067869" defer></script>
     <link rel="stylesheet" href="../shared/interface.css?v=4afb884b2018" />
     <script
       defer
@@ -34,6 +28,7 @@
     <script defer src="../shared/idle-controls.js?v=9d6923d5378e"></script>
     <script defer src="../shared/music.js?v=feb5b11068db"></script>
     <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
   <body id="top">
     <a class="skip-link" href="#surface">跳到木卫二介绍</a>
@@ -138,7 +133,7 @@
             <p>正在准备木卫二的冰面<small>LOADING LOCAL SURFACE MAPS</small></p>
           </div>
           <div class="model-fallback" id="model-fallback" hidden>
-            <img id="fallback-image" src="assets/europa-global.jpg" alt="木卫二全球影像" />
+            <img loading="lazy" id="fallback-image" src="assets/europa-global.jpg" alt="木卫二全球影像" />
             <p>当前设备未能启动三维视图。</p>
             <p>老天，这是在搞什么？算了，我们先把这玩意放着，来看看下面的文本吧。</p>
           </div>
@@ -268,7 +263,7 @@
         <div class="surface-grid">
           <article class="terrain-card">
             <button class="photo-button" data-photo="bands" aria-label="放大交错的脊与带状地形">
-              <img
+              <img srcset="assets/previews/bands-480.webp 480w, assets/previews/bands-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/bands.jpg"
                 alt="伽利略号拍摄的木卫二冰面，蓝白色冰与红褐色脊和宽带交错"
                 width="1275"
@@ -297,7 +292,7 @@
               data-photo="chaos"
               aria-label="放大阿革诺尔线附近的混沌地形"
             >
-              <img
+              <img srcset="assets/previews/chaos-480.webp 480w, assets/previews/chaos-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/chaos.jpg"
                 alt="木卫二混沌地形中的破碎冰块与阿革诺尔线宽带"
                 width="1265"
@@ -340,7 +335,7 @@
         </div>
         <div class="europa-hero">
           <button class="europa-photo" data-photo="europa" aria-label="放大木卫二伽利略号影像">
-            <img
+            <img srcset="assets/previews/europa-global-480.webp 480w, assets/previews/europa-global-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/europa-global.jpg"
               alt="伽利略号拍摄的木卫二，浅色冰壳上遍布红褐色裂纹"
               width="2300"
@@ -967,5 +962,13 @@
     >
       <span aria-hidden="true">♪</span>
     </button>
+    <template data-model-target="model-stage">
+      <script src="../shared/vendor/three.min.js"></script>
+      <script src="../shared/vendor/OrbitControls.js"></script>
+      <script src="assets/textures.js"></script>
+      <script src="assets/jupiter-geometry.js"></script>
+      <script src="../shared/model-runtime.js"></script>
+      <script src="model.js?v=ce56aa067869"></script>
+    </template>
   </body>
 </html>

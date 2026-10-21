@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = (id) => document.getElementById(id),
     stage = $('model-stage'),
     mount = $('model-mount'),

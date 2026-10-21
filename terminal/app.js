@@ -212,7 +212,7 @@
       return span;
     }
     const image = document.createElement('img');
-    image.src = 'assets/' + body.id + '.png';
+    image.src = 'assets/preview/' + body.id + '-128.webp';
     image.alt = '';
     image.width = 640;
     image.height = 640;
@@ -347,7 +347,7 @@
     $('portrait-image').hidden = !body.link;
     $('portrait-placeholder').hidden = !!body.link;
     if (body.link) {
-      $('portrait-image').src = 'assets/' + id + '.png';
+      $('portrait-image').src = 'assets/preview/' + id + '-512.webp';
       $('portrait-image').alt = body.name + '的可视化影像';
       $('enter-link').href = body.link;
       $('enter-text').textContent = '进入' + body.name + '档案';
@@ -359,7 +359,7 @@
     $('entry-note').hidden = !body.link;
     $('unavailable-note').hidden = !!body.link;
     if (body.link) {
-      $('dock-image').src = 'assets/' + id + '.png';
+      $('dock-image').src = 'assets/preview/' + id + '-128.webp';
       $('dock-name').replaceChildren(document.createTextNode(body.name + ' '));
       const small = document.createElement('small');
       small.textContent = body.en;

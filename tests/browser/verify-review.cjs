@@ -147,9 +147,9 @@ const server = http.createServer((req, res) => {
       const fallbackPage = await browser.newPage();
       const errors = [];
       fallbackPage.on('pageerror', error => errors.push(error.message));
-      await fallbackPage.route('**/pluto/vendor/three.min.js', route => route.fulfill({ contentType: 'text/javascript', body: '' }));
+      await fallbackPage.route('**/shared/vendor/three.min.js*', route => route.fulfill({ contentType: 'text/javascript', body: '' }));
       // OrbitControls also requires Three; omit both to exercise the intended fallback.
-      await fallbackPage.route('**/pluto/vendor/OrbitControls.js', route => route.fulfill({ contentType: 'text/javascript', body: '' }));
+      await fallbackPage.route('**/shared/vendor/OrbitControls.js*', route => route.fulfill({ contentType: 'text/javascript', body: '' }));
       await fallbackPage.goto(base + '/pluto/');
       assert(await fallbackPage.locator('#model-fallback').isVisible());
       assert(await fallbackPage.locator('#model-light').isDisabled());

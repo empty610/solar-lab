@@ -1,10 +1,138 @@
-# Revalidate mutable Terminal and shared runtime assets on every visit.
-# Images, textures, audio and vendor libraries retain their normal caching.
+# Only build-generated, content-addressed JS/CSS URLs are immutable.
+/shared/cache/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML and legacy JS/CSS URLs may change in place and must revalidate.
+/*.html
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/terminal/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
 /terminal/*.js
   Cache-Control: public, no-cache, max-age=0, must-revalidate
+
 /terminal/*.css
   Cache-Control: public, no-cache, max-age=0, must-revalidate
-/shared/*.js
+
+/mercury/
   Cache-Control: public, no-cache, max-age=0, must-revalidate
-/shared/*.css
+
+/mercury/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/mercury/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/venus/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/venus/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/venus/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/mars/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/mars/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/mars/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/jupiter/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/jupiter/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/jupiter/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/saturn/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/saturn/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/saturn/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/uranus/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/uranus/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/uranus/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/neptune/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/neptune/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/neptune/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/europa/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/europa/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/europa/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/pluto/
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/pluto/*.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/pluto/*.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/idle-controls.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/interface.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/interface.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/journey.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/model-loader.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/model-runtime.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/motion.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/music-controls.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/music.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/navigation-controls.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/reading.css
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/ui.js
+  Cache-Control: public, no-cache, max-age=0, must-revalidate
+
+/shared/vendor/*
   Cache-Control: public, no-cache, max-age=0, must-revalidate

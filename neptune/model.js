@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  if (document.getElementById('model-stage').dataset.modelLoad === 'error') return;
   const $ = (id) => document.getElementById(id),
     mount = $('model-mount'),
     stage = $('model-stage');
@@ -369,7 +370,7 @@
       }
       return spinning || !!resetFlight || moved;
     }
-    modelLoop = ModelRuntime.loop({ element: stage, draw: tick, fps: 40 });
+    modelLoop = ModelRuntime.loop({ element: stage, draw: tick, fps: 60 });
     modelLoop.bind(controls);
     stage.closest('section').addEventListener('click', modelLoop.invalidate);
     stage.addEventListener('keydown', modelLoop.invalidate);

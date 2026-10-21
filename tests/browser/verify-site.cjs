@@ -39,9 +39,10 @@ for (const file of files(root)) {
   assert(fs.statSync(file).size < 25 * 1024 * 1024, 'Cloudflare asset limit: ' + file);
   if (!/\.(html|css)$/.test(file)) continue;
   const text = fs.readFileSync(file, 'utf8').replace(/url\((["'])data:[\s\S]*?\1\)/g, '');
-  for (const match of text.matchAll(
-    /(?:src|href)=["']([^"']+)["']|url\(["']?([^\s)'";]+)["']?\)/g,
-  )) {
+  const referencePattern = file.endsWith('.html')
+    ? /(?:src|href)=["']([^"']+)["']|url\(["']?([^\s)'";]+)["']?\)/g
+    : /url\(["']?([^\s)'";]+)["']?\)/g;
+  for (const match of text.matchAll(referencePattern)) {
     const reference = match[1] || match[2];
     if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(reference)) continue;
     const url = reference.split(/[?#]/)[0];

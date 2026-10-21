@@ -4,7 +4,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { sourceRoot, isRuntimeFile } from './site.mjs';
 
-const mime = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.jpg':'image/jpeg', '.png':'image/png', '.mp3':'audio/mpeg', '.md':'text/plain; charset=utf-8', '.txt':'text/plain; charset=utf-8' };
+const mime = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.json':'application/json', '.svg':'image/svg+xml', '.jpg':'image/jpeg', '.png':'image/png', '.webp':'image/webp', '.mp3':'audio/mpeg', '.md':'text/plain; charset=utf-8', '.txt':'text/plain; charset=utf-8' };
 const legacyRoutes = {
   '/terminal_preview/':'/terminal/', '/mercury_preview/preview_v2/':'/mercury/',
   '/venus_preview/':'/venus/', '/mars_preview/':'/mars/', '/jupiter_preview/preview_v1/':'/jupiter/',

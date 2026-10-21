@@ -101,7 +101,7 @@ const cases = [
       try {
         const errors = [];
         page.on('pageerror', error => errors.push(error.message));
-        await page.route('**/mercury/vendor/three.min.js', async route => {
+        await page.route('**/shared/vendor/three.min.js*', async route => {
           const response = await route.fetch();
           await route.fulfill({ response, body:(await response.text()) + '\n;const originalLoad = THREE.TextureLoader.prototype.load; THREE.TextureLoader.prototype.load = function(url, onLoad, ...rest) { return originalLoad.call(this, url, texture => { window.releaseMercuryTexture = () => onLoad(texture); }, ...rest); };' });
         });

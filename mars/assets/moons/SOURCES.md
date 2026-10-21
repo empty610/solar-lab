@@ -8,7 +8,9 @@ NASA/JPL-Caltech 原始 glTF 模型（内含贴图），下载于 2026-09-18：
   - https://assets.science.nasa.gov/content/dam/science/psd/mars/resources/gltf_files/24879_Deimos_1_1000.glb
 
 本地 PNG 为模型中原始嵌入贴图，保留原有 UV；不是由单张照片随意铺到球体上。
-prepare-moons.mjs 从这两个 GLB 提取几何与贴图到 moon-assets.js，用于 file:// 离线访问。
+prepare-moons.mjs 从这两个 GLB 提取几何与贴图，用于 file:// 离线访问。2026-10-21 将原 moon-assets.js 的数据原样拆到 phobos.js、deimos.js，选择卫星近景时分别加载；位置、法线、UV、索引与贴图内容的 SHA-256 回归检查见 tests/model-runtime.test.mjs。
+
+moon-bounds.js 只保留从原网格计算出的包围半径与体积等效半径之比。使用新地址避免旧浏览器缓存的完整 moon-assets.js 与新数据结构混用。系统全景的微小卫星先用体积等效球体定位；近景加载后替换成原 NASA 不规则网格，沿用原 UV 与体积归一化，不将照片铺到替代球体作为最终近景。迟到的数据或贴图不会重新启动已失效的场景。
 
 大小：https://ssd.jpl.nasa.gov/sats/phys_par/ （Phobos 11.08 km，Deimos 6.2 km，体积等效平均半径）。
 轨道：https://ssd.jpl.nasa.gov/sats/elem/sep.html （MAR099，Phobos a=9375 km、e=.015、i=1.1°；Deimos a=23457 km、e≈0、i=1.8°）。

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { sourceRoot, validateSite, versionHTML } from './site.mjs';
+import { sourceRoot, validateSite, versionHTML, cacheAssets } from './site.mjs';
 
 // Only these fixed, local directories are ever replaced or recursively removed.
 function outputPath(root, name) {
@@ -31,11 +31,17 @@ export function buildSite(root = sourceRoot, { dryRun = false } = {}) {
     fs.rmSync(staging, { recursive: true, force: true });
     fs.mkdirSync(staging);
     try {
+      const assets = cacheAssets(root, files);
       for (const relative of files) {
         const from = path.join(root, relative), to = path.join(staging, relative);
         fs.mkdirSync(path.dirname(to), { recursive: true });
-        if (relative.endsWith('.html')) fs.writeFileSync(to, versionHTML(fs.readFileSync(from, 'utf8'), relative, root));
+        if (relative.endsWith('.html')) fs.writeFileSync(to, versionHTML(fs.readFileSync(from, 'utf8'), relative, root, assets));
         else fs.copyFileSync(from, to);
+      }
+      for (const asset of assets.values()) {
+        const file = path.join(staging, asset.path);
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, asset.data);
       }
       validateSite(staging);
       const hadPrevious = fs.existsSync(destination);

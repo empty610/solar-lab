@@ -32,7 +32,7 @@ async function instrument(page, mode = '') {
     };
     window.cancelAnimationFrame = id => { __modelStats.pending.delete(id); cancel(id); };
   });
-  await page.route('**/vendor/three*.js', async route => {
+  await page.route('**/vendor/three*.js*', async route => {
     const response = await route.fetch();
     const hook = `;(() => {
       const Renderer = THREE.WebGLRenderer;

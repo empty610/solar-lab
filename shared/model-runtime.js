@@ -1,15 +1,17 @@
 /* Small lifecycle helpers for the existing Three.js pages; no scene or UI policy here. */
 (() => {
   'use strict';
-  function loop({ element, draw, fps = 40 }) {
+  function loop({ element, draw, fps = 60 }) {
     let active = false, visible = true, suspended = false, disposed = false;
-    let frame = null, last = 0, elapsed = 0;
+    let frame = null, last = 0, elapsed = 0, budget = 0;
+    const interval = 1 / fps;
     const runnable = () => active && visible && !document.hidden && !suspended && !disposed;
     function cancel() {
       if (frame !== null) cancelAnimationFrame(frame);
       frame = null;
       last = 0;
       elapsed = 0;
+      budget = 0;
     }
     function invalidate() {
       if (!runnable() || frame !== null) return;
@@ -19,15 +21,20 @@
     function tick(now) {
       frame = null;
       if (!runnable()) { cancel(); return; }
-      elapsed += Math.min((now - last) / 1000, 0.08);
+      const delta = Math.min((now - last) / 1000, 0.08);
+      elapsed += delta;
+      budget += delta;
       last = now;
-      if (elapsed < 1 / fps) { invalidate(); return; }
+      // RAF timestamps can land just before the deadline. Keep the cadence
+      // remainder separate from simulation time so jitter cannot halve the FPS.
+      if (budget + 0.001 < interval) { invalidate(); return; }
+      budget = Math.max(0, budget - interval) % interval;
       const step = elapsed;
       elapsed = 0;
       // Controls may invalidate during draw while damping is still moving.
       const continuing = draw(step, now);
       if (continuing) invalidate();
-      if (frame === null) last = 0;
+      if (frame === null) { last = 0; budget = 0; }
     }
     function sync() { cancel(); invalidate(); }
     const observer = 'IntersectionObserver' in window ? new IntersectionObserver(([entry]) => {
@@ -69,7 +76,7 @@
     };
   }
 
-  function textures(THREE, renderer, { timeout = 30000 } = {}) {
+  function textures(THREE, renderer, { timeout = 30000, crossOrigin = 'anonymous' } = {}) {
     const cache = new Map(), owned = new Set(), pending = new Set();
     let disposed = false;
     return {
@@ -91,7 +98,9 @@
           const abandon = () => finish(null, null);
           const timer = setTimeout(() => finish(new Error('Model texture timed out')), timeout);
           pending.add(abandon);
-          const texture = new THREE.TextureLoader().load(url, map => {
+          const loader = new THREE.TextureLoader();
+          if (crossOrigin !== 'anonymous') loader.setCrossOrigin(crossOrigin ?? undefined);
+          const texture = loader.load(url, map => {
             if (disposed || finished) { map.dispose(); return; }
             map.colorSpace = THREE.SRGBColorSpace;
             map.flipY = flipY;

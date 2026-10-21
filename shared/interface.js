@@ -74,6 +74,27 @@
   ];
   let navigationPending = false;
   let navigationTimer;
+  function prepareDestination(destination) {
+    if (!/^https?:$/.test(location.protocol)) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    fetch(destination.href, { credentials: 'same-origin', signal: controller.signal })
+      .then(async response => {
+        if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) return;
+        const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+        // querySelectorAll does not enter inert model templates. Only prepare
+        // the next page's reading UI; model downloads still wait for visibility.
+        for (const node of doc.querySelectorAll('link[rel="stylesheet"][href], script[defer][src]')) {
+          const url = new URL(node.getAttribute('href') || node.getAttribute('src'), response.url);
+          if (url.origin !== location.origin) continue;
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.as = node.tagName === 'LINK' ? 'style' : 'script';
+          link.href = url.href;
+          document.head.append(link);
+        }
+      }).catch(() => {}).finally(() => clearTimeout(timer));
+  }
   document.addEventListener('click', (event) => {
     const link = event.target.closest('a[href]');
     if (
@@ -102,6 +123,7 @@
     event.preventDefault();
     if (navigationPending) return;
     navigationPending = true;
+    prepareDestination(destination);
     transition.querySelector('p').textContent = `${archive[0].toUpperCase()} // ESTABLISHING LINK`;
     transition.setAttribute('aria-hidden', 'false');
     transition.classList.add('is-mounted');

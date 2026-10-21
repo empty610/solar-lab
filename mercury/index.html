@@ -15,12 +15,8 @@
     <link rel="stylesheet" href="interface.css?v=677174233936" />
     <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script src="vendor/three.min.js" defer></script>
-    <script src="vendor/OrbitControls.js" defer></script>
     <script src="science.js?v=41fcd90e4f74" defer></script>
     <script src="sunstep.js?v=e80939d381b1" defer></script>
-    <script defer src="../shared/model-runtime.js"></script>
-    <script src="planet.js?v=56273a27ec4e" defer></script>
     <script src="page.js?v=f8369e4d13f7" defer></script>
     <script src="interface.js?v=ee9cb0d23a9c" defer></script>
     <link rel="stylesheet" href="../shared/interface.css?v=4afb884b2018" />
@@ -35,6 +31,7 @@
     <script defer src="../shared/music.js?v=feb5b11068db"></script>
     <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
   <link rel="stylesheet" href="../shared/reading.css?v=98d6d20df923" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
   <body id="top">
     <a class="skip-link" href="#profile">跳到水星介绍</a>
@@ -202,7 +199,7 @@
               data-terrain="caloris"
               aria-label="查看卡洛里盆地大图与介绍"
             >
-              <img
+              <img srcset="assets/previews/caloris-480.webp 480w, assets/previews/caloris-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/caloris.jpg"
                 alt="增强色彩影像中的卡洛里盆地，盆底呈橙黄色，与周围地表形成差异"
                 width="1012"
@@ -228,7 +225,7 @@
               data-terrain="scarps"
               aria-label="查看叶状陡崖大图与介绍"
             >
-              <img
+              <img srcset="assets/previews/scarps-480.webp 480w, assets/previews/scarps-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/scarps.jpg"
                 alt="伦勃朗盆地附近的水星地表，弯曲的断层陡崖穿过撞击地形"
                 width="1024"
@@ -253,7 +250,7 @@
               data-terrain="hollows"
               aria-label="查看桑德坑空洞大图与介绍"
             >
-              <img
+              <img srcset="assets/previews/hollows-480.webp 480w, assets/previews/hollows-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/hollows.jpg"
                 alt="桑德撞击坑中的明亮空洞与不规则凹陷"
                 width="1024"
@@ -278,7 +275,7 @@
               data-terrain="ice"
               aria-label="查看水星极地水冰分布图与介绍"
             >
-              <img
+              <img srcset="assets/previews/polar-ice-480.webp 480w, assets/previews/polar-ice-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
                 src="assets/polar-ice.jpg"
                 alt="水星北极影像与黄色雷达亮区叠加图，标出与水冰有关的区域"
                 width="1000"
@@ -809,5 +806,11 @@
     >
       <span aria-hidden="true">♪</span>
     </button>
+    <template data-model-target="planet-stage">
+      <script src="../shared/vendor/three.min.js"></script>
+      <script src="../shared/vendor/OrbitControls.js"></script>
+      <script src="../shared/model-runtime.js"></script>
+      <script src="planet.js?v=56273a27ec4e"></script>
+    </template>
   </body>
 </html>

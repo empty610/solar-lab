@@ -13,12 +13,7 @@
     <link rel="stylesheet" href="style.css?v=a4d536b39ef3" />
     <link rel="stylesheet" href="../shared/motion.css" />
     <script defer src="../shared/ui.js"></script>
-    <script defer src="vendor/three.min.js"></script>
-    <script defer src="vendor/OrbitControls.js"></script>
-    <script defer src="assets/models.js"></script>
     <script defer src="data.js?v=4a19829d7ddd"></script>
-    <script defer src="../shared/model-runtime.js"></script>
-    <script defer src="model.js?v=cf377c906f08"></script>
     <script defer src="app.js?v=df36b1c7a603"></script>
     <link rel="stylesheet" href="../shared/interface.css?v=4afb884b2018" />
     <script
@@ -31,6 +26,7 @@
     <script defer src="../shared/idle-controls.js?v=9d6923d5378e"></script>
     <script defer src="../shared/music.js?v=feb5b11068db"></script>
     <link rel="stylesheet" href="../shared/journey.css?v=4e16ba55b5bd" />
+    <script defer src="../shared/model-loader.js"></script>
 </head>
   <body id="top">
     <a class="skip" href="#main">跳到正文</a>
@@ -108,7 +104,7 @@
             <div id="model-mount"></div>
             <div class="model-loading" id="model-loading"><span></span>正在展开蓝色世界</div>
             <div id="model-fallback" class="model-fallback" hidden>
-              <img src="assets/dark-spot.jpg" alt="旅行者二号拍摄的海王星大黑斑" />
+              <img loading="lazy" src="assets/dark-spot.jpg" alt="旅行者二号拍摄的海王星大黑斑" />
               <p>当前设备无法启用三维视图，仍可浏览全部图文资料。</p>
             </div>
             <span class="model-watermark" aria-hidden="true">N / 08</span
@@ -257,7 +253,7 @@
         </div>
         <div class="image-grid">
           <button class="image-card" data-photo="storm">
-            <img
+            <img srcset="assets/previews/dark-spot-480.webp 480w, assets/previews/dark-spot-700.webp 700w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/dark-spot.jpg"
               width="700"
               height="852"
@@ -269,7 +265,7 @@
             >
           </button>
           <button class="image-card" data-photo="rings">
-            <img
+            <img srcset="assets/previews/webb-rings-480.webp 480w, assets/previews/webb-rings-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/webb-rings.jpg"
               width="1280"
               height="1280"
@@ -281,7 +277,7 @@
             >
           </button>
           <button class="image-card" data-photo="triton">
-            <img
+            <img srcset="assets/previews/triton-mosaic-480.webp 480w, assets/previews/triton-mosaic-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
               src="assets/triton-mosaic.jpg"
               width="1400"
               height="1400"
@@ -296,7 +292,7 @@
       </section>
       <section id="triton" class="section-block reveal triton-section">
         <div class="triton-art">
-          <img
+          <img srcset="assets/previews/triton-globe-480.webp 480w, assets/previews/triton-globe-960.webp 960w" sizes="auto, (max-width: 560px) calc(100vw - 48px), (max-width: 920px) 90vw, 760px"
             src="assets/triton-globe.png"
             width="1024"
             height="1024"
@@ -581,5 +577,12 @@
     >
       <span aria-hidden="true">♪</span>
     </button>
+    <template data-model-target="model-stage">
+      <script src="../shared/vendor/three.min.js"></script>
+      <script src="../shared/vendor/OrbitControls.js"></script>
+      <script src="assets/models.js"></script>
+      <script src="../shared/model-runtime.js"></script>
+      <script src="model.js?v=cf377c906f08"></script>
+    </template>
   </body>
 </html>

@@ -124,11 +124,8 @@ window.setupMarsMoons = function ({
     const bytes = Uint8Array.from(atob(a.data), (c) => c.charCodeAt(0));
     return new T.BufferAttribute(new arrays[a.type](bytes.buffer), a.size);
   }
-  const orbitPoints = [];
-  for (const id of ['phobos', 'deimos']) {
-    const b = bodies[id],
-      data = window.MARS_MOON_ASSETS[id],
-      g = new T.BufferGeometry();
+  function detailedGeometry(data, b) {
+    const g = new T.BufferGeometry();
     for (const key of ['position', 'normal', 'uv']) g.setAttribute(key, attribute(data[key]));
     g.setIndex(attribute(data.index));
     g.center();
@@ -147,6 +144,36 @@ window.setupMarsMoons = function ({
     const radius = Math.cbrt((Math.abs(volume) * 3) / (4 * Math.PI));
     g.scale((b.radius * unit) / radius, (b.radius * unit) / radius, (b.radius * unit) / radius);
     g.computeBoundingSphere();
+    return g;
+  }
+  function loadDetails(id) {
+    const b = bodies[id];
+    if (b.detailsPromise) return b.detailsPromise;
+    const template = document.querySelector('template[data-moon-detail="' + id + '"]');
+    const url = template.content.querySelector('script').getAttribute('src');
+    b.detailsPromise = ModelLoader.loadScript(url).then(() => {
+      if (unavailable()) return;
+      const data = window.MARS_MOON_DETAILS[id];
+      const geometry = detailedGeometry(data, b);
+      b.mesh.geometry.dispose();
+      b.mesh.geometry = geometry;
+      return textures.load(data.texture, { flipY: false }).then(map => {
+        if (unavailable() || !map) return;
+        b.mesh.material.map = b.mesh.material.emissiveMap = map;
+        b.mesh.material.needsUpdate = true;
+        b.textureLoaded = true;
+        if (selected === id) updateInfo(id);
+        invalidate();
+      });
+    }).catch(fail);
+    return b.detailsPromise;
+  }
+  const orbitPoints = [];
+  for (const id of ['phobos', 'deimos']) {
+    const b = bodies[id];
+    // In the system view these bodies are sub-pixel. Load the original irregular
+    // NASA mesh and its texture only when a moon is selected for a close-up.
+    const g = new T.SphereGeometry(b.radius * unit, 12, 8);
     const mat = new T.MeshStandardMaterial(
       surfaceMaterialOptions || {
         roughness: 0.88,
@@ -156,15 +183,8 @@ window.setupMarsMoons = function ({
         emissiveIntensity: 0.2,
       },
     );
-    textures.load(data.texture, { flipY: false }).then(map => {
-      if (unavailable() || !map) return;
-      mat.map = mat.emissiveMap = map;
-      mat.needsUpdate = true;
-      b.textureLoaded = true;
-      invalidate();
-    }).catch(fail);
     b.mesh = new T.Mesh(g, mat);
-    b.bound = g.boundingSphere.radius;
+    b.bound = b.radius * unit * window.MARS_MOON_ASSETS[id].boundRatio;
     const plane = new T.Group();
     plane.rotation.x = T.MathUtils.degToRad(b.i);
     world.add(plane);
@@ -230,15 +250,18 @@ window.setupMarsMoons = function ({
     camera.updateProjectionMatrix();
   }
   function updateInfo(id) {
+    const loading = id !== 'system' && id !== 'mars' && !bodies[id].textureLoaded;
+    info.setAttribute('aria-busy', String(loading));
     info.innerHTML =
       id === 'system'
         ? '<strong>火星与它的两颗卫星</strong><p>天体大小与轨道距离采用同一真实比例。<br>点击卫星标签靠近查看；标签圆点仅为定位标记。轨道相位为示意。</p>'
-        : `<strong>${bodies[id].name} <small>${bodies[id].en}</small></strong><p>${bodies[id].text}<br>镜头近距观察 · 天体尺寸保持真实比例</p>`;
+        : `<strong>${bodies[id].name} <small>${bodies[id].en}</small></strong><p>${bodies[id].text}<br>${loading ? '正在载入近景影像…' : '镜头近距观察 · 天体尺寸保持真实比例'}</p>`;
   }
   function focus(id, instant = false) {
     if (unavailable()) return;
     invalidate();
     if (!bodies[id] && id !== 'system') return;
+    if (id === 'phobos' || id === 'deimos') loadDetails(id);
     if (!flight) savedRotate = controls.autoRotate;
     controls.autoRotate = false;
     controls.enabled = false;
