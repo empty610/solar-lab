@@ -41,3 +41,15 @@ Three.js 和 OrbitControls 沿用同目录其他行星页的本地版本。MIT �
 - [新视野号](https://science.nasa.gov/mission/new-horizons/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+挥发性冰的迁移与热收支、2026年短暂液态氮解释、冥卫一极区材料来源、薄雾颜色与深部水海洋模型。
+
+- [NASA · 内部温度与地下海洋的可能性](https://science.nasa.gov/dwarf-planets/pluto/facts/)
+- [Nature · 氮冰的固态对流模型](https://www.nature.com/articles/nature18289)
+- [NASA · 裂隙暗区与液态氮的新解释（2026）](https://science.nasa.gov/blogs/science-news/2026/08/05/nasas-new-horizons-finds-evidence-of-recent-liquid-on-plutos-surface/)
+- [NASA · 甲烷迁移与冥卫一极区颜色](https://www.nasa.gov/missions/pluto-paints-its-largest-moon-red/)
+- [NASA · 薄雾颗粒与蓝色散射](https://www.nasa.gov/missions/new-horizons-finds-blue-skies-and-water-ice-on-pluto/)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

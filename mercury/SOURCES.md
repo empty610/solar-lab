@@ -53,3 +53,15 @@ Three.js 与 OrbitControls 从用户现有 Venus 项目使用的本地库复制�
 - [信使号飞行路线与探测](https://science.nasa.gov/mission/messenger/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+大核心形成方案与挥发分约束、空洞地形材料流失、3∶2自转公转共振、近日点进动。
+
+- [行星科学十年规划 · 水星形成问题](https://www.nationalacademies.org/read/26522/chapter/4)
+- [NASA · 核心与偏心磁场的测量](https://astrobiology.nasa.gov/missions/messenger/)
+- [NASA · 空洞地形的候选材料与机制](https://science.nasa.gov/solar-system/planets/mercury/mercurys-strange-hollows/)
+- [水星自转 · 偏心轨道、形状与引力转矩](https://academic.oup.com/mnras/article/427/1/468/1030686)
+- [Physical Review Letters · 水星近日点进动](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.120.191101)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

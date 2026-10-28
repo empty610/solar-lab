@@ -54,3 +54,20 @@
 - [塔拉区二氧化碳与内部碳来源线索](https://www.nasa.gov/solar-system/nasas-webb-finds-carbon-source-on-surface-of-jupiters-moon-europa/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+冰壳形变与浅层水体、双脊与冰壳回收、海底和表面化学能、氧气产率、碳与含氨物质、羽流采样的解释范围。
+
+- [NASA · 微波如何约束冰壳厚度](https://www.nasa.gov/missions/juno/nasas-juno-measures-thickness-of-europas-ice-shell/)
+- [Stanford · 双脊与浅层水体](https://news.stanford.edu/stories/2022/04/scientists-explain-formation-abundant-features-europa)
+- [JPL · 冰壳回收的地形线索](https://www.jpl.nasa.gov/news/scientists-find-evidence-of-diving-tectonic-plates-on-europa/)
+- [JPL · 海底与冰面的化学能来源](https://www.jpl.nasa.gov/press-kits/europa-clipper/mission/science/)
+- [NASA · 氧气产率与测量方法](https://www.nasa.gov/missions/juno/nasas-juno-mission-measures-oxygen-production-at-europa/)
+- [Hubble · 稀薄氧气大气](https://science.nasa.gov/missions/hubble/hubble-finds-oxygen-atmosphere-on-jupiters-moon-europa/)
+- [ESA / Webb · 羽流观测的范围](https://www.esa.int/Science_Exploration/Space_Science/Webb/Webb_finds_carbon_source_on_surface_of_Jupiter_s_moon_Europa)
+- [NASA · 表面化学与内部交换](https://science.nasa.gov/mission/europa-clipper/why-europa-ingredients-for-life/)
+- [NASA · 裂隙附近的含氨物质（2026）](https://science.nasa.gov/blogs/science-news/2026/01/29/nasas-galileo-mission-points-to-ammonia-at-europa-recent-study-shows/)
+- [NASA · 任务调查什么](https://science.nasa.gov/mission/europa-clipper/mission-faq/)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

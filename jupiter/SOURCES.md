@@ -60,3 +60,14 @@
 - [伽利略任务及下降探测器](https://science.nasa.gov/mission/galileo/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+氨水冰雹与浅层闪电、大红斑深度测量、尘埃环的卫星补给、伽利略下降地点的代表性。
+
+- [NASA · 浅层闪电与氨水冰雹](https://www.nasa.gov/missions/juno/shallow-lightning-and-mushballs-reveal-ammonia-to-nasas-juno-scientists/)
+- [NASA · 微波与引力测量中的风暴深度](https://www.nasa.gov/news-release/nasas-juno-science-results-offer-first-3d-view-of-jupiter-atmosphere/)
+- [JPL · 环与四颗内侧小卫星的联系](https://www.jpl.nasa.gov/news/galileo-finds-jupiters-rings-formed-by-dust-blasted-off-small-moons/)
+- [JPL · 伽利略下降位置与干湿差异](https://www.jpl.nasa.gov/news/galileo-finds-wet-spots-dry-spots-and-new-view-of-jupiters-light-show/)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

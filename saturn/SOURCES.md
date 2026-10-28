@@ -55,3 +55,17 @@ Three.js / OrbitControls 从现有 Neptune 项目复制，许可证在 vendor/LI
 - [土卫二](https://science.nasa.gov/saturn/moons/enceladus/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+氦雨与内部热演化、环的污染年龄和留存效率、辐条与环雨、土卫二喷流的氢与磷酸盐证据。
+
+- [木星与土星的氦雨和热演化模型](https://arxiv.org/abs/2407.11120)
+- [NASA · 年轻环的污染与输运估计](https://www.nasa.gov/solar-system/saturns-rings-young-and-ephemeral-three-nasa-ames-studies-say/)
+- [Nature Geoscience · 污染物留存的新模型](https://www.nature.com/articles/s41561-024-01598-9)
+- [Cassini · 细尘与环辐条](https://science.nasa.gov/mission/cassini/science/rings/)
+- [NASA · 环物质与高层大气](https://science.nasa.gov/missions/hubble/hubble-finds-saturns-rings-heating-its-atmosphere/)
+- [Cassini · 喷流中的分子氢与热液证据](https://pubmed.ncbi.nlm.nih.gov/28408597/)
+- [NASA · E环冰粒中的磷酸盐](https://www.nasa.gov/missions/cassini/nasa-cassini-data-reveals-building-block-for-life-in-enceladus-ocean/)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

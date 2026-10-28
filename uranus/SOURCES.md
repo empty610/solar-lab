@@ -24,3 +24,16 @@ Three.js 与 OrbitControls 沿用现有项目本地版本，MIT 许可位于 `ve
 - [韦布的近红外观测](https://science.nasa.gov/missions/webb/nasas-webb-rings-in-holidays-with-ringed-planet-uranus/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+硫化氢与云层组成、古卫星迁移倾角模型、导电流体与磁场、牧羊卫星、2025年内部热量重估及2026年外环光谱与物质来源。
+
+- [硫化氢观测论文](https://ora.ox.ac.uk/objects/uuid%3A8ef4459a-29ec-4420-87af-e149c4f35c73)
+- [古卫星迁移与倾角模型](https://www.aanda.org/articles/aa/pdf/2022/12/aa43953-22.pdf)
+- [NASA · ε环与牧羊卫星](https://science.nasa.gov/uranus/moons/cordelia/)
+- [NASA / Oxford · 2025年内部热量重估](https://science.nasa.gov/science-research/planetary-science/nasa-oxford-discover-warmer-uranus-than-once-thought/)：能量收支、反照率与内部热量；不把低云顶温度等同于内部没有热量。
+- [Keck · 2026年两条外环的光谱与来源](https://keckobservatory.org/uranus-two-outer-rings/)：μ环水冰、玛布撞击供给与ν环岩质富碳材料的解释。
+- [SLAC · 高压物质与冰巨星磁场](https://www6.slac.stanford.edu/news/2024-01-08-diamond-rain-icy-planets-offers-clues-magnetic-field-mysteries)：导电物质层与内部运动的候选模型。
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。

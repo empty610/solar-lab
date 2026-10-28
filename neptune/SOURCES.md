@@ -36,3 +36,17 @@
 - [冰巨星的内部热量](https://science.nasa.gov/science-research/planetary-science/nasa-oxford-discover-warmer-uranus-than-once-thought/)
 
 新增段落区分了直接测量、模型解释与尚待验证的可能性；未更新已有任务计划。
+
+## 2026-10-27 机制与证据补写
+
+钻石形成实验、海卫一双天体捕获与潮汐演化、环的物质来源和成盘过程、潮汐与聚集、2026年矿物光谱、环弧约束与真诚环弧公布。
+
+- [SLAC · 钻石形成实验与内部模型](https://www6.slac.stanford.edu/news/2024-01-08-diamond-rain-icy-planets-offers-clues-magnetic-field-mysteries)
+- [海卫一的双天体捕获模型](https://www.nature.com/articles/nature04792)
+- [海王星环 · 聚集、碰撞与演化](https://arxiv.org/abs/1906.11728)
+- [Caltech · 古卫星破碎方案](https://www.caltech.edu/about/news/neptunes-inner-moons-may-be-shattered-remains-of-ancient-icy-worlds)
+- [2026研究 · 内侧卫星与环的光谱](https://authors.library.caltech.edu/records/wg42e-62h34)
+- [NASA · 潮汐与环粒子聚集的一般原理](https://science.nasa.gov/mission/cassini/faq/)
+- [巴黎天文台 · “真诚”环弧与长期变化（2026）](https://lte.observatoiredeparis.psl.eu/Discovery-of-a-new-arc-in-one-of-Neptune-s-rings)
+
+正文保留原有介绍，新增内容延续提问、解释过程与生活类比的叙述。区分观测信号、模型推断和未解决环节；研究公布年份不等同于观测年份，未来任务节点不作为本轮更新内容。
