@@ -5,7 +5,7 @@ const path = require('node:path');
 const http = require('node:http');
 const assert = require('node:assert/strict');
 const measure = process.argv.includes('--measure');
-const pages = ['mercury', 'venus', 'mars', 'jupiter', 'saturn', 'neptune', 'europa', 'pluto'];
+const pages = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'neptune', 'europa', 'pluto'];
 const server = http.createServer((req, res) => {
   let file = path.join(siteRoot, new URL(req.url, 'http://local').pathname);
   if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');

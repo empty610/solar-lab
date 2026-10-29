@@ -41,9 +41,95 @@ dialog.ui-dialog-closing::backdrop { animation: backdrop-out 180ms ease both; }
 }
 @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* Earth field notes: small, finite gestures with the same lifecycle as the archives. */
+.earth-page {
+  --ui-enter-duration: 380ms;
+  --ui-exit-duration: 180ms;
+  --ui-ease: cubic-bezier(.22, .61, .36, 1);
+  --earth-ease: cubic-bezier(.45, 0, .2, 1);
+}
+.earth-page .tab-view-enter { animation-name: earth-note-in; animation-timing-function: var(--earth-ease); }
+.earth-page .tab-view-exit { animation-name: earth-note-out; animation-timing-function: ease-in-out; }
+.earth-page .earth-arrive { animation: earth-arrive 800ms var(--earth-ease) both; }
+.earth-page .earth-figure-enter { animation: earth-figure-in 620ms var(--earth-ease) both; }
+.earth-page .earth-summary-enter { animation: earth-note-in 320ms var(--earth-ease) both; }
+.earth-page .surface-plate { transition: opacity 180ms ease-in-out; }
+.earth-page .surface-plate.is-leaving { opacity: 0; }
+.earth-page .layer-shape { transition: opacity 380ms var(--earth-ease), stroke 380ms var(--earth-ease); }
+.earth-page :is(.model-controls button, .season-buttons button, .tab-row button, .layer-tabs button) {
+  transition: color 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+.earth-page :is(.text-link, .reading-route a, .explore-link span) { transition: color 220ms ease, transform 280ms var(--earth-ease); }
+.earth-page .reading-route a:not(.text-link):hover { transform: translateX(4px); color: var(--accent); }
+.earth-page .explore-link:hover span { transform: translate(3px, 3px); }
+.earth-page .text-link:hover { color: var(--copper); }
+.earth-page :is(.art-motion, .sky-layers li) { transition: background-color 260ms ease, border-color 260ms ease, color 260ms ease; }
+.earth-page .art-motion:hover:not(:disabled) { background: #e3ecde; border-color: #6b9e83; }
+.earth-page .section-nav a::after { transition: opacity 240ms ease, transform 300ms var(--earth-ease); }
+.earth-page .section-heading.earth-arrive .eyebrow::before { animation: earth-rule-in 760ms var(--earth-ease) both; transform-origin: left; }
+.earth-page .earth-figure-enter > svg { animation: earth-art-in 600ms var(--earth-ease) both; }
+.earth-page .earth-arrive:is(.living-atlas, .surface-atlas, .sky-art) { animation-name: earth-plate-in; }
+.earth-page .timeline li.earth-arrive { animation-name: earth-timeline-in; }
+.earth-page .fact-strip > div:nth-child(2), .earth-page .timeline li:nth-child(2) { --earth-stagger: 60ms; }
+.earth-page .fact-strip > div:nth-child(3), .earth-page .timeline li:nth-child(3) { --earth-stagger: 120ms; }
+.earth-page .fact-strip > div:nth-child(4), .earth-page .timeline li:nth-child(4) { --earth-stagger: 180ms; }
+.earth-page .timeline li:nth-child(5) { --earth-stagger: 240ms; }
+.earth-page :is(.timeline li, .fact-strip > div).earth-arrive { animation-delay: var(--earth-stagger, 0ms); }
+.earth-page .daylight-bar i { transition: width 380ms var(--earth-ease); }
+.earth-page .photo-button > img { transition: transform 650ms var(--earth-ease); }
+.earth-page .photo-button:hover > img { transform: scale(1.035); }
+.earth-page details summary span { transition: transform 340ms var(--earth-ease); }
+.earth-page dialog.archive-dialog.ui-dialog-opening[open] { animation: earth-dialog-in 420ms var(--earth-ease) both; }
+.earth-page dialog.archive-dialog.ui-dialog-closing[open] { animation: earth-dialog-out 230ms ease-in-out both; }
+.earth-page dialog.ui-dialog-opening::backdrop { animation-duration: 420ms; }
+.earth-page dialog.ui-dialog-closing::backdrop { animation-duration: 230ms; }
+@supports (interpolate-size: allow-keywords) and selector(details::details-content) {
+  .earth-page details { interpolate-size: allow-keywords; }
+  .earth-page details::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size 380ms var(--earth-ease), opacity 300ms ease, content-visibility 380ms allow-discrete;
+  }
+  .earth-page details[open]::details-content { block-size: auto; opacity: 1; }
+}
+@keyframes earth-note-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes earth-note-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-4px); } }
+@keyframes earth-arrive { from { opacity: .15; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes earth-figure-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes earth-dialog-in { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes earth-dialog-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(8px) scale(.99); } }
+@keyframes earth-rule-in { from { transform: scaleX(.15); } to { transform: scaleX(1); } }
+@keyframes earth-art-in { from { opacity: .35; translate: 0 9px; } to { opacity: 1; translate: 0 0; } }
+@keyframes earth-plate-in { from { opacity: .45; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes earth-timeline-in { from { opacity: .5; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .tab-view-enter, .tab-view-exit,
   .planet-portrait img:is(.selection-arrive,.portrait-arrive),
   dialog.archive-dialog.ui-dialog-opening[open], dialog.archive-dialog.ui-dialog-closing[open],
   dialog.ui-dialog-opening::backdrop, dialog.ui-dialog-closing::backdrop { animation: none; }
+  .earth-page :is(.tab-view-enter, .tab-view-exit, .earth-arrive, .earth-figure-enter, .earth-summary-enter),
+  .earth-page dialog.archive-dialog.ui-dialog-opening[open],
+  .earth-page dialog.archive-dialog.ui-dialog-closing[open],
+  .earth-page dialog.ui-dialog-opening::backdrop, .earth-page dialog.ui-dialog-closing::backdrop { animation: none; }
+  .earth-page details::details-content { transition: none; }
+  .earth-page .surface-plate.is-leaving { opacity: 1; }
+  .earth-page .section-heading.earth-arrive .eyebrow::before, .earth-page .earth-figure-enter > svg { animation: none; }
+}
+
+/* Diagram selections and chapter cues keep authored prose stationary. */
+.earth-page .scene-layer { transition: opacity 300ms var(--earth-ease); }
+.earth-page .scene-tabs button { transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease; }
+.earth-page .earth-relation-enter { animation: earth-relation-in 550ms var(--earth-ease) both; }
+.earth-page .earth-chapter-cue { animation: earth-chapter-cue 700ms ease-out both; }
+.earth-page .scene-notes .tab-view-enter { animation-name: earth-caption-in; }
+.earth-page .scene-notes .tab-view-exit { animation-name: earth-caption-out; }
+@keyframes earth-relation-in { from { opacity: .2; } to { opacity: 1; } }
+@keyframes earth-chapter-cue { from { text-shadow: 0 0 14px #9ab67d; } to { text-shadow: 0 0 0 transparent; } }
+@keyframes earth-caption-in { from { opacity: .3; } to { opacity: 1; } }
+@keyframes earth-caption-out { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .earth-page .earth-relation-enter, .earth-page .earth-chapter-cue { animation: none; }
+  .earth-page .scene-layer, .earth-page .scene-tabs button { transition: none; }
 }

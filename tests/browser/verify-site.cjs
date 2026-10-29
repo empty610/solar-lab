@@ -9,6 +9,7 @@ const pages = [
   'terminal',
   'mercury',
   'venus',
+  'earth',
   'mars',
   'jupiter',
   'saturn',
@@ -17,7 +18,7 @@ const pages = [
   'europa',
   'pluto',
 ];
-const nextStation = { mercury:'venus', venus:'mars', mars:'jupiter', jupiter:'saturn', saturn:'uranus', uranus:'neptune', neptune:'pluto', pluto:'terminal', europa:'saturn' };
+const nextStation = { mercury:'venus', venus:'earth', earth:'mars', mars:'jupiter', jupiter:'saturn', saturn:'uranus', uranus:'neptune', neptune:'pluto', pluto:'terminal', europa:'saturn' };
 function files(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     if (entry.name === '.git') return [];
@@ -98,8 +99,9 @@ const server = http.createServer((request, response) => {
   try {
     const nojs = await browser.newPage({ javaScriptEnabled: false });
     await nojs.goto(base + '/terminal/index.html');
-    assert.equal(await nojs.locator('.no-script a').count(), 9);
+    assert.equal(await nojs.locator('.no-script a').count(), 10);
     assert(await nojs.locator('.no-script a[href="../uranus/index.html"]').isVisible());
+    assert(await nojs.locator('.no-script a[href="../earth/index.html"]').isVisible());
     await nojs.close();
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     page.on('pageerror', (error) => { errors.push(error.message); console.error(page.url() + '\n' + error.stack); });
@@ -140,7 +142,7 @@ const server = http.createServer((request, response) => {
     const entries = await page
       .locator('.card-entry, .moon-entry')
       .evaluateAll((elements) => elements.map((e) => e.href));
-    assert.equal(entries.length, 9);
+    assert.equal(entries.length, 10);
     for (const url of entries) assert.equal((await page.request.get(url)).status(), 200);
     await page.screenshot({
       path: path.resolve(__dirname, '../../.qa/publish-catalog.png'),
@@ -230,7 +232,7 @@ const server = http.createServer((request, response) => {
         }
       }
       if (name !== 'terminal') {
-        const onward = page.locator('footer.journey-footer a[data-next-station]');
+        const onward = page.locator('footer a[data-next-station]');
         assert.equal(await onward.count(), 1, name + ' has one next station');
         assert.equal(await onward.getAttribute('href'), '../' + nextStation[name] + '/index.html');
         await onward.evaluate(element => element.click());
@@ -245,7 +247,7 @@ const server = http.createServer((request, response) => {
           (await back.getAttribute('href')).endsWith('/terminal/index.html'),
           name + ' back route',
         );
-        const triggers = page.locator('[data-photo], button[data-terrain], [data-image-full]');
+        const triggers = page.locator('[data-photo], button[data-terrain], [data-image-full], #earthrise-open');
         const count = await triggers.count();
         assert(count > 0, name + ' photo triggers');
         for (let i = 0; i < count; i++) {

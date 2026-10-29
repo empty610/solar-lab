@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f1f0e8" />
+  <meta name="description" content="地球观察手记：从一颗蓝色星球出发，认识海洋、大气、天气、地层、四季、月球与生态系统。Solar Laboratory 的交互式地球档案。" />
+  <title>地球 · 所有远行的起点 | Solar Laboratory</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../shared/motion.css" />
+  <link rel="stylesheet" href="../shared/interface.css" />
+  <link rel="stylesheet" href="../shared/music-controls.css" />
+  <link rel="stylesheet" href="../shared/navigation-controls.css" />
+  <link rel="stylesheet" href="../shared/journey.css" />
+  <script defer src="../shared/ui.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="../shared/interface.js" data-terminal="../terminal/index.html"></script>
+  <script defer src="../shared/idle-controls.js"></script>
+  <script defer src="../shared/music.js"></script>
+  <script defer src="../shared/model-loader.js"></script>
+  <noscript><style>#model-loading{display:none}#model-fallback[hidden]{display:block!important}.model-controls,.tab-row,.layer-tabs{display:none}[role="tabpanel"][hidden]{display:block!important;margin-top:35px}</style></noscript>
+</head>
+<body id="top" class="earth-page">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="masthead wrap">
+    <a class="brand" href="../terminal/index.html"><span class="brand-mark" aria-hidden="true">⊕</span> EMPTY610 <span>/ SOLAR LABORATORY</span></a>
+    <span class="edition">行星观察手记 &nbsp; NO. 03</span>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="title">
+      <div class="hero-word" aria-hidden="true">EARTH</div>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> THE LIVING PLANET / 太阳系第三颗行星</p>
+        <h1 id="title">地球<span>所有远行的起点。</span></h1>
+        <p class="hero-description">在宇宙的辽阔里，<br />有一颗星球，把海洋、云与生命<br />写进了同一种蓝色。</p>
+        <a class="explore-link" href="#portrait">重新认识我们的家园 <span aria-hidden="true">↘</span></a>
+        <div class="hero-footnote"><span>01 AU</span><p>距太阳约 1.496 亿千米<br /><small>A SMALL WORLD. OUR WHOLE WORLD.</small></p></div>
+      </div>
+      <div class="earth-observer" data-earth-scene>
+        <div class="observer-label"><span>⊕ &nbsp; 地球观察台</span><span id="model-status" role="status">正在准备模型</span></div>
+        <div class="model-stage" id="model-stage">
+          <span id="tropic-label" class="model-annotation" aria-hidden="true" hidden>北回归线 <small>23.44° N</small></span>
+          <div id="model-mount" aria-label="地球三维观察，可拖动旋转，滚轮或双指缩放，使用下方按钮缩放、切换昼夜和复位"></div>
+          <div class="model-loading" id="model-loading">正在展开蓝色星球 <span>· · ·</span></div>
+          <div class="model-fallback" id="model-fallback" hidden><img src="assets/earth-poster.png" width="800" height="800" alt="地球：蓝色海洋、陆地与白色云层" /><p>当前设备显示静态地球影像，图文与下方实验仍可阅读。</p></div>
+          <p class="model-hint">拖动旋转 · 滚轮 / 双指缩放</p>
+        </div>
+        <div class="observer-bottom"><div class="model-controls"><button id="spin" aria-pressed="true" disabled>暂停自转</button><button id="night" aria-pressed="false" disabled>夜间灯光</button><button id="zoom-out" class="zoom-button" disabled aria-label="缩小地球模型" title="缩小">−</button><button id="zoom-in" class="zoom-button" disabled aria-label="放大地球模型" title="放大">+</button><button id="reset" disabled aria-label="重置地球观察视角">复位 ↺</button></div><span class="tiny">本地合成贴图 / 非实时云图</span></div>
+      </div>
+    </section>
+
+    <nav class="section-nav" aria-label="本页章节"><div class="nav-mobile-heading" aria-hidden="true">地球观察手记 <span>FIELD NOTES / 03</span></div><div class="wrap"><span class="nav-caption">FIELD GUIDE <span aria-hidden="true">↗</span></span><a href="#portrait"><span class="nav-index" aria-hidden="true">01</span>行星档案</a><a href="#surface"><span class="nav-index" aria-hidden="true">02</span>蓝色表面</a><a href="#atmosphere"><span class="nav-index" aria-hidden="true">03</span>大气与磁场</a><a href="#interior"><span class="nav-index" aria-hidden="true">04</span>地球内部</a><a href="#seasons"><span class="nav-index" aria-hidden="true">05</span>昼夜与四季</a><a href="#moon"><span class="nav-index" aria-hidden="true">06</span>地月之间</a><a href="#life"><span class="nav-index" aria-hidden="true">07</span>生命与时间</a><a href="#perspective"><span class="nav-index" aria-hidden="true">08</span>回望家园</a></div><button id="art-motion" class="art-motion" type="button" aria-pressed="true" hidden><span aria-hidden="true">◌</span> 插画动效 <b>开启</b></button></nav>
+
+    <section id="portrait" class="chapter wrap" aria-labelledby="portrait-title">
+      <div class="section-heading"><p class="eyebrow">01 / A PORTRAIT OF HOME</p><h2 id="portrait-title">熟悉的名字，<br />值得重新认识的星球。</h2><p>它不是太阳系最大的行星，也不是最古老的天体。<br />但迄今为止，这是我们唯一确认存在生命的世界。</p></div>
+      <dl class="fact-strip"><div><dt>平均半径</dt><dd>6,371 <small>km</small></dd><span>赤道略鼓，两极略扁</span></div><div><dt>恒星自转周期</dt><dd>23<small>h</small> 56<small>m</small></dd><span>平均太阳日约 24 小时</span></div><div><dt>公转周期</dt><dd>365.25 <small>天</small></dd><span>约值，沿椭圆轨道绕太阳</span></div><div><dt>地球年龄</dt><dd>45.4 <small>亿年</small></dd><span>由岩石与陨石定年推断</span></div></dl>
+      <div class="portrait-bottom"><div class="portrait-prose">
+          <p>地球，太阳系中距离太阳第三近的行星，与水星、金星和火星共同组成内太阳系的四颗类地行星。它主要由岩石和金属构成，外部覆盖着海洋与大气，内部则分为地壳、地幔和地核。倘若读者刚从金星或火星的介绍过来，大概已经对这些词相当熟悉；只不过这一次，我们终于可以把“与地球相比”这句话暂时收起来了。</p>
+          <p>我们介绍别的行星时，总喜欢说它的一年相当于多少个地球年，重力是地球的几分之几，温度比我们这里高出多少。地球因此很容易成为一个被略过的参照物，好像知道自己生活在哪里，就已经知道这颗行星是怎么回事。可仔细想一想，为什么天空中有氧气？海水为什么没有全部逃向太空？脚下的岩石究竟能有多深？熟悉的生活里，其实藏着不少还没来得及问的问题。</p>
+          <p>从太阳系的尺度看，地球位于一个能让合适条件下的地表保有液态水的距离范围，通常称为宜居带。但处在宜居带并不会自动得到海洋和森林，大气的组成与厚度、行星质量、内部活动以及漫长的演化历史，都在参与决定地表的模样。金星与火星就在附近，它们已经足够提醒我们，仅凭一项条件，很难替一颗行星写好结局。</p>
+          <p>当然，地球也没有始终保持今天的温和面貌。年轻时的它经历过剧烈碰撞与高温，后来的大陆不断聚散，大气成分发生改变，冰盖也曾大规模扩张。今天的蓝色星球，是这些过程延续到现在的结果；它还在变化，我们恰好生活在其中的一小段时间里。下面不妨从最醒目的蓝色开始，逐渐往天空、地下和更久远的过去走一走。</p>
+</div><aside class="reading-route" aria-label="阅读路线">
+        <span class="label">A WAY THROUGH / 阅读路线</span>
+        <a href="#surface"><span>02—03</span><strong>从海洋，走向天空</strong><small>表面 · 水循环 · 大气与磁场</small></a>
+        <a href="#interior"><span>04—06</span><strong>从地心，看向月亮</strong><small>内部 · 昼夜与四季 · 地月之间</small></a>
+        <a href="#life"><span>07—08</span><strong>从过去，回到家园</strong><small>生命与时间 · 回望地球</small></a>
+        <a class="text-link" href="https://science.nasa.gov/earth/facts/" target="_blank" rel="noopener">NASA · 地球档案 ↗</a>
+      </aside></div>
+    </section>
+
+    <section id="surface" class="surface-section" aria-labelledby="surface-title"><div class="wrap">
+      <div class="section-heading"><p class="eyebrow">02 / THE BLUE SURFACE</p><h2 id="surface-title">一颗以陆地命名，<br />却属于海洋的星球。</h2></div>
+      <div class="surface-layout">
+<div class="surface-atlas" aria-label="地球表面图解">
+          <div class="water-art surface-plate" data-earth-scene data-surface-figure="ocean"><span class="art-index">FIG. 01 — THE WATER WORLD</span><div class="water-number">71<span>%</span></div><p>地球表面，被海洋覆盖。</p><svg viewBox="0 0 600 300" role="img" aria-label="海面波光与深海洋流的艺术示意，未按比例绘制"><defs>
+  <linearGradient id="ocean-depth" x2="0" y2="1"><stop stop-color="#327e88"/><stop offset="1" stop-color="#082b43"/></linearGradient>
+  <linearGradient id="ocean-light" x2="0" y2="1"><stop stop-color="#ade1d0" stop-opacity=".28"/><stop offset="1" stop-color="#ade1d0" stop-opacity="0"/></linearGradient></defs>
+  <circle class="art-glow" cx="461" cy="55" r="39" fill="#e1c48c" opacity=".8"/>
+  <g class="art-drift" fill="none" stroke="#c2ddd4" stroke-linecap="round" opacity=".35"><path d="M70 47h113m-66 10h96M350 24h66m89 57h59"/></g>
+  <path d="M0 114Q90 77 190 114T390 114T600 107V300H0Z" fill="url(#ocean-depth)"/>
+  <path class="art-wave" d="M-45 112Q65 79 170 110T380 110T645 104" stroke="#b1e2d3" fill="none" stroke-width="2"/>
+  <path d="M360 110L245 300H445L487 110Z" fill="url(#ocean-light)"/>
+  <g class="art-wave art-slow" fill="none" stroke="#8bcbc3" opacity=".45"><path d="M-25 152Q80 128 185 152T395 152T625 147M-25 182Q80 158 185 182T395 182T625 177"/></g>
+  <g class="art-flow" fill="none" stroke="#d7c797" stroke-dasharray="4 12" opacity=".55"><path d="M50 220C160 175 245 270 365 229S510 199 570 234"/><path d="M34 264C150 219 238 305 356 271S487 246 590 278"/></g>
+  <g fill="#c6e5d7" opacity=".45"><circle cx="92" cy="198" r="2"/><circle cx="171" cy="248" r="1.5"/><circle cx="384" cy="179" r="2"/><circle cx="497" cy="255" r="2"/><circle cx="546" cy="163" r="1.5"/></g>
+  <path d="M47 142v125m-5-8 5 8 5-8" fill="none" stroke="#abcfc7" opacity=".6"/><text x="66" y="291" fill="#d2e6db">流动的海洋 · 储存与输送热量</text></svg><div class="water-key"><span><i></i> 海洋约 71%</span><span><i></i> 陆地约 29%</span></div></div>
+          <div class="surface-plate land-art" data-earth-scene data-surface-figure="land" hidden>
+            <span class="art-index">FIG. 01B — A MOVING SURFACE</span>
+            <div class="plate-heading">29<span>%</span></div><p>大陆，写在缓慢移动的板块上。</p>
+            <svg viewBox="0 0 600 300" role="img" aria-label="山脉、森林与褶皱岩层的艺术示意，未按比例绘制"><defs>
+  <linearGradient id="land-rock" x2="0" y2="1"><stop stop-color="#a67d58"/><stop offset="1" stop-color="#684936"/></linearGradient>
+  <linearGradient id="land-mountain" x2="1" y2="1"><stop stop-color="#b9bca0"/><stop offset="1" stop-color="#697d6a"/></linearGradient></defs>
+  <circle cx="475" cy="57" r="30" fill="#e8c486"/><circle class="art-glow" cx="475" cy="57" r="42" fill="none" stroke="#bb985f" opacity=".35"/>
+  <g class="art-drift" fill="none" stroke="#fbf1da" stroke-width="2" opacity=".7"><path d="M42 54h106m-74 10h114M321 30h75"/></g>
+  <path d="M0 163L95 91 135 123 216 43 290 121 365 66 445 151 520 113 600 151V230H0Z" fill="url(#land-mountain)"/>
+  <path d="M171 95L216 43 254 88 225 78 211 94 201 80ZM338 96L365 66 395 105 367 95 355 106Z" fill="#f5efdc"/>
+  <path d="M0 190Q93 141 185 175T365 172T600 181V300H0Z" fill="url(#land-rock)"/>
+  <path d="M0 191Q93 142 185 176T365 173T600 182" stroke="#d4c68f" stroke-width="5" fill="none"/>
+  <g fill="#365e50"><path d="M55 163l12-31 12 31h-8v19h-8v-19Zm27-3 15-39 15 39h-11v18h-8v-18Zm372 6 14-37 14 37h-10v19h-8v-19Zm33 0 17-46 17 46h-13v13h-8v-13Z"/></g>
+  <g fill="none" stroke-linecap="round"><path d="M0 218Q95 180 189 216T376 214T600 219" stroke="#d8ae7f" stroke-width="17"/><path d="M0 252Q95 214 189 250T376 248T600 253" stroke="#c49468" stroke-width="18"/><path d="M0 280Q95 242 189 278T376 276T600 281" stroke="#e2c19b" stroke-width="8"/>
+  <path d="M0 232Q95 194 189 230T376 228T600 233" stroke="#f5d8af" opacity=".6"/><path class="art-flow" d="M300 180L262 300" stroke="#f8e9cb" stroke-dasharray="3 6"/></g>
+  </svg><div class="plate-caption"><span>LAND / 陆地</span><span>地表覆盖约 29%</span></div>
+          </div>
+          <div class="surface-plate ice-art" data-earth-scene data-surface-figure="ice" hidden>
+            <span class="art-index">FIG. 01C — THE FROZEN ARCHIVE</span>
+            <div class="plate-heading ice-heading">H₂O</div><p>冻结的水，也封存着时间。</p>
+            <svg viewBox="0 0 600 300" role="img" aria-label="冰山晶面与海面下的冰体艺术示意，未按比例绘制"><defs>
+  <linearGradient id="ice-water" x2="0" y2="1"><stop stop-color="#659da8"/><stop offset="1" stop-color="#255c72"/></linearGradient>
+  <linearGradient id="ice-prism" x2="1" y2="1"><stop stop-color="#eff9ef"/><stop offset="1" stop-color="#a2cfce"/></linearGradient></defs>
+  <g class="art-drift" fill="none" stroke="#f5faf0" opacity=".7"><path d="M35 46h128m-80 12h107M414 30h101"/></g>
+  <path d="M0 122Q145 113 300 122T600 122V300H0Z" fill="url(#ice-water)"/>
+  <path d="M137 124L210 53 264 68 320 17 390 94 446 124 380 235 301 282 229 211Z" fill="url(#ice-prism)"/>
+  <path d="M320 17L301 282 380 235 446 124 390 94Z" fill="#abd2d2"/><path d="M210 53L264 68 229 211 137 124Z" fill="#dcece5"/>
+  <path d="M320 17L340 126 301 282 264 68 298 128 137 124 229 211 340 126 446 124 380 235" fill="none" stroke="#f0fbef" opacity=".6"/>
+  <path class="art-wave" d="M-30 122Q130 113 300 122T630 122" fill="none" stroke="#eff6e9" stroke-width="2"/>
+  <g class="art-wave art-slow" fill="none" stroke="#c0deda" opacity=".35"><path d="M20 157h83m377 0h98M42 189h102m301 18h108M84 245h95m229 19h109"/></g>
+  <g fill="#f7fff3" opacity=".7"><circle cx="253" cy="159" r="2"/><circle cx="279" cy="211" r="3"/><circle cx="320" cy="180" r="2"/><circle cx="356" cy="150" r="2"/></g>
+  <path d="M464 144h57v90m-7 0h14" fill="none" stroke="#d7eeea" stroke-dasharray="3 5"/><text x="431" y="260" fill="#d7eeea">海面之下</text></svg><div class="plate-caption"><span>CRYOSPHERE / 冰冻圈</span><span>冰川 · 海冰 · 冻土</span></div>
+          </div>
+          <div class="surface-plate cycle-art" data-earth-scene data-surface-figure="cycle" hidden>
+            <span class="art-index">FIG. 01D — WATER IN MOTION</span>
+            <div class="cycle-heading">一滴水的旅程</div><p>太阳能与重力，让旅程继续。</p>
+            <svg viewBox="0 0 600 340" role="img" aria-label="水循环示意：太阳加热海洋，蒸发、凝结、降水与径流相连"><defs>
+  <linearGradient id="cycle-sea" x2="0" y2="1"><stop stop-color="#4c9a9c"/><stop offset="1" stop-color="#285f75"/></linearGradient>
+  <marker id="cycle-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0 0L6 3 0 6" fill="none" stroke="#e2cb95"/></marker></defs>
+  <circle cx="85" cy="58" r="25" fill="#dbc38c"/><circle class="art-glow" cx="85" cy="58" r="37" fill="none" stroke="#e5c98f" opacity=".5"/>
+  <g class="art-drift"><path d="M240 84C211 83 217 49 241 46C247 12 298 15 309 44C342 35 360 61 348 84Z" fill="#d6e6d7"/><path d="M243 84h105" stroke="#a6c9c3" stroke-width="5"/></g>
+  <path d="M301 258L421 117 480 200 518 155 600 236V340H301Z" fill="#7c9c83"/><path d="M421 117L480 200 518 155 600 236V340H421Z" fill="#597e72"/>
+  <path d="M391 153L421 117 450 158 424 145 411 163Z" fill="#e3ead7"/>
+  <path d="M0 259Q120 239 239 259T475 259T690 259V340H0Z" fill="url(#cycle-sea)"/>
+  <path class="art-wave" d="M-25 281Q95 261 215 281T455 281T695 281" fill="none" stroke="#b0d5cc" opacity=".5"/>
+  <path d="M420 182Q370 200 407 215T360 249" fill="none" stroke="#b4dbd1" stroke-width="4"/>
+  <g class="art-flow" fill="none" stroke="#e2cb95" stroke-width="1.7" stroke-dasharray="5 7" marker-end="url(#cycle-arrow)"><path d="M145 225Q124 137 208 91"/><path d="M367 75Q414 68 439 102"/><path d="M456 242Q365 313 263 292"/></g>
+  <g class="art-rain" stroke="#c7e4dc" stroke-width="2" stroke-linecap="round"><path d="M267 108l-8 21m34-21-8 21m34-21-8 21m-32 19-8 21m34-21-8 21"/></g>
+  <g fill="#a6c4a2"><path d="M493 220l10-27 10 27h-7v12h-6v-12Zm27-14 12-32 12 32h-9v14h-6v-14Z"/></g>
+  <text x="94" y="174">蒸发</text><text x="334" y="148">降水</text><text x="393" y="316">径流</text><text x="36" y="324">OCEAN</text></svg><div class="plate-caption"><span>WATER CYCLE / 水循环</span><span>没有固定的地址</span></div>
+          </div>
+        </div>
+        <div class="surface-copy"><div class="tab-row" role="tablist" aria-label="地球表面主题"><button id="tab-ocean" role="tab" aria-controls="ocean-panel" aria-selected="true">海洋</button><button id="tab-land" role="tab" aria-controls="land-panel" aria-selected="false" tabindex="-1">大陆</button><button id="tab-ice" role="tab" aria-controls="ice-panel" aria-selected="false" tabindex="-1">冰冻圈</button><button id="tab-cycle" role="tab" aria-controls="cycle-panel" aria-selected="false" tabindex="-1">水循环</button></div>
+        <div class="panel-deck">
+        <article id="ocean-panel" role="tabpanel" aria-labelledby="tab-ocean"><span class="label">HYDROSPHERE / 水圈</span><h3>蓝色，是流动的。</h3>
+          <p>如果把上面的地球转到太平洋这一侧，你会发现，陆地有时几乎要退出画面。海洋覆盖地球表面约71%的面积，各个大洋彼此相通，地图上画出的名字并没有把海水分开。对于一颗被称为“地球”的行星来说，这个比例多少有些名不副实。</p>
+          <p>海洋为什么是蓝色的？读者可能首先想到天空的倒影，它确实会影响我们眼前的海面，但水本身对不同颜色的光也有不同的吸收能力。红色部分更容易被吸收，蓝色光相对更容易留下来；再加上水中的散射，便形成了我们熟悉的深蓝。近岸泥沙、浮游生物与海底的反光，又会让海水呈现青绿、黄褐等不同颜色。</p>
+          <p>这层蓝色还在调节着地球的气候。水能够储存大量热量，海洋升温与降温通常比陆地缓慢，沿海地区的温度变化因此常常比较温和。风、海水密度差异以及地球自转等因素驱动洋流，把热量从一个地方带往另一个地方。海面看似平静，水下的搬运却一直没有停止。</p>
+          <p>继续往下，阳光越来越弱，深海的大部分区域长期处在黑暗之中。那里仍然有生命，有些依靠从上层落下的有机物，有些则围绕热泉等环境，依靠微生物利用化学能建立起食物网。我们在寻找地外海洋中的生命时，也会回头研究这些远离阳光的地球居民。</p>
+          <p>最后还得提醒一句，海洋里的水主要是咸水，全球淡水中又有很大一部分储存在冰川、冰盖与地下。可以方便取用的河流和湖泊，只占全部水资源中的很小一部分。地球看起来到处都是水，与你家水龙头能否一直流出干净的水，仍然是两件需要分别考虑的事。</p>
+<dl class="small-facts"><div><dt>最深的海沟</dt><dd>约 11 <small>km</small></dd></div><div><dt>水的主要储库</dt><dd>海洋</dd></div></dl></article>
+        <article id="land-panel" role="tabpanel" aria-labelledby="tab-land" hidden><span class="label">LITHOSPHERE / 岩石圈</span><h3>脚下的大陆，也在旅行。</h3>
+          <p>把目光从海洋移回来，地球的大陆也并没有我们想象中那么安稳。地壳与最上部坚硬的地幔共同组成岩石圈，岩石圈又被分割成许多板块，它们携带着大陆与洋底，以每年厘米量级的速度相对运动。这个速度放在一次旅行里实在不值一提，放进几千万年，却足以开合一片海洋。</p>
+          <p>板块相互远离时，深部物质上涌、冷却，能够在洋中脊形成新的洋壳；板块汇聚时，较致密的板块可能向下俯冲，也可能发生大陆之间的碰撞，把岩层挤压、抬升成山脉。喜马拉雅山与印度板块、欧亚板块的碰撞有关，而大西洋中脊记录的是另一种方向的运动。</p>
+          <p>读者可能会顺着这个想法继续追问：如果大陆一直在动，地图岂不是迟早要重画？的确如此，只是我们不必为此每年更换一张世界地图。岩石中的磁性记录、相隔很远却能够对应的地层与化石，以及现代卫星测量，都在帮助人类追踪这种缓慢的位移。</p>
+          <p>地表的变化也不全由地下推动。山脉抬升的同时，雨水、河流、冰川与风又在不断拆解岩石，把碎屑带往更低的地方。它们沉积、压实，后来还可能重新成为岩层。我们眼前的高山、平原和三角洲，正是内部活动与外部侵蚀共同留下的模样。</p>
+<dl class="small-facts"><div><dt>大陆漂移的速度尺度</dt><dd>厘米 / 年</dd></div><div><dt>主要塑形过程</dt><dd>构造与侵蚀</dd></div></dl></article>
+        <article id="ice-panel" role="tabpanel" aria-labelledby="tab-ice" hidden><span class="label">CRYOSPHERE / 冰冻圈</span><h3>白色的部分，保存着时间。</h3>
+          <p>地球两极的白色区域，容易让从火星页面过来的读者产生一点熟悉感。不过，这里的大规模冰盖主要由水冰构成，没有火星上那样随季节广泛凝结、升华的干冰极冠。南极与格陵兰的大陆冰盖、山地冰川、漂浮海冰，以及多年冻土，共同构成了地球的冰冻圈。</p>
+          <p>雪一年又一年地积累，下面的积雪受到挤压，逐渐变得致密，最终形成冰。这个过程中，一部分空气被封闭成小气泡，尘埃与火山灰也可能留在其中。科学家钻取冰芯、测量气泡中的气体，再结合冰的同位素等线索，就能研究过去的大气与气候。它很像一份需要仔细核对日期的旧档案，里面封存的甚至有当年的空气。</p>
+          <p>冰还会反过来影响气候。明亮的冰雪反射较多阳光，海冰退去后露出的深色海水则更容易吸收能量。这种变化能够加强原来的升温趋势，所以一片冰的消失，影响往往不止于照片上少了一块白色。</p>
+          <p>谈到海平面时，需要把陆地冰和漂浮海冰分开。陆地上的冰川、冰盖融化并流入海洋，会增加海水总量；已经浮在水里的海冰融化，对海平面的直接影响很小，和杯子里浮着的冰块有些相似。此外，海水本身受热膨胀，也是海平面上升的重要原因。</p>
+<dl class="small-facts"><div><dt>极地冰芯记录</dt><dd>过去的大气</dd></div><div><dt>冰雪的重要作用</dt><dd>反射太阳光</dd></div></dl></article>
+        <article id="cycle-panel" role="tabpanel" aria-labelledby="tab-cycle" hidden><span class="label">WATER CYCLE / 水循环</span><h3>一滴水，没有固定的地址。</h3>
+          <p>接着，我们来追踪一滴水。它可能刚从海面蒸发，跟随空气离开低纬海洋，在远方的山坡上凝结成云，再以雨雪的形式回到地面。之后，它可以进入河流、渗入地下，也可以在冰川里停留很久。水循环没有规定每滴水必须按照同一张路线图旅行。</p>
+          <p>这里有一个很容易被日常用语藏起来的小区别：真正的水蒸气是看不见的。天空中白色的云，以及壶口附近那团被我们顺口叫作“水蒸气”的白雾，主要是已经凝结的小水滴或冰晶。空气冷却到适当条件时，水汽凝结，才出现了能够被我们看见的云。</p>
+          <p>植物也参与这场搬运。根部吸收的水经过植物组织，一部分通过叶片的气孔以水汽形式回到空气中，这叫蒸腾。蒸发与蒸腾把水带进大气，降水把水送回来，重力再推动地表和地下的水流动。因此，森林、河流与远方的降雨之间，存在着比地图上的距离更紧密的联系。</p>
+          <p>水在这些地方停留的时间并不相同。暴雨形成的径流可以很快到达下游，而某些深层地下水的补给则十分缓慢。人类修筑水库、抽取地下水、改变土地覆盖，也会改写它的去向。所谓“水可以循环”，并不保证我们能在任何地点、任何时候，以任意速度把水取出来用。</p>
+<dl class="small-facts"><div><dt>主要动力</dt><dd>太阳能与重力</dd></div><div><dt>连续的旅程</dt><dd>蒸发 → 降水</dd></div></dl></article>
+        </div>
+        </div>
+      </div><p class="section-note">比例为约值。插图随主题切换，地层、浮冰与水循环均为简化示意，未按真实尺度绘制。<a href="https://oceanservice.noaa.gov/facts/oceanwater.html" target="_blank" rel="noopener">NOAA · 海洋与地球的水 ↗</a></p>
+    </div></section>
+
+    <section id="atmosphere" class="chapter wrap" aria-labelledby="atmosphere-title">
+      <div class="section-heading"><p class="eyebrow">03 / THE INVISIBLE SHELTER</p><h2 id="atmosphere-title">我们生活在，<br />一层很薄的天空之下。</h2><p>从天气发生的低空，到逐渐融入太空的稀薄气体，<br />大气没有一条突然结束的硬边界。</p></div>
+      <div class="sky-layout"><div class="sky-art" data-earth-scene><div class="sky-star" aria-hidden="true">✦</div><span class="sky-space">SPACE</span><ol class="sky-layers"><li><b>外逸层</b><span>约 600 km 以上 · 逐渐过渡到太空</span></li><li><b>热层</b><span>约 85–600 km · 许多极光在这里发光</span></li><li><b>中间层</b><span>约 50–85 km · 多数流星烧蚀</span></li><li><b>平流层</b><span>约 12–50 km · 臭氧层吸收紫外线</span></li><li><b>对流层</b><span>地表至约 12 km · 云、雨与我们的呼吸</span></li></ol><span class="sky-ground">SEA LEVEL / 海平面</span></div><div class="sky-copy"><span class="label">AIR / 大气</span><h3>看不见，却与一切有关。</h3>          <p>在火星和金星的介绍中，我们花了不少篇幅谈论大气。回到地球，情况终于变得适合人类直接呼吸：近地表的干燥空气中，氮约占78%，氧约占21%，其余主要是氩以及二氧化碳等气体。平时容易被忽略的氮，其实才是这片天空中的大多数。</p>
+          <p>这里特意加上“干燥”两个字，是因为水汽含量会随地点与天气明显变化。闷热夏日的空气和寒冷干燥地区的空气，不能只用一张固定比例表描述。至于氧气为何能占到如此高的比例，则与生命漫长的活动有关，后面的时间线会接着讲这件事。</p><div class="air-bar" role="img" aria-label="干燥空气：约78%氮，21%氧，1%其它气体"><span></span><span></span><span></span></div><div class="air-key"><span>78% 氮</span><span>21% 氧</span><span>1% 其它</span></div>          <p>大气也在参与保温。地表吸收太阳能后向外发出红外辐射，水汽、二氧化碳等温室气体能够吸收并重新发射其中的一部分，使地表和低层大气维持比缺少这种作用时更高的温度。自然温室效应本身是地球适宜生命的重要条件。问题在于，人类燃烧化石燃料、改变土地利用等活动增加了温室气体，使原来的能量收支发生变化，推动气候进一步变暖。</p>
+          <p>当然，今天窗外下了一场大雪，并不能单独回答全球有没有变暖。天气讲的是短期、局部的大气状态，气候则需要观察较长时间里的平均情况和变化范围。一次寒潮与长期升温可以同时存在；要判断后者，我们需要把各地多年积累的记录放到一起。</p><details><summary>为什么天空是蓝色的？ <span>＋</span></summary>          <p>阳光进入大气后，会被空气分子散射，其中较短波长的可见光更容易被散射。于是，除了直接看向太阳，我们从天空的其他方向也能收到偏蓝的光。眼前整片蓝色的天空，就是这样形成的。</p>
+          <p>到了日出或日落，阳光斜着穿过更长的大气路径，直射光中的蓝光被更多地散射到别处，剩下的光便偏向红橙色。云层、气溶胶等还会改变实际看到的色彩。所以，如果你在火星页面读到蓝色落日，也不必觉得它违背了这里的解释；换了一套大气和尘埃条件，光的旅程自然会有不同的结果。</p></details><a class="text-link" href="https://www.noaa.gov/jetstream/atmosphere/layers-of-atmosphere" target="_blank" rel="noopener">NOAA · 大气分层 ↗</a></div></div>
+      <div class="magnetism"><figure class="magnetic-atlas" data-earth-scene data-scene-focus="wind">
+  <div class="scene-heading"><span class="label">EARTH'S INVISIBLE REACH</span><span>磁层观察 / 03</span></div>
+  <svg viewBox="0 0 620 360" role="img" aria-labelledby="magnetic-title magnetic-desc">
+    <title id="magnetic-title">太阳风中的地球磁层</title><desc id="magnetic-desc">太阳风从左侧到来，迎日侧磁层压缩，背日侧延伸成磁尾；地球高纬地区标出极光位置。选取下方主题可突出对应区域。</desc>
+    <defs>
+      <radialGradient id="mag-space"><stop stop-color="#265c63"/><stop offset="1" stop-color="#102d40"/></radialGradient>
+      <linearGradient id="mag-envelope"><stop stop-color="#8bd5c5" stop-opacity=".22"/><stop offset="1" stop-color="#73b3c6" stop-opacity=".02"/></linearGradient>
+      <radialGradient id="mag-earth" cx=".3" cy=".3"><stop stop-color="#a0cab0"/><stop offset=".6" stop-color="#478c95"/><stop offset="1" stop-color="#224c65"/></radialGradient>
+      <marker id="mag-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="m1 1 6 3-6 3" fill="none" stroke="#e5c995" stroke-width="1.5"/></marker>
+    </defs>
+    <rect width="620" height="360" fill="url(#mag-space)"/>
+    <g fill="#c4dfcf" opacity=".35"><circle cx="78" cy="41" r="1"/><circle cx="362" cy="43" r="1"/><circle cx="569" cy="104" r="1"/><circle cx="446" cy="316" r="1"/><circle cx="91" cy="303" r="1"/></g>
+    <path d="M598 47C384 42 121 24 119 180S384 318 598 313" fill="url(#mag-envelope)" stroke="#8dc5be" stroke-width="1.4"/>
+    <g class="magnetic-field" fill="none" stroke="#8dbfb6" opacity=".65">
+      <path d="M237 145C167 61 137 101 145 180S191 280 252 216M237 145C148 22 100 128 119 180S159 318 252 216"/>
+      <path d="M237 145C299 61 430 71 606 78M252 216C316 295 449 287 606 281M240 146C309 113 436 120 606 127M253 215C328 249 448 244 606 233"/>
+    </g>
+    <g class="scene-layer" data-scene-layer="wind" fill="none" stroke="#e5c995" stroke-width="2">
+      <path class="art-flow" stroke-dasharray="7 14" d="M18 111H114M18 180H110M18 249H114"/>
+      <path marker-end="url(#mag-arrow)" d="M40 111H100M35 180H94M40 249H100"/>
+      <path d="M105 116Q82 180 105 244" stroke-dasharray="3 5" opacity=".6"/>
+    </g>
+    <g class="scene-layer" data-scene-layer="tail" fill="none" stroke="#a9d5dc" stroke-width="2">
+      <path class="art-flow" stroke-dasharray="5 11" d="M275 137Q391 90 599 93M279 223Q401 270 599 266"/>
+      <path d="M320 180H588" stroke-dasharray="2 7" opacity=".5"/>
+    </g>
+    <circle cx="245" cy="180" r="43" fill="url(#mag-earth)" stroke="#c3e0cf"/>
+    <path d="m221 147 22-6 12 12-6 10 15 12-9 18-16-2-5 23-11-14 5-17-14-9Z" fill="#acc59a" opacity=".8"/>
+    <ellipse cx="245" cy="180" rx="19" ry="42" fill="none" stroke="#d8e7ca" opacity=".18" transform="rotate(-15 245 180)"/>
+    <path d="m230 122 30 116" stroke="#dce3c7" stroke-dasharray="3 5" opacity=".4"/>
+    <g class="scene-layer" data-scene-layer="aurora" fill="none" stroke="#b9edb0">
+      <path class="aurora-halo art-glow" d="M221 148Q234 135 251 144M242 217Q260 227 272 211" stroke-width="10" opacity=".35"/>
+      <path d="M221 148Q234 135 251 144M242 217Q260 227 272 211" stroke-width="2.5"/>
+      <path class="art-flow" stroke-dasharray="3 7" d="M273 103Q236 113 235 139M295 261Q264 253 260 222"/>
+    </g>
+    <g class="mag-labels"><text x="20" y="83">太阳风 →</text><text x="153" y="61">迎日侧</text><text x="455" y="59">背日侧 · 磁尾</text><text x="218" y="258">地球</text><text x="304" y="133">高纬极光</text><path d="M299 138 256 147" fill="none" stroke="#b9d5c4" opacity=".5"/></g>
+    <text x="22" y="338" class="scene-scale">结构示意 · 距离、形状与速度均非实测比例</text>
+  </svg>
+  <div class="scene-controls"><div class="scene-tabs" role="tablist" aria-label="磁层观察主题" hidden><button type="button" role="tab" id="mag-wind-tab" aria-controls="mag-wind-note" aria-selected="true" tabindex="0"><span aria-hidden="true">01</span> 太阳风</button><button type="button" role="tab" id="mag-tail-tab" aria-controls="mag-tail-note" aria-selected="false" tabindex="-1"><span aria-hidden="true">02</span> 磁尾</button><button type="button" role="tab" id="mag-aurora-tab" aria-controls="mag-aurora-note" aria-selected="false" tabindex="-1"><span aria-hidden="true">03</span> 极光</button></div><div class="panel-deck scene-notes"><div id="mag-wind-note" role="tabpanel" aria-labelledby="mag-wind-tab" tabindex="0" data-scene-key="wind"><strong>太阳风</strong><p>来自太阳的带电粒子流迎面而来，迎日侧磁层受到压缩。金色流线标出太阳风的来向。</p></div><div id="mag-tail-note" role="tabpanel" aria-labelledby="mag-tail-tab" tabindex="0" data-scene-key="tail"><strong>磁尾</strong><p>背向太阳的一侧被拉长。浅蓝流线强调磁尾的延伸方向，图中的边缘并非固定的外壳。</p></div><div id="mag-aurora-note" role="tabpanel" aria-labelledby="mag-aurora-tab" tabindex="0" data-scene-key="aurora"><strong>极光</strong><p>部分粒子沿磁场进入高纬大气，碰撞激发光芒。绿色弧线提示极光区域，并非发光云层。</p></div></div></div>
+  <figcaption>从太阳风的来向，读懂这面会变化的屏障。</figcaption>
+</figure><div><span class="label">MAGNETOSPHERE / 磁层</span><h3>一面无形、也会变化的屏障。</h3>          <p>我们平时靠指南针辨认方向，到了行星尺度，同一个磁场又会影响地球周围大量带电粒子的运动。地球深处的液态外核以导电的铁合金为主，流体运动与自转等条件共同参与维持磁场，具体的内部结构可以在下一章继续看。</p>
+          <p>太阳持续向外释放带电粒子流，也就是太阳风。地球磁层迎向太阳的一侧受到压缩，背向太阳的一侧则被拉出长长的磁尾，因此真实的磁层并不像基础偶极场那样对称。部分粒子沿磁场进入高纬大气，与原子、分子碰撞，激发出绿色、红色等光芒，这便是极光。</p>
+          <p>极光看起来像天空中垂下的帘幕，但它并不是一层漂浮的彩色云。发光物质、粒子能量与高度不同，颜色和形态也会变化。磁场能够改变很多带电粒子的路径，大气又承担了吸收部分高能辐射等作用；我们生活的地表环境，是这些条件共同作用的结果。</p></div></div>
+      <p class="section-note">大气层边界随纬度、季节与太阳活动变化；高度为近似范围，色带和磁场图均未按真实尺度绘制。</p>
+      <div class="earth-reading" aria-label="地球的天气活动">
+        <article class="reading-essay"><header><span class="essay-number" aria-hidden="true">01</span><span class="label">MONSOON / 海陆之间</span><h3>风把海洋的水汽，送进大陆深处。</h3><figure class="weather-plate" data-earth-scene><svg viewBox="0 0 400 250" role="img" aria-label="季风输送水汽的艺术示意，海洋与山地之间有湿润气流和降水"><defs><linearGradient id="monsoon-sea" x2="0" y2="1"><stop stop-color="#548e96"/><stop offset="1" stop-color="#255f78"/></linearGradient></defs>
+  <circle class="art-glow" cx="319" cy="46" r="25" fill="#e5c287"/>
+  <path d="M0 174L93 69 157 139 196 100 280 192H0Z" fill="#769484"/><path d="M65 101L93 69 119 100 94 92 86 108Z" fill="#e6e9d2"/>
+  <path d="M0 179Q85 161 183 189T420 180V250H0Z" fill="url(#monsoon-sea)"/>
+  <path class="art-wave" d="M-20 210Q75 189 175 210T420 210" fill="none" stroke="#9fcac6" opacity=".65"/>
+  <path class="art-flow" d="M350 155C290 88 235 85 167 94m18-8-18 8 18 4" fill="none" stroke="#f3d6a0" stroke-width="2" stroke-dasharray="4 7"/>
+  <g class="art-drift" fill="#dce9de"><path d="M68 61C53 40 76 26 91 35C102 11 137 18 140 40C163 30 182 45 169 61Z"/></g>
+  <g class="art-rain" stroke="#b9d7cd" stroke-width="2"><path d="M132 77l-7 17m30-17-7 17m30-17-7 17"/></g>
+  <text x="23" y="234">大陆</text><text x="316" y="234">海洋</text><text x="212" y="75">水汽输送</text></svg><figcaption>海陆之间 / 水汽的季节性旅程</figcaption></figure></header><div class="essay-prose">
+          <p>地球的天气，离不开太阳对地表不均匀的加热。赤道与极地接收的能量不同，陆地和海洋升温、降温的速度也不同，空气便在气压差的推动下流动。地球自转又使大尺度气流的方向发生偏转；海岸线、山脉和海温变化，让这场全球性的搬运在各地呈现不同模样。</p>
+          <p>季风就是其中一种鲜明的节律：大范围的盛行风随季节发生变化，水汽输送与雨带也跟着调整。以亚洲夏季风为例，来自海洋的湿润气流进入大陆，遇到山地抬升或与其他气流交汇，便可能带来持续降雨。到了冬季，东亚大陆冷却，许多地方转而受到寒冷、干燥的大陆气流影响。季风不是“一场特别大的雨”，而是一套随季节变化的环流。</p>
+          <p>雨季为河流、森林和农田补充水分，但降雨集中也可能造成洪涝；雨带位置或持续时间改变，又可能使一些地方缺水。我们熟悉的播种时节、湿地涨落和植被生长，都与天空里的这套节律相连。</p>
+          <a class="text-link" href="https://www.weather.gov/twc/Monsooninfo" target="_blank" rel="noopener">NWS · 季风如何形成 ↗</a>
+        </div></article>
+        <article class="reading-essay"><header><span class="essay-number" aria-hidden="true">02</span><span class="label">STORMS / 水与能量</span><h3>从一朵积云，到旋转的风暴。</h3><figure class="weather-plate storm-plate" data-earth-scene><svg viewBox="0 0 400 250" role="img" aria-label="积雨云中上升气流、凝结与降雨的艺术示意，未按尺度绘制"><defs><linearGradient id="storm-cloud" x2="0" y2="1"><stop stop-color="#dce7df"/><stop offset="1" stop-color="#739eaa"/></linearGradient></defs>
+  <g class="art-drift"><path d="M80 70C50 67 47 39 76 33H317Q350 36 332 55L276 76V133Q311 164 277 174H113Q78 172 103 144L113 101Z" fill="url(#storm-cloud)"/><path d="M112 124Q150 92 182 124T251 128" fill="none" stroke="#edf5e7" opacity=".45"/></g>
+  <path d="M0 222Q95 204 185 222T400 219V250H0Z" fill="#4a7c83"/>
+  <path class="art-flow" d="M171 216C144 179 168 145 187 111S210 71 190 55m-6 14 6-14 10 9" fill="none" stroke="#f2ce8f" stroke-width="2" stroke-dasharray="5 6"/>
+  <g class="art-rain" stroke="#a3d1d6" stroke-width="2" stroke-linecap="round"><path d="M225 186l-8 18m30-18-8 18m30-18-8 18m30-18-8 18"/></g>
+  <text x="25" y="111">上升</text><path d="M59 107h63" stroke="#c4d9d1" opacity=".4"/><text x="310" y="157">凝结</text><text x="300" y="208">降水</text></svg><figcaption>云的内部 / 水与能量的交换</figcaption></figure></header><div class="essay-prose">
+          <p>当空气中有足够水汽、大气层结不稳定，又有地表加热、山坡或锋面推动空气上升时，积云就可能发展成高耸的积雨云。空气上升后冷却，水汽凝结成云滴并释放潜热，帮助上升运动继续发展。云中的水滴与冰粒增长、碰撞，伴随电荷分离，便可能出现强降雨、闪电，有时还有冰雹。</p>
+          <p>热带气旋则是更大尺度的组织。温暖海面不断供应水汽和能量，在足够的自转偏转作用、较弱的垂直风切变等条件配合下，雷暴可以围绕低压中心组织成旋转的系统。达到相应强度后，西北太平洋称它为台风，北大西洋等海域称它为飓风。它们的能量补给与海洋紧密相连，并不是海面只要温暖就一定会生成。</p>
+          <p>云、风和风暴并非地球独有，其他行星同样有强烈的大气活动。地球特别的地方，是这些天气与广阔的液态水海洋、冰雪、土壤和生命圈相互作用：一场雨既在释放大气中的能量，也可能成为一条河流的来水、一片森林的水源。</p>
+          <p class="section-note"><a href="https://www.noaa.gov/jetstream/thunderstorms/ingredients-for-thunderstorm" target="_blank" rel="noopener">NOAA · 雷暴的形成条件 ↗</a> · <a href="https://www.noaa.gov/jetstream/tropical/tropical-cyclone-introduction" target="_blank" rel="noopener">NOAA · 热带气旋 ↗</a></p>
+        </div></article>
+      </div>
+    </section>
+
+    <section id="interior" class="interior-section" aria-labelledby="interior-title"><div class="wrap">
+      <div class="section-heading"><p class="eyebrow">04 / BENEATH OUR FEET</p><h2 id="interior-title">向下 6,371 千米，<br />是一颗仍然炽热的心。</h2></div>
+      <div class="interior-layout"><div class="cutaway" data-earth-scene><svg viewBox="0 0 560 520" role="img" aria-label="地球内部剖面示意，由外向内为地壳、地幔、液态外核和固态内核"><defs><radialGradient id="mantle-depth"><stop stop-color="#dba06b"/><stop offset="1" stop-color="#99513d"/></radialGradient><radialGradient id="outer-depth"><stop stop-color="#ffe2a0"/><stop offset="1" stop-color="#ce8c48"/></radialGradient><radialGradient id="inner-depth"><stop stop-color="#fff8d8"/><stop offset="1" stop-color="#edc981"/></radialGradient><pattern id="rock-lines" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0V8" stroke="#f2eee5" stroke-width="1" opacity=".18"/></pattern></defs><circle class="layer-shape" data-layer="crust" cx="260" cy="260" r="224" fill="#9eb6a1"/><circle class="layer-shape" data-layer="mantle" cx="260" cy="260" r="214" fill="url(#mantle-depth)"/><circle cx="260" cy="260" r="214" fill="url(#rock-lines)" pointer-events="none"/><circle class="layer-shape" data-layer="outer" cx="260" cy="260" r="122" fill="url(#outer-depth)"/><circle class="layer-shape" data-layer="inner" cx="260" cy="260" r="43" fill="url(#inner-depth)"/><path d="M260 36A224 224 0 0 0 260 484Z" fill="#1e4b47"/><path d="M260 36C80 160 80 360 260 484M260 36C172 160 172 360 260 484M66 148H260M36 260H260M66 372H260" stroke="#a5b4a3" opacity=".3" fill="none"/><path d="M260 260h245" stroke="#f1e8d1" stroke-width="1"/><text x="265" y="250">0</text><text x="455" y="250">6,371 km</text><text x="55" y="510">FIG. 02 / 从地表到地心</text></svg><span class="cutaway-note">依据地震波等证据推断 · 地壳厚度已夸张</span></div>
+      <div class="layer-copy"><div class="layer-tabs" role="tablist" aria-label="选择地球内部层次"><button id="tab-crust" role="tab" aria-selected="true" aria-controls="crust-panel" data-layer="crust">01 地壳</button><button id="tab-mantle" role="tab" aria-selected="false" aria-controls="mantle-panel" data-layer="mantle" tabindex="-1">02 地幔</button><button id="tab-outer" role="tab" aria-selected="false" aria-controls="outer-panel" data-layer="outer" tabindex="-1">03 外核</button><button id="tab-inner" role="tab" aria-selected="false" aria-controls="inner-panel" data-layer="inner" tabindex="-1">04 内核</button></div>
+      <div class="panel-deck">
+      <article id="crust-panel" role="tabpanel" aria-labelledby="tab-crust"><span class="label">CRUST / 最外侧的薄壳</span><h3>所有山海，<br />都在这层薄薄的外衣上。</h3>
+          <p>先从我们真正能够接触到的一层开始。地壳厚度大约为5至70千米，洋壳通常较薄，大陆地壳一般较厚，某些高大山系之下还伸展着更厚的“山根”。对住在地表的人来说，几十千米已经很深；可拿它与六千多千米的地球半径相比，又只剩薄薄的一层。</p>
+          <p>图中的浅色边缘已经刻意画厚了一些，否则你可能还没看清，地壳就已经被地幔的颜色盖过去了。地质剖面图里的各层厚度，和纸上画出来的视觉分量，并不总能完全一致。</p>
+          <p>前面说到的板块，也不能简单理解成几块漂在岩浆上的地壳。地壳与最上部坚硬地幔一起构成岩石圈板块，下方的岩石能够在漫长时间中缓慢变形。我们踩着的地面虽然坚硬，它参与的运动却远远超出了脚下这一小块岩石。</p>
+<strong class="layer-stat">5–70 <small>km / 大致厚度</small></strong></article>
+      <article id="mantle-panel" role="tabpanel" aria-labelledby="tab-mantle" hidden><span class="label">MANTLE / 漫长时间里的流动</span><h3>坚硬的岩石，<br />也可以缓慢变形。</h3>
+          <p>越过地壳，直到大约2,900千米深处，便是占据地球内部大部分体积的地幔。它主要由硅酸盐岩石组成。读者可能因为火山流出的熔岩，顺势把地下想象成一大锅烧开的岩浆；实际上，地幔绝大部分仍然处于固态。</p>
+          <p>固态的东西，为什么还能对流？关键在于我们讨论的是多长的时间。岩石在高温、高压和持续应力下，可以通过缓慢变形产生运动。放在人的寿命里，它依然显得十分坚硬；放进数百万年的尺度，热物质的上升与冷物质的下沉就能够参与输运热量。</p>
+          <p>只有在一些合适的温度、压力和成分条件下，岩石才会局部熔融，产生岩浆。深部热量既有地球形成与分异时留下的一部分，也有放射性元素衰变等过程持续提供的一部分。地球已经存在了四十多亿年，内部仍然没有彻底冷却。</p>
+<strong class="layer-stat">2,900 <small>km / 底界深度</small></strong></article>
+      <article id="outer-panel" role="tabpanel" aria-labelledby="tab-outer" hidden><span class="label">OUTER CORE / 液态金属层</span><h3>在深处流动的，<br />是炽热的金属。</h3>
+          <p>继续向下，物质的性质发生了明显变化。大约2,900至5,150千米深处是外核，这里的主体是液态铁合金。它与上方岩石质地幔的差异，让地震波经过边界时改变传播速度与路径，也为人类判断地下结构提供了线索。</p>
+          <p>地震产生的波有不同类型，其中横波需要介质具有剪切刚性，无法像在固体中那样穿过液态外核；纵波则可以继续传播，但会发生显著折射。把世界各地记录到的到时与缺失信号拼在一起，科学家便能判断地球内部并不是一颗成分均匀的实心球。</p>
+          <p>前面提到的全球磁场，也与这里联系在一起。导电流体的运动能够参与产生和维持磁场，地球自转则影响这些流动的组织方式。这套过程通常称为地磁发电机。只在地心放一块普通磁铁，并不能解释我们观测到的全部现象。</p>
+<strong class="layer-stat">液态 <small>/ 以铁合金为主</small></strong></article>
+      <article id="inner-panel" role="tabpanel" aria-labelledby="tab-inner" hidden><span class="label">INNER CORE / 固态中心</span><h3>高温之中，<br />压力让它保持固态。</h3>
+          <p>走到最中心，情况又变了一次：内核半径约1,220千米，主要由铁、镍等物质组成，却是固态的。刚刚读完外核的读者，可能会觉得奇怪——越往中心越热，为什么这里反而凝固了？</p>
+          <p>物质能否熔化，并不只由温度决定。内核承受的压力极其巨大，相应的熔点也会改变，因此即使温度很高，仍能保持固态。日常生活中在常压下建立的“热了就融化”的直觉，搬到地心时，需要把压力这个条件一起带上。</p>
+          <p>说到这里，我们其实已经走过一段人类从未亲自抵达的旅程。现有钻探远没有进入地核，内部画像主要来自地震波、重力与磁场观测，以及高温高压实验和模型。圈层的大体结构有多种证据支持，更细致的成分与运动方式仍在研究。你看到的这张图，是人类逐步读懂地球留下的结果。</p>
+<strong class="layer-stat">1,220 <small>km / 近似半径</small></strong></article></div>
+      </div></div>
+    </div></section>
+
+    <section id="seasons" class="chapter wrap" aria-labelledby="seasons-title">
+      <div class="section-heading"><p class="eyebrow">05 / A TILTED WORLD</p><h2 id="seasons-title">一次自转，是一天。<br />一点倾斜，是四季。</h2><p>地轴相对轨道面的法线倾斜约 23.4°。<br />公转时，倾斜方向大致保持不变，阳光的角度与昼长随之改变。</p></div>
+      <div class="season-lab"><div class="orbit-art" data-earth-scene><div class="diagram-top"><span>ORBITAL NOTEBOOK</span><span>交互示意 / 非实时星历</span></div><svg id="season-diagram" viewBox="0 0 680 380" role="img" aria-label="地球绕太阳公转与倾斜地轴示意"><defs><radialGradient id="sun-color"><stop stop-color="#f6df9a"/><stop offset="1" stop-color="#c9a35e"/></radialGradient></defs><ellipse cx="340" cy="190" rx="238" ry="118" fill="none" stroke="#6c8d7b" stroke-dasharray="3 7"/><path d="M340 72h-15l9-8M340 308h15l-9 8" stroke="#6c8d7b" fill="none"/><line id="sun-ray" x1="340" y1="190" x2="340" y2="72" stroke="#c6aa6a" stroke-dasharray="4 7"/><circle cx="340" cy="190" r="36" fill="url(#sun-color)"/><circle cx="340" cy="190" r="48" fill="none" stroke="#d8c59a"/><text x="340" y="255" text-anchor="middle">太阳 / SUN</text><g id="orbit-earth" transform="translate(340 72)"><circle r="23" fill="#538680" stroke="#cde1cc" stroke-width="3"/><path d="M-9-17l14 6-9 13 10 11-11 6-7-15Z" fill="#b1c3a0"/><path d="M-19 40 19-40m-8 4 8-4 1 9" stroke="#365d4e" stroke-width="2"/><text x="24" y="-40">N</text></g><text x="340" y="27" text-anchor="middle">春分</text><text x="48" y="194" text-anchor="middle">夏至</text><text x="340" y="361" text-anchor="middle">秋分</text><text x="632" y="194" text-anchor="middle">冬至</text></svg><p class="section-note">季节名称以北半球为准；南半球相反。轨道、球体与倾斜采用示意投影，不按比例。</p></div>
+      <div class="season-controls"><div class="season-buttons" aria-label="选择北半球节气"><button data-angle="0" aria-pressed="true">春分</button><button data-angle="90" aria-pressed="false">夏至</button><button data-angle="180" aria-pressed="false">秋分</button><button data-angle="270" aria-pressed="false">冬至</button></div><div class="season-summary" aria-live="polite"><span class="label" id="season-label">MARCH EQUINOX / 春分附近</span><h3 id="season-title">阳光，接近直射赤道。</h3><p id="season-description">南北半球获得的日照较为对称，各地昼夜大致等长。</p></div><label class="range-label" for="orbit-position">公转位置 <output id="orbit-output">0°</output></label><input id="orbit-position" type="range" min="0" max="359" value="0" /><label class="range-label" for="latitude">观察纬度 <output id="latitude-output">北纬 40°</output></label><input id="latitude" type="range" min="-66" max="66" value="40" /><div class="daylight"><span>这个纬度的理论昼长</span><strong id="daylight-value">12.0 <small>小时</small></strong><div class="daylight-bar"><i id="daylight-fill"></i></div></div><p class="tiny">按圆轨道与球形地球近似计算，忽略大气折射、太阳视直径和地形。</p></div></div>
+      <div class="two-notes"><article><span class="label">DAY & NIGHT</span><h3>为何一天有两个长度？</h3>          <p>如果读者还记得开头的参数，可能已经发现一个小问题：为什么地球自转一周是23小时56分，我们每天却要过24个小时？这多出来的约四分钟，来自地球同时还在绕太阳运动。</p>
+          <p>当我们相对遥远恒星转完一圈时，地球已经在公转轨道上向前走了一小段。要让太阳重新来到天空中相同的方向，就需要再转一点。前者叫恒星日，后者对应太阳日；日常计时采用的24小时，是平均太阳日的长度。</p>
+          <p>因此，讨论一颗行星的“一天”，最好先说清楚参照的是恒星还是太阳。在地球上，这个差别只有几分钟，到了自转特别缓慢的金星或水星，两个数字就会相差得令人意外。</p></article><article><span class="label">A COMMON QUESTION</span><h3>夏天，是因为离太阳更近吗？</h3>          <p>不妨先想一个简单的反问：如果夏天只是因为整颗地球离太阳更近，南北半球为什么会同时经历相反的季节？地球公转时，倾斜的地轴在一年中大致保持同一指向，于是不同半球朝向太阳的程度发生变化。</p>
+          <p>北半球朝向太阳倾斜时，阳光照射得更直接，白昼通常也更长，同一片地面能在一天里获得更多太阳能；南半球此时则相反。这里的“更直接”可以借助手电筒理解：斜着照时，同一束光铺开的面积更大，单位面积分到的能量也就更少。</p>
+          <p>你可以把上面的纬度拖向赤道，再试着往高纬移动，看看昼长对季节的反应有多大差别。演示只保留了主要的几何关系，真实的气温还受到海洋、地形和热量积累等因素影响，所以一年中最热的一天，也不必恰好落在夏至。</p></article></div>
+    </section>
+
+    <section id="moon" class="moon-section" aria-labelledby="moon-title"><div class="wrap moon-layout"><div class="moon-visual" data-earth-scene><div class="moon-disc" role="img" aria-label="月球表面纹理球体示意"></div><span class="moon-cross" aria-hidden="true">+</span><div class="moon-distance"><span>EARTH</span><i></i><span>MOON</span></div><p>384,400 <small>km</small><span>平均地月距离</span></p><span class="tiny">月面纹理与照明为可视化示意</span></div><div class="moon-copy"><p class="eyebrow">06 / OUR COMPANION</p><h2 id="moon-title">一颗月亮，<br />与我们共享漫长岁月。</h2>          <p>月球是地球唯一的天然卫星，平均距离我们约384,400千米。倘若把地球缩小成直径一米的球，月球大约只有27厘米宽，却要放在三十米之外。网页上常见的地月合照，为了让两颗球都看得清，通常已经把它们挪得近了许多；真正的太空，比画面里的留白还要空。</p>
+          <p>月球对地球的作用也远不止夜空中的一轮光。它与太阳的引力共同驱动潮汐：地球不同位置受到的引力略有差别，海水便会产生相应运动。不过，真实海岸边的涨落还受到海盆形状、岸线、水深与地球自转等影响，不能只看月亮在头顶的方向，就判断某个港口何时涨潮。</p>
+          <p>地月之间的潮汐作用还在长期改变地球的自转与月球轨道。这些变化对一次观月几乎没有影响，却属于地月系统数十亿年历史的一部分。我们今天觉得理所当然的一天、一个月，放到很遥远的过去，也并不是完全相同的长度。</p><div class="moon-facts"><div><strong>27.3 <small>天</small></strong><span>相对恒星公转一周</span></div><div><strong>29.5 <small>天</small></strong><span>相邻两次新月之间</span></div></div><details><summary>为什么月亮总以同一面朝向地球？ <span>＋</span></summary>          <p>月球自转一周与绕地球公转一周所需的时间接近相同，这叫同步自转。你可以找一把椅子，始终面朝椅背绕它走一圈；回到原点时，你的身体相对房间也已经转过一整圈。月球保持同一面大致朝向地球，用的就是这种关系。</p>
+          <p>这里说“大致”，是因为月球的轨道与姿态会让我们看到的边缘略有变化。至于月球背面，它同样会被太阳照亮，也有白天和黑夜；“背向地球”与“背向太阳”，可不能混作一件事。</p></details><details><summary>月相是地球的影子吗？ <span>＋</span></summary>          <p>平时的阴晴圆缺，来自我们所看到的月球受光面比例变化。太阳总会照亮月球的大约一半，而月球绕地球运行时，我们观察这一半的角度不断改变，于是有了新月、上弦、满月和下弦。只有当地球挡住照向月球的阳光，才发生月食。</p>
+          <p>这也解释了旁边两个“月”的长度为什么不同：月球相对恒星绕地球一周约27.3天，但地月系统同时在绕太阳前进，月球还要再走一段，才能恢复相同的日地月相对方向，因此相邻两次新月之间约有29.5天。</p></details><details class="moon-origin"><summary>月球从哪里来？ <span>＋</span></summary>
+          <p>一个重要的解释是大碰撞假说：在太阳系早期，一颗较大的天体撞上年轻地球，碰撞抛出的部分物质进入轨道，最终形成月球。月岩的成分、地月之间的相似与差异，以及计算机模拟，都为这类模型提供了约束。</p>
+          <p>但我们还没有把那次遥远事件的全部细节还原出来。碰撞天体的性质、碰撞方式和随后物质的演化，仍有不同方案。如果你在动画里看到一个天体干净利落地撞出一颗月亮，不妨把它当作帮助理解的示意，真实过程远比那几秒钟的画面复杂。</p>
+<p class="section-note"><a href="https://science.nasa.gov/moon/formation/" target="_blank" rel="noopener">NASA · 月球的形成 ↗</a></p></details><a class="text-link" href="https://science.nasa.gov/moon/facts/" target="_blank" rel="noopener">继续了解月球 ↗</a></div></div></section>
+
+    <section id="life" class="chapter wrap" aria-labelledby="life-title"><div class="section-heading"><p class="eyebrow">07 / DEEP TIME, LIVING WORLD</p><h2 id="life-title">岩石记下岁月，<br />生命改变了这颗星球。</h2><p>氧气、土壤、珊瑚礁和森林，都不是地球诞生时就有的模样。<br />生命与环境，彼此塑造了数十亿年。</p></div><figure class="living-atlas" data-earth-scene data-scene-focus="water"><div class="atlas-heading"><span class="label">THE CONNECTED WORLD</span><h3>每一种生命，都与远方相连。</h3><span class="atlas-badge">地球生态图景 · 01</span></div><svg viewBox="0 0 1200 440" role="img" aria-label="连通山地、森林、河流、湿地与海洋的生态景观艺术示意，上方是云和降雨，下方是土壤与根系"><defs>
+  <linearGradient id="living-sky" x2="0" y2="1"><stop stop-color="#153d4a"/><stop offset="1" stop-color="#88aea1"/></linearGradient>
+  <linearGradient id="living-sea" x2="0" y2="1"><stop stop-color="#559599"/><stop offset="1" stop-color="#163f58"/></linearGradient>
+  <linearGradient id="living-soil" x2="0" y2="1"><stop stop-color="#8d7953"/><stop offset="1" stop-color="#3b4d41"/></linearGradient>
+  <radialGradient id="living-sun"><stop stop-color="#f3d996"/><stop offset="1" stop-color="#dbbc7e"/></radialGradient>
+  <g id="living-tree"><path d="M0 0v71" stroke="#d5b679" stroke-width="3"/><path d="M0-25-24 20h13l-21 30H32L11 20h13Z" fill="currentColor"/><path d="M0-10v55" stroke="#dbe2b5" opacity=".16"/></g></defs>
+  <rect width="1200" height="440" fill="url(#living-sky)"/>
+  <circle class="art-glow" cx="941" cy="91" r="49" fill="url(#living-sun)"/>
+  <circle cx="941" cy="91" r="65" fill="none" stroke="#d7c798" opacity=".2"/>
+  <g class="art-drift" fill="#d6e4d7" opacity=".45"><path d="M100 87Q78 62 110 57Q116 20 163 42Q188 22 215 50Q258 39 265 69Q298 67 303 87Z"/><path d="M563 110Q546 93 571 87Q583 65 611 79Q641 62 662 88Q693 77 709 110Z"/></g>
+  <path d="M0 245L89 144 162 195 287 67 407 215 505 146 615 253 741 203 858 259 1200 248V440H0Z" fill="#678d86"/>
+  <path d="M215 148L287 67 344 137 306 123 280 148 264 122Z" fill="#dfe9d7"/><path d="M287 67L407 215 505 146 615 253 400 284Z" fill="#416c6a" opacity=".6"/>
+  <path d="M0 272Q142 197 292 260T576 273T850 298L1200 325V440H0Z" fill="#416b55"/>
+  <path d="M0 322Q183 260 358 315T676 315Q763 285 839 311L1200 348V440H0Z" fill="url(#living-soil)"/>
+  <path d="M0 323Q183 261 358 316T676 316Q763 286 839 312" fill="none" stroke="#a5b77e" stroke-width="6"/>
+  <path d="M533 233Q482 257 562 277T560 316Q650 333 711 310L861 326Q723 358 607 346T479 318Q536 294 501 278T533 233Z" fill="#98c8bc"/>
+  <path d="M796 316Q938 285 1200 310V440H746Q797 386 796 316Z" fill="url(#living-sea)"/>
+  <g fill="none" stroke="#94c6be" opacity=".45" class="art-wave"><path d="M816 338Q906 318 1002 338T1230 338M800 369Q906 349 1002 369T1230 369M776 402Q906 382 1002 402T1230 402"/></g>
+  <g color="#234e40"><use href="#living-tree" x="83" y="235"/><use href="#living-tree" x="121" y="220"/><use href="#living-tree" x="160" y="244"/><use href="#living-tree" x="204" y="218"/><use href="#living-tree" x="247" y="244"/></g>
+  <g color="#76975e"><use href="#living-tree" x="55" y="260"/><use href="#living-tree" x="179" y="248"/><use href="#living-tree" x="296" y="251"/></g>
+  <g fill="#769777"><ellipse cx="680" cy="255" rx="35" ry="26"/><ellipse cx="723" cy="267" rx="27" ry="21"/></g>
+  <g stroke="#d5bd86" fill="none" stroke-width="2"><path d="M680 260v63m0-24-17-20m17 29 17-23M723 273v40m0-16 12-11"/></g>
+  <g stroke="#cfb58a" fill="none" opacity=".55"><path d="M121 327l-4 30-27 24m27-24 32 28m-26-47 29 10M204 325l13 43-18 27m18-27 28 17M296 332l-5 24-22 20m22-20 26 19"/></g>
+  <g stroke="#acc491" stroke-width="2"><path d="M758 315l-3-34m3 25 12-21M775 316v-30m0 19 9-15M789 318l4-31"/></g>
+  <g class="art-rain" stroke="#d8e8d7" stroke-width="1.5" opacity=".55"><path d="M134 108l-8 20m34-20-8 20m34-20-8 20m34-20-8 20"/></g>
+  <g class="art-flow" fill="none" stroke="#e3d29a" stroke-dasharray="3 9" opacity=".7"><path d="M1048 254Q1066 170 1019 133m-17-12Q842 11 669 47"/><path d="M590 366Q671 398 736 376"/></g>
+  <g fill="#f2daa1"><circle class="art-glow" cx="335" cy="260" r="2.5"/><circle class="art-glow art-slow" cx="382" cy="285" r="2"/></g>
+  <g stroke="#e4e5c6" fill="none" opacity=".75"><path d="M53 179h96l19 36M409 53h-50l-32 42M813 226h-70l-21 20M1064 275h-57l-18 31"/></g>
+  <g fill="#eef0da"><text x="53" y="166">01 / 森林与土壤</text><text x="365" y="41">02 / 山地与河流</text><text x="759" y="214">03 / 河口湿地</text><text x="1030" y="263">04 / 海洋</text></g><g class="eco-relations" fill="none" stroke-width="3">
+  <g class="scene-layer" data-scene-layer="water" stroke="#b5e9ed"><path class="art-flow" stroke-dasharray="7 11" d="M1048 272Q1091 127 1009 104Q853 9 667 51M194 101 179 150M533 237Q490 259 545 276T539 311Q668 353 811 326"/><circle cx="179" cy="150" r="7"/><circle cx="811" cy="326" r="7"/></g>
+  <g class="scene-layer" data-scene-layer="energy" stroke="#f6d38b"><path class="art-flow" stroke-dasharray="7 11" d="M884 95Q536 24 217 222M919 151 997 311M236 245Q369 215 421 281"/><circle cx="217" cy="222" r="8"/><circle cx="997" cy="311" r="8"/><circle cx="421" cy="281" r="6"/></g>
+  <g class="scene-layer" data-scene-layer="soil" stroke="#e0b78d"><path class="art-flow" stroke-dasharray="7 11" d="M320 290Q390 335 321 388Q173 438 126 358M126 358Q102 330 145 302"/><circle cx="321" cy="388" r="8"/><circle cx="145" cy="302" r="7"/></g>
+</g></svg><div class="scene-controls"><div class="scene-tabs" role="tablist" aria-label="生态关系观察" hidden><button type="button" role="tab" id="eco-water-tab" aria-controls="eco-water-note" aria-selected="true" tabindex="0"><span aria-hidden="true">01</span> 水连接山海</button><button type="button" role="tab" id="eco-energy-tab" aria-controls="eco-energy-note" aria-selected="false" tabindex="-1"><span aria-hidden="true">02</span> 阳光供能</button><button type="button" role="tab" id="eco-soil-tab" aria-controls="eco-soil-note" aria-selected="false" tabindex="-1"><span aria-hidden="true">03</span> 养分回到土壤</button></div><div class="panel-deck scene-notes"><div id="eco-water-note" role="tabpanel" aria-labelledby="eco-water-tab" tabindex="0" data-scene-key="water"><strong>水连接山海</strong><p>蒸发、降水与径流连接海洋、山地和河口。沿浅蓝路径，追踪水在不同环境之间的转移。</p></div><div id="eco-energy-note" role="tabpanel" aria-labelledby="eco-energy-tab" tabindex="0" data-scene-key="energy"><strong>阳光供能</strong><p>植物与藻类把光能转为有机物中的化学能，取食让能量沿食物网传递；能量逐步散失，并不循环。</p></div><div id="eco-soil-note" role="tabpanel" aria-labelledby="eco-soil-tab" tabindex="0" data-scene-key="soil"><strong>养分回到土壤</strong><p>落叶与遗体中的物质经分解者处理，养分回到土壤，再被植物利用。赭色环线提示物质循环。</p></div></div></div><figcaption><span>阳光供能</span><span>水连接山海</span><span>养分回到土壤</span><small>景观与物质联系的艺术示意 · 非真实地点或比例</small></figcaption></figure><ol class="timeline"><li><span>约 45.4 亿年前</span><i></i><h3>地球形成</h3><p>尘埃与岩石物质聚集，碰撞与分异塑造年轻行星。</p></li><li><span>至少约 35 亿年前</span><i></i><h3>早期生命</h3><p>古老岩石保存了微生物活动的证据，更早的记录仍有争议。</p></li><li><span>约 24 亿年前起</span><i></i><h3>大氧化事件</h3><p>光合作用等过程推动大气氧含量发生深刻变化。</p></li><li><span>约 5.39 亿年前起</span><i></i><h3>寒武纪辐射</h3><p>动物的形态与生态关系在地质时间内迅速多样化。</p></li><li><span>今天</span><i></i><h3>我们身处其中</h3><p>人类改变土地、物质循环与气候，也开始从太空观测家园。</p></li></ol><p class="section-note">选取部分重要节点，时间间距未按比例绘制；生命起源的准确时间与过程仍在研究中。</p><div class="earth-reading">
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">01</span><span class="label">ORIGINS / 生命的开端</span><h3>水、岩石与生命的开端</h3></header><div class="essay-prose">
+          <p>“地球上的生命是怎么开始的？”这个问题听起来比寻找火星生命更近，回答起来却同样困难。我们能在古老岩石里找到早期微生物活动的线索，但最初的化学体系如何一步步成为能够维持自身、复制并演化的生命，仍没有一套已经完整验证的过程。</p>
+          <p>地球的岩石记录也并不完整。板块运动、变质作用与侵蚀会改造甚至抹去古老痕迹，保存下来的证据需要反复辨认。生命出现得早，某块岩石保存得早，以及我们目前找到的证据有多早，是三个不能随便画上等号的问题。</p>
+          <p>海洋、能量来源和合适的化学环境，为研究提供了方向。至于第一批生命究竟出现在哪里、以什么样的方式开始，我们仍然只能一边积累证据，一边检验不同的解释。</p>
+</div></article>
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">02</span><span class="label">CHANGE / 彼此的塑造</span><h3>今天能呼吸的空气，曾经并不适合许多生命</h3></header><div class="essay-prose">
+          <p>地球早期的大气中，没有今天这样丰富的游离氧。随着能够进行产氧光合作用的微生物活动，氧气不断产生，但它还会与海水中的铁、岩石中的物质等发生反应，并没有一出现就立刻堆满天空。</p>
+          <p>大约24亿年前开始的大氧化事件，标志着地表环境经历了深刻变化。对我们来说，氧气意味着呼吸；对许多适应缺氧环境的微生物来说，它却可能造成伤害。同一种物质，在不同生命面前，有着完全不同的意义。</p>
+          <p>后来的生命逐渐发展出利用氧气的方式，也继续改变环境。读到这里，你或许会发现，开头所说的“宜居条件”本身，也可能被生活在其中的生命改写。生命适应地球，地球的面貌又因为生命而改变。</p>
+</div></article>
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">03</span><span class="label">ECOSYSTEMS / 相互依存</span><h3>一片森林，远不止一群树。</h3></header><div class="essay-prose">
+          <p>生态系统包括生活在某个地方的生物，也包括它们周围的水、空气、土壤与光照，以及这些部分之间的联系。树木、草和许多藻类通过光合作用，把太阳能转成有机物中的化学能；动物通过取食获得物质与能量；真菌和细菌等分解者再处理落叶、遗体与排泄物，让其中的养分重新进入环境。</p>
+          <p>这些关系交织成食物网。一尾小鱼可能吃浮游动物，也可能成为多种鱼类与海鸟的食物，因此它并不只属于一条简单的“食物链”。能量在传递中不断以热的形式散失，需要持续补充；碳、氮等元素则可以反复进入生物体，再回到水、空气和土壤。深海热泉附近的一些食物网以化能合成微生物为基础，提醒我们：生命利用能量的方式，并不只有直接追随阳光。</p>
+          <p>森林蒸腾会影响水汽输送，植物生长和生物呼吸参与碳循环；环境改变也会重新分配物种的生存空间。生态系统会受到干旱、火灾和人类活动等扰动，并非永远保持不变的平衡。理解它，需要同时看见生物之间的联系，以及这些联系赖以存在的环境。</p>
+          <a class="text-link" href="https://www.noaa.gov/education/resource-collections/marine-life/aquatic-food-webs" target="_blank" rel="noopener">NOAA · 水生食物网 ↗</a>
+</div></article>
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">04</span><span class="label">LIVING LAND / 有生命的地表</span><h3>从森林到荒漠，脚下也有一个世界。</h3></header><div class="essay-prose">
+          <p>地球陆地的颜色，不只来自岩石。温度、降水、季节变化与地形共同影响植被：温暖湿润的地区可以生长繁茂森林，季节性缺水的地方常见草地，干旱地区则有适应少雨环境的灌木与其他植物。高纬度或高山地区生长季短，苔原中的苔藓、地衣与低矮植物，以另一种方式利用短暂的温暖。荒漠也不是没有生命，只是生命需要更节省地使用水。</p>
+          <p>脚下的土壤同样不是一层磨碎的岩石。矿物颗粒之间有水和空气，也有植物根系、真菌、细菌及许多小动物；生物残体在分解中形成土壤有机质。土壤的结构与有机质影响水能否渗入、被保存，以及养分如何供植物利用。岩石风化与生命活动在这里相遇，形成了与裸露岩面很不一样的地表环境。</p>
+          <p>长期存在的地表液态水，让河流侵蚀山地、搬运泥沙，在下游沉积出平原与三角洲；植物根系与地表覆盖又会影响土壤流失。水改造地形，地形改变栖息地，生命再参与塑造地表。这种广泛而持续的联系，是认识地球面貌的重要线索。</p>
+          <p class="section-note"><a href="https://www.nrcs.usda.gov/conservation-basics/soil/soil-health/role-of-organic-matter" target="_blank" rel="noopener">USDA · 土壤有机质的作用 ↗</a> · <a href="https://oceanservice.noaa.gov/facts/et-oceans.html" target="_blank" rel="noopener">NOAA · 其他星球上的海洋 ↗</a></p>
+</div></article>
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">05</span><span class="label">COASTAL LIFE / 海陆交界</span><h3>湿地与珊瑚礁，把边界变成家园。</h3></header><div class="essay-prose">
+          <p>河流进入海洋的地方，淡水、海水与泥沙相遇。潮汐让水位和盐度不断变化，河口湿地中的生物必须适应这种起伏。盐沼、红树林等生境为许多幼鱼、贝类和鸟类提供食物与庇护；植物与沉积物还能截留部分泥沙和养分。这些地方连接着流域与海洋，上游土地利用的变化，也可能一路影响到海岸。</p>
+          <p>温暖浅海里的许多造礁珊瑚，则与体内的共生藻类合作：藻类通过光合作用提供部分营养，珊瑚虫逐渐构筑碳酸钙骨骼。经过漫长积累，礁体形成复杂的空间，为多种生物提供栖息地。珊瑚是动物，不是海底植物；也不是所有珊瑚都生活在明亮浅水中。</p>
+          <p>如果水温等环境条件带来过大压力，珊瑚可能失去共生藻，露出白色骨骼，这就是白化。白化不等于立即死亡，但持续胁迫会增加死亡风险。湿地被填埋、污染物输入或海洋持续变暖，也会改变这些生态系统。地球拥有丰富生命，并不意味着每一处生命环境都能承受无限变化。</p>
+          <p class="section-note"><a href="https://www.noaa.gov/education/resource-collections/marine-life/life-in-estuary" target="_blank" rel="noopener">NOAA · 河口的生命 ↗</a> · <a href="https://www.noaa.gov/education/resource-collections/marine-life/coral-reef-ecosystems" target="_blank" rel="noopener">NOAA · 珊瑚礁生态系统 ↗</a></p>
+</div></article>
+<article class="reading-essay"><header><span class="essay-number" aria-hidden="true">06</span><span class="label">BEYOND / 更远的问题</span><h3>地球有生命，能告诉我们宇宙什么？</h3></header><div class="essay-prose">
+          <p>从深海热泉到极寒环境，地球生命展现出了很宽的生存范围。研究这些生物，能够帮助我们提出更好的问题：没有阳光的地方是否有其他能量来源？液态水能维持多久？一个环境是否能持续提供生命需要的物质？</p>
+          <p>不过，某种地球微生物能够在类似条件下生活，并不能证明另一颗星球上也已经诞生了生命。发现有机物、找到潜在能源、确认过去有水，都是重要线索；它们与直接确认生命之间，还有需要证据跨过的距离。</p>
+          <p>我们仍然只有地球这一个得到确认的生命世界。这个样本足够丰富，让人类不断修正对生命的想象，却还不足以回答生命在宇宙中究竟普遍到什么程度。下一次去读火星或木卫二的介绍时，不妨带着这些问题再看一遍。</p>
+</div></article>
+</div><div class="life-note"><span aria-hidden="true">✳</span><p>从深海热泉到高山苔原，生命使用着不同的生存方式。<br /><strong>多样性，是地球故事里最丰富的一页。</strong></p><a class="text-link" href="https://naturalhistory.si.edu/education/teaching-resources/life-science/early-life-earth-animal-origins" target="_blank" rel="noopener">Smithsonian · 早期生命 ↗</a></div></section>
+
+    <section id="perspective" class="perspective wrap" aria-labelledby="perspective-title"><div class="perspective-photo"><button class="photo-button" id="earthrise-open" aria-label="放大查看阿波罗8号地出影像"><img loading="lazy" src="assets/earthrise.jpg" width="1280" height="1280" alt="1968年阿波罗8号拍下的地出：蓝白色地球悬在灰色月球地平线之上" /><span>放大影像 ↗</span></button><p>EARTHRISE / 1968.12.24 <span>NASA · Bill Anders</span></p></div><div class="perspective-copy"><p class="eyebrow">08 / LOOKING BACK</p><h2 id="perspective-title">走得足够远，<br />才看见家的模样。</h2>          <p>1968年，阿波罗8号绕月飞行时，Bill Anders拍下了这张《地出》。灰色的月球地平线之上，蓝白相间的地球悬在黑暗中。我们习惯站在地面仰望月亮，这张照片却把观察的位置交换了过来，让地球也成为天空里的一颗天体。</p>
+          <p>照片里看不到国家之间的边界，也很难辨认一座城市。那些在人类生活中占据很大分量的事情，都被收进这一小片受光的球面里。距离让许多细节消失，却让“所有人生活在同一颗行星上”这件本来就知道的事，忽然变得容易看见。</p>          <p>人类也开始用这种新的观察位置，认真记录家园的变化。1972年起，Landsat系列持续观测地表；把不同年份的影像放在一起，我们就能追踪城市扩展、森林变化和冰川进退。一张照片告诉我们当时看见了什么，一长串能够比较的记录，才逐渐显露出变化的方向。</p>
+          <p>卫星并不能独自回答所有问题。它们接收到的是不同波段的光和其他信号，需要结合地面测量与模型，才能解释为温度、植被、水分或大气成分。探索地球依然需要人走进森林、把仪器放进海里，也需要实验室中对样本的耐心分析。</p>
+          <p>如果读者愿意继续往外走，下一站仍然是火星。不过在离开之前，也可以抬头看看今天的天空，或留意身边那条并不起眼的河流。我们刚刚谈过的很多过程，就发生在这些熟悉的地方；人类对宇宙的求索，也一直从这里出发。</p><a class="text-link" href="https://science.nasa.gov/resource/apollo-8s-iconic-earthrise/" target="_blank" rel="noopener">这张照片的故事 ↗</a><div class="closing-line">我们的坐标。<br /><em>我们的家。</em></div></div></section>
+
+    <footer class="page-footer wrap"><div><a class="brand" href="#top">⊕ EARTH <span>/ FIELD NOTES 03</span></a><p>数据为适合阅读的近似值；三维贴图、剖面与轨道用于科普展示。<br />影像和科学资料来源见 <a href="SOURCES.md">来源说明</a>。</p></div><a class="next-world" data-next-station rel="next" href="../mars/index.html"><span>下一站 / NEXT WORLD</span><strong>火星 <small>MARS</small> ↗</strong></a></footer>
+  </main>
+  <dialog id="image-dialog" aria-labelledby="image-title"><button class="dialog-close" aria-label="关闭影像">×</button><img src="assets/earthrise.jpg" alt="阿波罗8号地出完整影像" /><div class="dialog-copy"><p class="eyebrow">APOLLO 8 / 1968</p><h2 id="image-title">地出 Earthrise</h2>          <p>1968年12月24日，宇航员Bill Anders在阿波罗8号环月飞行中拍下这幅景象。画面里，近处的月面灰白、布满地形起伏，远处的地球则显露出海洋、大气与云层共同形成的蓝白色。两个距离很近的世界，呈现着截然不同的面貌。</p>          <p>“地出”这个名字很容易让人联想到每天的日出，但这里地球越过月球地平线，主要来自飞船的轨道运动。由于月球大致以同一面朝向地球，如果你站在月球正面的大多数固定地点，地球会长时间停留在天空中差不多的位置，并不会每天按时升起又落下。</p>
+          <p>我们看见的地球也没有完整地被照亮。它同样有朝向太阳的一面与背向太阳的一面，从月球附近看去，也会呈现类似月相的受光变化。地球上的人仰望月亮时，通常不会顺手想到，自己脚下这颗行星也正在经历一套相似的光影。</p>
+          <p>你可以放大看看那道轮廓。容纳海洋、陆地和所有日常生活的世界，到了这里，已经能够被一张照片完整收进视野。</p><a class="text-link" href="https://science.nasa.gov/resource/apollo-8s-iconic-earthrise/" target="_blank" rel="noopener">NASA / Bill Anders · 原始来源 ↗</a></div></dialog>
+  <audio id="bg-music" src="../shared/audio/ad-astra.mp3" loop preload="none" hidden></audio><button id="music-toggle" class="music-toggle" type="button" data-idle-hide aria-label="播放或暂停音乐" aria-pressed="false" title="音乐"><span aria-hidden="true">♪</span></button>
+  <template data-model-target="model-stage"><script src="../shared/vendor/three.min.js"></script><script src="../shared/vendor/OrbitControls.js"></script><script src="../shared/model-runtime.js"></script><script src="assets/file-textures.js" data-file-only></script><script src="model.js"></script></template>
+</body>
+</html>

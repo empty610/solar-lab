@@ -1,6 +1,6 @@
 # Solar Laboratory · 太阳系探索
 
-一个纯静态的太阳系探索网站，包含动态星图导航与九个天体档案。页面、Three.js、图片、纹理和音频均随仓库提供。这里是唯一维护的源码；本地预览直接读取源码，发布由 Node.js 20+ 单向生成到 dist，线上仍为纯静态文件。
+一个纯静态的太阳系探索网站，包含动态星图导航与十个天体档案。页面、Three.js、图片、纹理和音频均随仓库提供。这里是唯一维护的源码；本地预览直接读取源码，发布由 Node.js 20+ 单向生成到 dist，线上仍为纯静态文件。
 
 ## 目录
 
@@ -9,6 +9,7 @@
 | `terminal/` | 独立的太阳系总览：星图、天体目录、标签切换   |
 | `mercury/`  | 水星当前版                                   |
 | `venus/`    | 金星                                         |
+| `earth/`    | 地球：海洋、大气、地心、四季与生命             |
 | `mars/`     | 火星、卫星、巡视器与天空                     |
 | `jupiter/`  | 木星                                         |
 | `saturn/`   | 土星                                         |
@@ -18,9 +19,9 @@
 | `pluto/`    | 冥王星                                       |
 | `shared/`   | 各页面共用的界面过渡、返回入口与放大展示样式 |
 
-根目录的 `index.html` 自动进入 `terminal/`。所有档案入口均已更新为本仓库的相对路径。地球尚未收录，目录中保留明确提示。
+根目录的 `index.html` 自动进入 `terminal/`。所有档案入口均已更新为本仓库的相对路径。地球档案已纳入主站星图、天体目录、无脚本入口和统一构建，入口为 `earth/index.html`；可直接双击打开，也可通过 `npm run dev` 预览。源码纳入本地仓库不代表已经发布到线上。
 
-各档案页尾的“下一站”按现有页面串联：水星 → 金星 → 火星 → 木星 → 土星 → 天王星 → 海王星 → 冥王星 → 太阳系总览；木卫二支线接回土星。地球页完成后，可在金星与火星之间接入。页尾使用静态链接，样式集中在 `shared/journey.css`，跳转复用公共连接动画；所有来源说明继续保留。
+各档案页尾的“下一站”按现有页面串联：水星 → 金星 → 地球 → 火星 → 木星 → 土星 → 天王星 → 海王星 → 冥王星 → 太阳系总览；木卫二支线接回土星。页尾使用静态链接，跳转复用公共连接动画；所有来源说明继续保留。
 
 ## Cloudflare Pages
 
@@ -52,7 +53,7 @@ git push origin main
 
 `shared/interface.css` 与 `shared/interface.js` 复用个人网站的金色双轨道、中心光点和深色遮罩，在跳转前显示约 1 秒的 `ESTABLISHING LINK` 连接动画；同时统一档案的 BACK 返回总览，以及左图右介绍的放大窗口（手机改为上下布局）。修改这些通用效果时，连同 `shared/` 一起提交。
 
-Terminal 与九个介绍页的 BACK 统一采用 `shared/navigation-controls.css` 中的 Venus 模板：右上角的黑金色胶囊、回转箭头和 BACK 文字。Terminal 返回个人主页的“项目”区，介绍页返回 Terminal。介绍页的返回顶部按钮单独位于音乐按钮上方，两个圆形控件间隔 14px。Terminal 与九个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 管理音乐播放：默认配乐为 `shared/audio/ad-astra.mp3`，火星使用用户提供的 `mars/assets/soil-of-life.mp3`，通过 `data-music-track` 独立保存该曲目的进度。点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
+Terminal 与十个介绍页的 BACK 统一采用 `shared/navigation-controls.css` 中的 Venus 模板：右上角的黑金色胶囊、回转箭头和 BACK 文字。Terminal 返回个人主页的“项目”区，介绍页返回 Terminal。介绍页的返回顶部按钮单独位于音乐按钮上方，两个圆形控件间隔 14px。Terminal 与十个天体档案统一使用 `shared/music-controls.css` 的音乐按钮。`shared/idle-controls.js` 在两秒无操作后淡出控件，鼠标、触摸或键盘操作会重新显示。`shared/music.js` 管理音乐播放：默认配乐为 `shared/audio/ad-astra.mp3`，火星使用用户提供的 `mars/assets/soil-of-life.mp3`，通过 `data-music-track` 独立保存该曲目的进度。点击 ♪ 播放或暂停，并在同一标签页内记住开关与进度；进入档案或返回 Terminal 时续播。浏览器要求新的播放手势时，点击页面会恢复已启用的音乐。修改这些控件时，连同对应的 `shared/` 文件一起提交。
 
 本仓库为唯一源码，工作区的 previews 与 ready2push 仅作历史参考。预览和发布都从本仓库读取，不再双向复制。工具位于 `scripts/`，浏览器检查位于 `tests/browser/`，完整流程见 [工程说明](docs/engineering.md)。
 
@@ -98,7 +99,7 @@ Windows 默认使用 Edge，其他平台首次检查前运行 `npx playwright in
 
 ## Terminal 更新与浏览器缓存
 
-脚本与样式的内容发生变化时，构建会生成不同的文件地址，已有浏览器缓存也会请求新资源。根目录 `_headers` 仅为 `shared/cache/*` 设置一年 immutable 缓存；HTML 和原址可变的旧 JS/CSS 要求重新校验。图片、纹理和音频继续使用默认缓存。八页相同的 Three.js 与七页相同的 OrbitControls 共用 `shared/vendor/`，金星 controls 与火星定制库分别保留。自定义域名的外部缓存规则仍可能覆盖响应头，需要独立核对线上结果。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
+脚本与样式的内容发生变化时，构建会生成不同的文件地址，已有浏览器缓存也会请求新资源。根目录 `_headers` 仅为 `shared/cache/*` 设置一年 immutable 缓存；HTML 和原址可变的旧 JS/CSS 要求重新校验。图片、纹理和音频继续使用默认缓存。九页相同的 Three.js 与八页相同的 OrbitControls 共用 `shared/vendor/`，金星 controls 与火星定制库分别保留。自定义域名的外部缓存规则仍可能覆盖响应头，需要独立核对线上结果。缓存行为依据 [Cloudflare Pages Headers](https://developers.cloudflare.com/pages/configuration/headers/)。
 
 总览与正文影像卡片使用 WebP 预览，放大窗口保留原图和署名。模型库在模型区域首次可见时加载，火星隐藏巡视器图片与卫星精细模型、土星和海王星的卫星模型、木星与木卫二的贴图按观察目标准备；Mars/Jupiter/Europa 的内嵌贴图仅在 file:// 打开时加载。五页轨道演示在全部关联图表离屏后休眠，火星天空轨迹复用固定星历采样。跨页连接动画期间预取目标页的阅读界面资源。具体约定与复查结果见 [加载性能说明](docs/loading-performance.md)。
 

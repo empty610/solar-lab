@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { Script } from 'node:vm';
 
 export const sourceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const pages = ['terminal', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'europa', 'pluto'];
+export const pages = ['terminal', 'mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'europa', 'pluto'];
 export const rootFiles = ['index.html', '404.html', '_headers'];
 export const runtimeDirectories = [...pages, 'shared'];
 const excluded = new Set(['node_modules', '_backups', 'tests', 'scripts', 'dist']);

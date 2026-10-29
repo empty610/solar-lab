@@ -64,6 +64,7 @@
     ['terminal', /\/(?:terminal|terminal_preview)\//i],
     ['mercury', /\/(?:mercury|mercury_preview)\//i],
     ['venus', /\/(?:venus|venus_preview)\//i],
+    ['earth', /\/earth\//i],
     ['mars', /\/(?:mars|mars_preview)\//i],
     ['jupiter', /\/(?:jupiter|jupiter_preview)\//i],
     ['saturn', /\/(?:saturn|saturn_preview)\//i],
