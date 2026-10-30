@@ -96,3 +96,9 @@ Cloudflare Pages 的设置应为：生产分支 `main`，框架 `None`，构建�
 - Node.js 20+ 构建仅使用内置模块；Playwright 已固定版本并写入 package-lock，旧缓存与原稿检查不再读取历史 Git 提交或工作区外文件。
 
 以上为第一阶段完成时的验证记录。`.qa/` 为可删除的本机检查产物，检查时自动重建；Cloudflare 设置需在发布时独立核实。
+
+## 本地历史 Terminal 入口
+
+旧 `previews/terminal_preview/index.html` 曾保留九个档案的完整总览。双击旧介绍页后，返回按钮会回到这份历史 HTML，导致地球重新显示为待收录。该入口现改为轻量跳转页，统一进入 `solar-lab/terminal/index.html`；旧介绍页、书签和无脚本链接也会回到包含地球的总览。查询参数和章节片段由跳转保留。
+
+如从历史备份恢复了旧入口，在本仓库运行 `node scripts/repair-local-terminal.mjs` 可重新修复；原入口会先保存到工作区 `_backups/terminal-entry-<时间>/index.html`。命令重复运行不会重复覆盖。这里只维护入口指向，历史档案素材不再同步，发布仍只使用本仓库的构建产物。
