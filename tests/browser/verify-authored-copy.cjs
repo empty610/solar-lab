@@ -48,7 +48,8 @@ const normalize = s => s.replace(/\s+/g,'');
           }
         }
         if (['venus','mars'].includes(planet)) {
-          await page.locator('#intro-toggle').click();
+          if (await page.locator('#intro-toggle').getAttribute('aria-expanded') !== 'true')
+            await page.locator('#intro-toggle').click();
           assert.equal(await page.locator('#intro-toggle').getAttribute('aria-expanded'),'true');
           const region = page.locator(planet === 'mars' ? '#mars-intro-content' : '#venus-intro');
           // The disclosure hint changes from “展开” to “收起”; compare authored

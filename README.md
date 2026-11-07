@@ -67,6 +67,8 @@ Terminal 与十个介绍页的 BACK 统一采用 `shared/navigation-controls.css
 
 金星地貌与火星“地表外观”的原文放在 `.terrain-copy` 中，卡片可展开，放大窗口始终显示完整介绍。火星五类地貌的详细说明保存在卡片的 `data-image-caption` 中，弹窗按句子分段，保留全部原文和署名。修改后可运行 `npm run check:browser -- recovered-copy` 对照已恢复原稿，检查卡片、展开与放大窗口。
 
+金星总介绍在 `#venus-intro-content` 中默认展开，十段手写原文完整保留，可收起后查看模型。手机上介绍与模型上下排列；影像弹窗将说明与署名分段，署名链接由卡片的 `data-image-source` 指向对应原始资料。历史原稿快照保持不变，恢复检查仅显式修正旧说明中“00金星”的杂字。
+
 应用脚本和样式由 `npm run build` 复制到 dist 内的 `shared/cache/<内容哈希>/<原路径>`，HTML 引用指向这些地址并保留版本参数；源码不会回写。CSS 中的图片相对路径随输出位置调整，内嵌 SVG 与选择器保持原样。开发服务器使用 no-store，直接刷新即可读取修改后的文件。
 
 ## 素材与来源

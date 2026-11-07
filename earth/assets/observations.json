@@ -1,0 +1,67 @@
+{
+  "land": {
+    "file": "himalayas-iss.webp",
+    "width": 1440,
+    "height": 956,
+    "title": "喜马拉雅山脉与青藏高原",
+    "date": "2012-05-23",
+    "credit": "NASA · Don Pettit / ISS",
+    "source": "https://science.nasa.gov/earth/earth-observatory/himalayas-near-and-far-147980/",
+    "alt": "国际空间站拍下的喜马拉雅山脉全景，雪峰分隔恒河平原与青藏高原，远处可见地球弧形边缘",
+    "note": "从轨道看见山脉、平原与高原。山脉的隆起与印度、欧亚板块的碰撞有关。",
+    "original": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/147000/147980/ISS031-E-67020.jpeg",
+    "processing": "仅等比缩小并转换为 WebP；保留整幅构图、方向和比例尺。"
+  },
+  "ice": {
+    "file": "greenland-iceberg.webp",
+    "width": 1440,
+    "height": 960,
+    "title": "丹麦海峡中的格陵兰冰山",
+    "date": "2026-06-12",
+    "credit": "NASA Earth Observatory · Lauren Dauphin / USGS",
+    "source": "https://science.nasa.gov/earth/earth-observatory/an-uncommon-drifter-in-the-denmark-strait/",
+    "alt": "Landsat 9 影像中，一座表面分布蓝色融水池的白色冰山漂浮在深色海水和碎冰之间，左下保留方向与两千米比例尺",
+    "note": "Landsat 9 记录的冰山与碎冰，蓝色区域是表面融水池。图中只显示露出海面的部分。",
+    "original": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/iotd/2026/an-uncommon-drifter-in-the-denmark-strait/greenlandbergzm_oli2_20260612.jpg",
+    "processing": "仅等比缩小并转换为 WebP；保留整幅构图、方向和比例尺。"
+  },
+  "monsoon": {
+    "file": "india-monsoon.webp",
+    "width": 540,
+    "height": 716,
+    "title": "季风前后的河口与低地",
+    "date": "2005-06-18 / 2005-07-07",
+    "credit": "NASA · MODIS Rapid Response Team",
+    "source": "https://science.nasa.gov/earth/earth-observatory/monsoon-flooding-in-india-15096/",
+    "alt": "印度古吉拉特邦季风前后的两幅 MODIS 假彩色卫星影像，上图为7月7日，下图为6月18日；蓝色水域和浅蓝白色云层在季风后扩大",
+    "note": "印度古吉拉特邦，2005 年。上图为 7 月 7 日，下图为 6 月 18 日；假彩色让积水更易辨认，不代表肉眼所见颜色。",
+    "original": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/15000/15096/India_TMO_2005188.jpg",
+    "processing": "仅等比缩小并转换为 WebP；保留整幅构图、方向和比例尺。"
+  },
+  "cloud": {
+    "file": "cumulonimbus-iss.webp",
+    "width": 1080,
+    "height": 668,
+    "title": "从太空俯看积雨云",
+    "date": "2008-02-05",
+    "credit": "NASA · ISS Expedition 16",
+    "source": "https://science.nasa.gov/earth/earth-observatory/cumulonimbus-cloud-over-africa-8542/",
+    "alt": "国际空间站从斜上方拍摄的非洲积雨云，白色云塔顶部向两侧铺展成砧状，周围散布较小的云团",
+    "note": "非洲上空，2008 年 2 月 5 日。云塔向上生长，顶部铺展成云砧；这张照片展示云的形态，不是气流剖面。",
+    "original": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/8000/8542/ISS016-E-27426_lrg.jpg",
+    "processing": "仅等比缩小并转换为 WebP；保留整幅构图、方向和比例尺。"
+  },
+  "delta": {
+    "file": "yukon-delta.webp",
+    "width": 1440,
+    "height": 1440,
+    "title": "河流、湿地与海洋相遇",
+    "date": "2002-09-22",
+    "credit": "NASA · Jesse Allen、Robert Simmon / USGS",
+    "source": "https://science.nasa.gov/earth/earth-observatory/yukon-delta-alaska-72762/",
+    "alt": "阿拉斯加育空河三角洲自然色 Landsat 影像，分叉河道穿过湖泊密布的湿地，浅色泥沙进入青绿色白令海",
+    "note": "育空河三角洲，2002 年 9 月 22 日。河道、湿地和近海泥沙连成同一幅景观，提供观察海陆联系的真实例子。",
+    "original": "https://assets.science.nasa.gov/content/dam/science/esd/eo/images/imagerecords/72000/72762/yukon_etm_2002265_lrg.jpg",
+    "processing": "仅等比缩小并转换为 WebP；保留整幅构图、方向和比例尺。"
+  }
+}

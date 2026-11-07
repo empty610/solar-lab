@@ -65,7 +65,7 @@
 
 昼夜视图以约 0.9 秒的缓入缓出在同一球面上混合贴图，夜间自发光与独立云层透明度同步变化。中途反向切换从当前混合状态继续；减少动态效果时直接显示目标视图。动画沿用按需模型时钟，离屏或后台暂停，恢复后继续；此渐变是观察模式切换，不模拟真实日落。
 
-地表四图、季风与积雨云剖面、生态景观长图为本页绘制的 SVG 艺术示意，不是观测影像或按比例的科学模拟。森林、根系、湿地、河流与海洋用于展示环境联系；水汽路径、雨线、洋流、光晕和磁场线的运动均为帮助阅读的视觉提示，速度、轨迹和明暗变化不对应实测值。原始 NASA 影像、模型纹理和科学参数未因美术调整改变。
+地表的海洋与水循环插图、磁层与生态关系长图为本页绘制的 SVG 示意，不是观测影像或按比例的科学模拟。大陆、冰冻圈、季风、积雨云与河口段落改用下表所列的 NASA 官方摄影或卫星影像。森林、根系、湿地、河流与海洋用于展示环境联系；水汽路径、雨线、洋流、光晕和磁场线的运动均为帮助阅读的视觉提示，速度、轨迹和明暗变化不对应实测值。原始 NASA 影像、模型纹理和科学参数未因美术调整改变。
 
 插画循环由 CSS 驱动，`SolarUI.activity` 控制各图的可见性、前后台及页面生命周期；离屏暂停并保留动画进度。章节导航中的“插画动效”按钮可统一暂停或恢复插画循环，选择保存在本地。系统启用减少动态效果时，插画静止。正文不使用持续位移、滚动劫持或打字动画；有限的入场和交互过渡继续由共享界面生命周期收尾。
 
@@ -78,3 +78,17 @@
 本轮磁层图以迎日侧压缩、背日侧延伸与高纬极光三个观察层替换对称椭圆示意；流线用于定位结构，不表示粒子的精确轨迹或磁场方向。生态关系层区分水的转移、能量传递与养分循环，能量层不绘成闭合循环。所有关系切换仅突出配图与图注，预留当前宽度下最长说明的高度；键盘方向键可切换主题，无脚本时完整保留说明。窄屏生态全景完整呈现，避免森林与外海被裁切。章节导航保留原生锚点与历史记录，以连续位置判断当前章节；总阅读进度与当前章节进度分别显示，正文不随导航淡出。
 
 模型观察区域扩展为与正文同宽的独立全景，初始镜头保留完整球体与留白；移除蓝色底板和固定装饰环。北回归线采用球面北纬 23.44° 的三维虚线，标签投影随镜头、球面自转与缩放更新，背面自动隐藏。滚轮、双指和缩放按钮在模型内控制距离；复位沿球面方向与相对观察距离做约 0.9 秒缓动，沿最短角度恢复球面朝向，可被手动操作中断。离屏、后台暂停复位计时，减少动态效果时直接收束；窗口尺寸变化保持观察方向和相对缩放。自转与昼夜选择在复位时保留。
+
+## 2026-11-04 · 正文观测影像
+
+以官方影像替换静态山脉、冰山、季风与积雨云示意，另在海陆交界正文配入育空河三角洲观测图。主文和交互实验保留，图注区分相机摄影、自然色与假彩色卫星图。图片本地保存为 WebP，只做等比缩小和格式转换，不裁掉原图的日期、方向和比例尺；图片设置宽高与延迟加载，点击可查看完整本地图像。
+
+| 本地文件 | 记录与署名 | 官方来源 |
+| --- | --- | --- |
+| `himalayas-iss.webp` | 2012-05-23；ISS031-E-67020；NASA / Don Pettit，ISS Expedition 31 | [Himalayas, Near and Far](https://science.nasa.gov/earth/earth-observatory/himalayas-near-and-far-147980/) |
+| `greenland-iceberg.webp` | 2026-06-12；Landsat 9 OLI；NASA Earth Observatory / Lauren Dauphin，USGS 数据 | [An Uncommon Drifter in the Denmark Strait](https://science.nasa.gov/earth/earth-observatory/an-uncommon-drifter-in-the-denmark-strait/) |
+| `india-monsoon.webp` | 2005-07-07 与 2005-06-18；Terra MODIS 假彩色对照；NASA MODIS Rapid Response Team | [Monsoon Flooding in India](https://science.nasa.gov/earth/earth-observatory/monsoon-flooding-in-india-15096/) |
+| `cumulonimbus-iss.webp` | 2008-02-05；ISS016-E-27426；NASA ISS Expedition 16 / Johnson Space Center | [Cumulonimbus Cloud over Africa](https://science.nasa.gov/earth/earth-observatory/cumulonimbus-cloud-over-africa-8542/) |
+| `yukon-delta.webp` | 2002-09-22；Landsat 7 ETM+ 自然色；NASA / Jesse Allen、Robert Simmon，USGS 数据 | [Yukon Delta, Alaska](https://science.nasa.gov/earth/earth-observatory/yukon-delta-alaska-72762/) |
+
+原图地址、日期、画幅和处理方式同时保存在 `assets/observations.json`。以上选取的 NASA 影像用于科普展示，保留 NASA 与原作者署名，不暗示机构背书；使用说明参照 [NASA Image Use Policy](https://gpm.nasa.gov/image-use-policy)。季风图不是实时降雨预报；冰山图不展示水下形状，三角洲图也不表示所有河口都具有相同的植被与地貌。

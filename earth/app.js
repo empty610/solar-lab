@@ -67,7 +67,7 @@
 
   // Reserve the tallest note at the current width so switching a topic does
   // not move the following chapter. Hidden notes remain hidden to readers.
-  const decks = [...document.querySelectorAll('.panel-deck')];
+  const decks = [...document.querySelectorAll('.panel-deck, .surface-atlas')];
   const deckWidths = new WeakMap();
   function reservePanels(deck, force = false) {
     const width = deck.clientWidth;

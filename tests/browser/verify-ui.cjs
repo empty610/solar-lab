@@ -104,6 +104,49 @@ async function check(name, run) {
           assert(await trigger.evaluate(element => element === document.activeElement));
         } finally { await page.close(); }
       });
+    await check('Venus introduction title stays anchored through disclosure changes', async () => {
+      for (const width of [1440, 800, 760, 600, 390, 320]) {
+        const page = await newPage({viewport:{width,height:900}});
+        try {
+          await page.goto(base+'/venus/');
+          await page.waitForFunction(() => document.getElementById('intro-toggle').onclick);
+          await page.evaluate(() => document.fonts.ready);
+          for (const clicks of [1, 1, 5]) {
+            const positions = await page.evaluate(async clicks => {
+              const title = document.getElementById('intro-toggle');
+              const measure = () => [title, ...title.children].map(element => {
+                const box = element.getBoundingClientRect();
+                return [box.x, box.y, box.width, box.height];
+              });
+              const samples = [measure()];
+              for (let i=0; i<clicks; i++) title.click();
+              samples.push(measure());
+              const start = performance.now();
+              await new Promise(resolve => {
+                const frame = () => {
+                  samples.push(measure());
+                  if (performance.now()-start < 600) requestAnimationFrame(frame);
+                  else resolve();
+                };
+                requestAnimationFrame(frame);
+              });
+              return samples;
+            }, clicks);
+            for (const sample of positions) for (let i=0; i<sample.length; i++)
+              for (let axis=0; axis<4; axis++)
+                assert(Math.abs(sample[i][axis]-positions[0][i][axis]) < 1,
+                  `${width}px: disclosure title and hint must retain their position and size`);
+          }
+          const toggle = page.locator('#intro-toggle');
+          await toggle.press('Enter');
+          assert.equal(await toggle.getAttribute('aria-expanded'),'true');
+          assert(await page.locator('#venus-intro-content').isVisible());
+          assert.equal(await page.locator('#venus-intro-content > p').count(),10);
+          assert.equal(await page.evaluate(() => document.documentElement.scrollWidth>innerWidth),false);
+          if ([1440,390].includes(width)) await page.screenshot({path:path.join(output,`ui-venus-intro-${width}.png`)});
+        } finally { await page.close(); }
+      }
+    });
     await check('nested modals and reopen during closing preserve ownership', async () => {
       const page = await newPage();
       try {

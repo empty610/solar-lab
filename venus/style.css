@@ -552,7 +552,7 @@ button {
 .planet-intro {
   position: absolute;
   z-index: 2;
-  top: 50%;
+  top: 20px;
   left: 28px;
   box-sizing: border-box;
   width: calc(var(--model-gutter) - 76px);
@@ -563,13 +563,11 @@ button {
   background: rgba(250, 247, 240, 0.78);
   box-shadow: 0 14px 34px -24px rgba(60, 45, 30, 0.55);
   color: #5a4d3d;
-  transform: translateY(-50%);
   backdrop-filter: blur(9px);
   pointer-events: auto;
-  transition:
-    top 0.5s cubic-bezier(0.22, 0.75, 0.26, 1),
-    transform 0.5s cubic-bezier(0.22, 0.75, 0.26, 1);
-  will-change: top, transform;
+  /* Keep the disclosure title anchored as content and scrollbars change. */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 
 .intro-title {
@@ -621,7 +619,8 @@ button {
 
 .planet-intro:not(.is-open) {
   min-height: 0;
-  padding-block: 17px;
+  padding-bottom: 17px;
+  overflow: hidden;
 }
 .planet-intro:not(.is-open) #venus-intro-content {
   display: none;
@@ -632,7 +631,6 @@ button {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
   scrollbar-color: rgba(184, 148, 56, 0.56) transparent;
 }
 
@@ -1257,10 +1255,6 @@ button {
 @media (min-width: 761px) {
   .planet-stage:has(.planet-intro:not(.is-open)) #venus-3d {
     transform: translateX(0);
-  }
-  .planet-stage:has(.planet-intro:not(.is-open)) .planet-intro {
-    top: 22px;
-    transform: none;
   }
   .planet-stage:has(.planet-intro:not(.is-open))::before,
   .planet-stage:has(.planet-intro:not(.is-open))::after {

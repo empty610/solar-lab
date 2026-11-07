@@ -610,3 +610,35 @@ html { scroll-padding-top: var(--earth-nav-offset, 140px); }
   .earth-observer .model-controls button { padding-inline: 8px; }
 }
 .model-annotation { left: clamp(65px, var(--tropic-x, 50%), calc(100% - 65px)); top: clamp(12px, var(--tropic-y, 50%), calc(100% - 45px)); }
+
+/* Observational images replace the static landscape and weather drawings. */
+.surface-plate.photo-plate { display: block; min-height: 510px; padding: 24px; background: #f7f5ec; color: var(--ink); border: 1px solid #b5c5b5; }
+.surface-plate.photo-plate::after { display: none; }
+.photo-plate-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.photo-plate .art-index { color: #63776a; opacity: 1; font-size: 9px; }
+.photo-stat { font: 24px/1 var(--serif); color: #5e785e; }
+.surface-plate > .photo-plate-title { font: 22px/1.65 var(--serif); margin: 16px 0 20px; }
+.observation-image { display: block; position: relative; color: #f5f2e8; background: #183d45; }
+.observation-image > img { display: block; width: 100%; height: auto; }
+.observation-image > span { position: absolute; right: 10px; bottom: 10px; padding: 4px 8px; background: #19372cd9; font-size: 10px; opacity: 0; }
+.observation-image:hover > span, .observation-image:focus-visible > span { opacity: 1; }
+.photo-plate figcaption { margin-top: 20px; }
+.photo-plate figcaption > strong, .observation-photo figcaption > strong { display: block; font: 16px/1.65 var(--serif); color: var(--ink); }
+.photo-plate figcaption > p, .observation-photo figcaption > p { margin: 8px 0 10px; font-size: 12px; line-height: 1.9; color: #5d7164; }
+.observation-credit { display: inline-block; font-size: 10px; line-height: 1.8; color: #4a7161; text-decoration: underline; text-underline-offset: 3px; }
+.weather-plate.observation-photo { background: #f7f5ec; border-color: #b5c5b5; box-shadow: none; max-width: 410px; }
+.observation-photo figcaption { background: #f7f5ec; border-top: 1px solid #c7d2c2; color: var(--ink); padding: 15px 17px 18px; letter-spacing: 0; }
+.reading-essay > header:has(.observation-photo) { position: static; }
+@media (max-width: 800px) {
+  .surface-plate.photo-plate { min-height: 510px; padding: 22px; }
+  .weather-plate.observation-photo { max-width: 540px; }
+  .observation-image > span { opacity: 1; font-size: 9px; }
+}
+@media (max-width: 480px) {
+  .surface-plate.photo-plate { min-height: 460px; padding: 22px; }
+  .surface-plate > .photo-plate-title { font-size: 20px; }
+}
+.surface-atlas { min-block-size: var(--panel-height, auto); }
+.surface-atlas.is-measuring > .surface-plate[hidden] { display: block !important; visibility: hidden; position: absolute; inset: 0 0 auto; }
+/* Keep the open-image link below the photograph so it cannot hide a scale bar. */
+.observation-image > span { position: static; display: block; padding: 7px 10px; background: #eef0e5; color: #3b6553; text-align: right; opacity: 1; }
