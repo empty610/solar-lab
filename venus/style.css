@@ -575,12 +575,29 @@ button {
 .intro-title {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   width: 100%;
   padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
   text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.intro-title small {
+  color: #75602b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.intro-title:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 6px;
+  border-radius: 3px;
 }
 
 .intro-title span {
@@ -606,10 +623,7 @@ button {
   min-height: 0;
   padding-block: 17px;
 }
-.planet-intro:not(.is-open) p {
-  display: none;
-}
-.planet-intro:not(.is-open) .atmosphere-profile-tag {
+.planet-intro:not(.is-open) #venus-intro-content {
   display: none;
 }
 
@@ -631,9 +645,20 @@ button {
 }
 
 .planet-intro p {
-  margin: 4px 0 0;
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.image-dialog .image-credit {
+  margin-top: 24px;
   font-size: 12px;
-  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.image-dialog .image-credit a {
+  color: #a2d2e0;
+  text-underline-offset: 3px;
 }
 
 .atmosphere-profile-tag {
@@ -1346,7 +1371,7 @@ button {
     padding: 17px 18px;
   }
   .planet-intro p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .atmosphere-profile-tag {
     grid-template-columns: 76px minmax(0, 1fr);
@@ -1457,4 +1482,26 @@ button {
 }
 .terrain-source {
   overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .planet-stage:has(.planet-intro.is-open) {
+    --intro-height: min(480px, 60svh);
+    height: calc(var(--intro-height) + 424px);
+    min-height: 0;
+  }
+
+  .planet-intro.is-open {
+    max-height: var(--intro-height);
+  }
+
+  .planet-stage:has(.planet-intro.is-open) #venus-3d,
+  .planet-stage:has(.planet-intro.is-open) .planet-fallback {
+    inset: calc(var(--intro-height) + 24px) 0 0;
+  }
+
+  .planet-stage:has(.planet-intro.is-open)::before,
+  .planet-stage:has(.planet-intro.is-open)::after {
+    top: calc(var(--intro-height) + 224px);
+  }
 }
